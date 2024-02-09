@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "name": "@marceloterreiro/eslint-config",
+  "version": "0.0.1",
+  "description": "A shared eslint configuration for Marcelo's projects",
+  "author": "Marcelo Prado <lelo@hey.com>",
+  "license": "MIT",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "lint": "eslint --ext js,ts,tsx ."
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.42.1",
+    "@typescript-eslint/parser": "^5.42.1",
+    "eslint": "^8.34.0",
+    "eslint-config-universe": "^11.2.0",
+    "prettier": "^2.7.1"
+  },
+  "eslintConfig": {
+    "extends": "."
+  }
+}

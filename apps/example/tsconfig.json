@@ -1,0 +1,11 @@
+{
+  "extends": "@marceloterreiro/tsconfig/base",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@marceloterreiro/flash-calendar": ["../../packages/flash-calendar/src"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}

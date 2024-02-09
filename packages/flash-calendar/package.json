@@ -1,0 +1,39 @@
+{
+  "name": "@marceloterreiro/flash-calendar",
+  "version": "0.0.1",
+  "description": "A better calendar for React Native.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "react-native": "./src/index.ts",
+  "repository": "github.com/marceloprado/flash-calendar",
+  "author": "Marcelo Prado",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsup --watch --silent",
+    "lint": "eslint --ext js,ts,tsx .",
+    "test": "jest",
+    "build": "tsup --dts",
+    "clean": "rm -rf dist && rm -rf node_modules"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "devDependencies": {
+    "@marceloterreiro/eslint-config": "*",
+    "@marceloterreiro/tsconfig": "*",
+    "@types/bun": "^1.0.5",
+    "react": "18.2.0",
+    "react-native": "0.73.4",
+    "tsup": "^8.0.1"
+  },
+  "private": false,
+  "eslintConfig": {
+    "extends": "@marceloterreiro/eslint-config",
+    "ignorePatterns": [
+      "node_modules",
+      "build"
+    ]
+  }
+}

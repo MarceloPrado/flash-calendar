@@ -1,0 +1,20 @@
+{
+  "name": "@marceloterreiro/monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "build": "turbo build",
+    "clean": "turbo clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "@marceloterreiro/tsconfig": "*",
+    "typescript": "^5.3.0"
+  }
+}
