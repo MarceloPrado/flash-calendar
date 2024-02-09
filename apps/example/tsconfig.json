@@ -4,8 +4,10 @@
     "baseUrl": ".",
     "paths": {
       "@marceloterreiro/flash-calendar": ["../../packages/flash-calendar/src"]
-    }
+    },
+    "esModuleInterop": true
   },
-  "include": ["src"],
+
+  "include": ["src", ".storybook"],
   "exclude": ["node_modules"]
 }
