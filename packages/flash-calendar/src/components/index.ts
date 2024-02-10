@@ -1,2 +1,2 @@
-export { Day } from "./Day";
+export { CalendarItemDay } from "./CalendarItemDay";
 export { Month } from "./Month";

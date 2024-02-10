@@ -1,0 +1,49 @@
+{
+  "Stylesheet usage": {
+    "prefix": "snip-stylesheet",
+    "body": [
+      "import { StyleSheet  } from \"react-native\"",
+      "",
+      "const styles = StyleSheet.create({",
+      "  container: { ",
+      "    padding: themeGlobals.spacings[12],",
+      "  }",
+      " })"
+    ]
+  },
+  "Inline stylesheet": {
+    "prefix": "snip-stylesheet-inline",
+    "body": [
+      "useMemo<ViewStyle>(() => ({",
+      "\t...styles.$1",
+      "\t $2",
+      "}), [$3]);"
+    ]
+  },
+  "Story": {
+    "prefix": "snip-story",
+    "body": [
+      "import { paddingDecorator } from \"@/developer/decorators\";",
+      "import type { Meta, StoryObj } from \"@storybook/react\";",
+      "import { ${TM_FILENAME_BASE/(.*)\\..+$/$1/} } from \"./${TM_FILENAME_BASE/(.*)\\..+$/$1/}\"",
+      "import type { ${TM_FILENAME_BASE/(.*)\\..+$/$1/}Props } from \"./${TM_FILENAME_BASE/(.*)\\..+$/$1/}\"",
+      "",
+      "const ${TM_FILENAME_BASE/(.*)\\..+$/$1/}Meta: Meta<typeof ${TM_FILENAME_BASE/(.*)\\..+$/$1/}> = {",
+      "  title: \"${TM_FILENAME_BASE/(.*)\\..+$/$1/}\",",
+      "  component: ${TM_FILENAME_BASE/(.*)\\..+$/$1/},",
+      "  argTypes: {",
+      "    onPress: { action: \"onPress\" },",
+      " },",
+      "  args: {",
+      "    children: \"hello world\",", 
+      "   },"
+      "  decorators: [paddingDecorator],",
+      "}",
+      "",
+      "export default ${TM_FILENAME_BASE/(.*)\\..+$/$1/}Meta",
+      "",
+      "export const Default: StoryObj<typeof ${TM_FILENAME_BASE/(.*)\\..+$/$1/}> = {}",
+      ""
+    ]
+  }
+}
