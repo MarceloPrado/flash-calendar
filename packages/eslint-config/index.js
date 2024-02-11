@@ -1,14 +1,41 @@
-// Copied from Cedric's repo: https://github.com/byCedric/expo-monorepo-example/blob/main/packages/eslint-config/index.js
+const { resolve } = require("node:path");
 
+const project = resolve(process.cwd(), "tsconfig.json");
+
+/** @type {import('eslint').Linter.Config} */
 module.exports = {
-  extends: "eslint-config-universe",
-  // do some additional things with it
-  rules: {
-    "prettier/prettier": ["error", { endOfLine: "auto" }],
+  extends: [
+    "eslint:recommended",
+    "eslint-config-universe",
+    "eslint-config-turbo",
+    "prettier",
+  ],
+  parserOptions: {
+    project,
   },
-  // Disable import/namespace due to https://github.com/facebook/react-native/issues/28549
-  // By setting delimiters to `\|/`, this ignore is supported on Windows too
+  globals: {
+    React: true,
+    JSX: true,
+  },
+  env: {
+    node: true,
+  },
   settings: {
-    "import/ignore": ["node_modules(\\\\|/)react-native(\\\\|/)index\\.js$"],
+    "import/resolver": {
+      typescript: {
+        project,
+      },
+    },
   },
+  ignorePatterns: [
+    // Ignore dotfiles
+    ".*.js",
+    "node_modules/",
+    "dist/",
+  ],
+  overrides: [
+    {
+      files: ["*.js?(x)", "*.ts?(x)"],
+    },
+  ],
 };

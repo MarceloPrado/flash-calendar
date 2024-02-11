@@ -7,14 +7,20 @@
     "packages/*"
   ],
   "scripts": {
+    "build": "turbo build",
+    "clean": "turbo clean && rm -rf node_modules",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "test": "turbo test",
-    "build": "turbo build",
-    "clean": "turbo clean && rm -rf node_modules"
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "test": "turbo test"
   },
   "devDependencies": {
+    "@marceloterreiro/eslint-config": "*",
     "@marceloterreiro/tsconfig": "*",
+    "@typescript-eslint/typescript-estree": "^6.21.0",
+    "prettier": "^2.8.8",
+    "turbo": "^1.12.1",
     "typescript": "^5.3.0"
-  }
+  },
+  "packageManager": "bun@1.0.25"
 }

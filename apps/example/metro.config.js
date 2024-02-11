@@ -1,7 +1,7 @@
 const { getDefaultConfig } = require("expo/metro-config");
-const { generate } = require("@storybook/react-native/scripts/generate");
-
 const path = require("path");
+
+const { generate } = require("@storybook/react-native/scripts/generate");
 
 // Storybook setup
 generate({

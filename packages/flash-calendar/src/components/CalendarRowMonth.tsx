@@ -1,12 +1,9 @@
 import type { ReactNode } from "react";
-import { memo } from "react";
-import { StyleSheet, Text, View } from "react-native";
-
-export const CALENDAR_ROW_MONTH_HEIGHT = 20;
+import { memo, useMemo } from "react";
+import { StyleSheet, Text, View, ViewStyle } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
-    height: CALENDAR_ROW_MONTH_HEIGHT,
     width: "100%",
   },
   content: {
@@ -14,12 +11,34 @@ const styles = StyleSheet.create({
   },
 });
 
+type CalendarRowMonthTheme = {
+  container?: ViewStyle;
+  content?: ViewStyle;
+};
+
 export interface CalendarRowMonthProps {
   children: ReactNode;
+  /**
+   * The height of the month row, needed to correctly measure the calendar's
+   * height.
+   */
+  height: number;
+  /** The theme of the month row, useful for customizing the component. */
+  theme?: CalendarRowMonthTheme;
 }
 
-export const CalendarRowMonth = memo(({ children }: CalendarRowMonthProps) => (
-  <View style={styles.container}>
-    <Text style={styles.content}>{children}</Text>
-  </View>
-));
+export const CalendarRowMonth = memo(
+  ({ children, height, theme }: CalendarRowMonthProps) => {
+    const { containerStyles, contentStyles } = useMemo(() => {
+      const containerStyles = [styles.container, { height }, theme?.container];
+      const contentStyles = [styles.content, theme?.content];
+      return { containerStyles, contentStyles };
+    }, [height, theme?.container, theme?.content]);
+
+    return (
+      <View style={containerStyles}>
+        <Text style={contentStyles}>{children}</Text>
+      </View>
+    );
+  }
+);

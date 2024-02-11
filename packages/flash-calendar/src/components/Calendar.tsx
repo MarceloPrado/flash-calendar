@@ -6,12 +6,19 @@ import {
   CalendarItemEmpty,
 } from "@/components/CalendarItemDay";
 import { CalendarItemWeekName } from "@/components/CalendarItemWeekName";
-import { CalendarRowMonth } from "@/components/CalendarRowMonth";
+import {
+  CalendarRowMonth,
+  CalendarRowMonthProps,
+} from "@/components/CalendarRowMonth";
 import { CalendarRowWeek } from "@/components/CalendarRowWeek";
 import { VStack } from "@/components/VStack";
 import { uppercaseFirstLetter } from "@/helpers/strings";
 import { tokens } from "@/helpers/tokens";
 import { BuildCalendarParams, useCalendar } from "@/hooks/useCalendar";
+
+export type CalendarTheme = {
+  rowMonthTheme: CalendarRowMonthProps["theme"];
+};
 
 export interface CalendarProps extends BuildCalendarParams {
   onDayPress: (dateId: string, date: Date) => void;
@@ -23,6 +30,8 @@ export interface CalendarProps extends BuildCalendarParams {
    * @default 8
    */
   calendarRowSpacing?: number;
+  /** Theme to customize the calendar component. */
+  theme?: CalendarTheme;
 }
 
 export const Calendar = memo(
@@ -31,6 +40,7 @@ export const Calendar = memo(
     disabledDates,
     activeDateRanges,
     calendarRowSpacing = 8,
+    theme,
     ...buildCalendarParams
   }: CalendarProps) => {
     const { calendarRowMonth, weeksList, weekDaysList } =
@@ -41,7 +51,7 @@ export const Calendar = memo(
         alignItems="center"
         spacing={calendarRowSpacing as keyof typeof tokens.spacing}
       >
-        <CalendarRowMonth>
+        <CalendarRowMonth height={20} theme={theme?.rowMonthTheme}>
           {uppercaseFirstLetter(calendarRowMonth)}
         </CalendarRowMonth>
         <CalendarRowWeek spacing={8}>

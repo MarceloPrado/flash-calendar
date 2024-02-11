@@ -10,12 +10,14 @@
   "license": "MIT",
   "scripts": {
     "dev": "tsup --watch --silent",
-    "lint": "eslint --ext js,ts,tsx .",
+    "lint": "eslint src",
     "test": "bun test",
     "build": "tsup --dts",
     "clean": "rm -rf dist && rm -rf node_modules"
   },
-  "dependencies": {},
+  "dependencies": {
+    "date-fns": "^3.3.1"
+  },
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
@@ -23,18 +25,13 @@
   "devDependencies": {
     "@marceloterreiro/eslint-config": "*",
     "@marceloterreiro/tsconfig": "*",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint": "^8.56.0",
     "@types/bun": "^1.0.5",
-    "date-fns": "^3.3.1",
     "react": "18.2.0",
     "react-native": "0.73.4",
-    "tsup": "^8.0.1"
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
   },
-  "private": false,
-  "eslintConfig": {
-    "extends": "@marceloterreiro/eslint-config",
-    "ignorePatterns": [
-      "node_modules",
-      "build"
-    ]
-  }
+  "private": false
 }
