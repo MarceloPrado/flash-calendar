@@ -1,2 +1,8 @@
 export * from "./components";
-export { toDateId, toDateId2 } from "./helpers/dates";
+export { toDateId, fromDateId } from "./helpers/dates";
+
+export {
+  useCalendar,
+  type BuildCalendarParams,
+  buildCalendar,
+} from "./hooks/useCalendar";

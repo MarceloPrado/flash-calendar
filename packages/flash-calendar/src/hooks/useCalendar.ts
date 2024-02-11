@@ -60,7 +60,10 @@ export type BuildCalendarParams = {
   firstDayOfWeek: "sunday" | "monday";
 };
 
-const buildCalendar = ({
+/**
+ * Builds a calendar based on the given parameters.
+ */
+export const buildCalendar = ({
   month,
   firstDayOfWeek,
   calendarRowMonthFormat = "MMMM yyyy",
@@ -72,7 +75,6 @@ const buildCalendar = ({
   const monthEnd = endOfMonth(month);
   const monthEndId = toDateId(monthEnd);
 
-  // let dayToIterate = new Date(monthStart);
   const emptyDaysAtStart = getNumberOfEmptyCellsAtStart(
     monthStart,
     firstDayOfWeek
@@ -162,5 +164,8 @@ const buildCalendar = ({
   };
 };
 
+/**
+ * Returns a memoized calendar based on the given parameters.
+ */
 export const useCalendar = (buildCalendarParams: BuildCalendarParams) =>
   useMemo(() => buildCalendar(buildCalendarParams), [buildCalendarParams]);
