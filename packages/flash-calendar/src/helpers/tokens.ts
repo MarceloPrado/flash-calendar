@@ -7,6 +7,9 @@ export const tokens = {
       disabled: "#B0B0B0",
       primary: "#000000",
       secondary: "#212121",
+      inverse: {
+        primary: "#FFFFFF",
+      },
     },
     background: {
       primary: "#000000",

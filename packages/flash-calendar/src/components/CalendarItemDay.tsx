@@ -76,7 +76,7 @@ const createStyles = ({
 
       return {
         container: updatedContainer,
-        textStyle,
+        textStyle: { color: tokens.colors.content.inverse.primary },
       };
     }
     case "today": {
@@ -118,27 +118,13 @@ const createStyles = ({
 export interface CalendarItemDayProps {
   children: ReactNode;
   id: string;
-  isEndOfMonth?: boolean;
   isEndOfRange?: boolean;
-  isEndOfWeek?: boolean;
-  isStartOfMonth?: boolean;
   isStartOfRange?: boolean;
-  isStartOfWeek?: boolean;
   onPress: (id: string) => void;
-  /**
-   * If true, the active day filler/extension will be hidden. The filler is used
-   * as a visual effect to join the active days together in a complete range.
-   *
-   * Defaults to `true` when:
-   * - `isEndOfRange` is true
-   * - `isEndOfWeek` is true
-   * - `isEndOfMonth` is true
-   */
-  hideActiveDayFiller?: boolean;
   state: DayState;
 }
 
-const BaseCalendarItemDay = memo(
+export const CalendarItemDay = memo(
   ({
     state,
     id,
@@ -173,33 +159,33 @@ const BaseCalendarItemDay = memo(
   }
 );
 
-type SpacerProps = {
+export interface CalendarItemDayContainerProps {
   children: ReactNode;
-} & Omit<CalendarItemDayProps, "children" | "onPress" | "id">;
+  isStartOfWeek: boolean;
+  /**
+   * If true, the active day filler/extension will be shown. The filler is used
+   * as a visual effect to join the active days together in a complete range.
+   */
+  shouldShowActiveDayFiller?: boolean;
+}
 
-const Spacer = memo(
+export const CalendarItemDayContainer = memo(
   ({
     children,
     isStartOfWeek,
-    state,
-    isEndOfRange,
-    isEndOfWeek,
-    isEndOfMonth,
-    hideActiveDayFiller = isEndOfRange || isEndOfWeek || isEndOfMonth,
-  }: SpacerProps) => {
+    shouldShowActiveDayFiller,
+  }: CalendarItemDayContainerProps) => {
     const spacerStyles = useMemo<ViewStyle>(() => {
-      const skipMargin = isStartOfWeek;
-
       return {
         position: "relative",
-        marginLeft: skipMargin ? 0 : DAY_GAP,
+        marginLeft: isStartOfWeek ? 0 : DAY_GAP,
         flex: 1,
         height: DAY_HEIGHT,
       };
     }, [isStartOfWeek]);
 
     const activeDayFiller = useMemo<ViewStyle | null>(() => {
-      if (state !== "active" || hideActiveDayFiller) {
+      if (!shouldShowActiveDayFiller) {
         return null;
       }
 
@@ -211,45 +197,15 @@ const Spacer = memo(
         width: DAY_GAP + 2, // +2 to cover the 1px gap (distributes evenly on both sides)
         backgroundColor: tokens.colors.background.primary,
       };
-    }, [state, hideActiveDayFiller]);
+    }, [shouldShowActiveDayFiller]);
 
     return (
       <View style={spacerStyles}>
         {children}
-
         {activeDayFiller ? <View style={activeDayFiller} /> : null}
       </View>
     );
   }
 );
 
-export const CalendarItemDay = memo((props: CalendarItemDayProps) => {
-  if (props.state === "active") {
-    return (
-      <Spacer {...props}>
-        <BaseCalendarItemDay {...props} />
-      </Spacer>
-    );
-  }
-
-  return (
-    <Spacer {...props}>
-      <BaseCalendarItemDay {...props} />
-    </Spacer>
-  );
-});
-
-export const CalendarItemEmpty = memo(
-  ({
-    isEndOfWeek,
-    isStartOfWeek,
-  }: Pick<CalendarItemDayProps, "isStartOfWeek" | "isEndOfWeek">) => (
-    <Spacer
-      isEndOfWeek={isEndOfWeek}
-      isStartOfWeek={isStartOfWeek}
-      state="idle"
-    >
-      <View style={styles.empty} />
-    </Spacer>
-  )
-);
+export const CalendarItemEmpty = memo(() => <View style={styles.empty} />);
