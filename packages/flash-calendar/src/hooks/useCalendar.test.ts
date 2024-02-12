@@ -6,16 +6,16 @@ import { buildCalendar } from "@/hooks/useCalendar";
 describe("buildCalendar", () => {
   it("builds the month row", () => {
     const january = buildCalendar({
-      month: fromDateId("2024-01-01"),
-      firstDayOfWeek: "sunday",
+      calendarMonth: fromDateId("2024-01-01"),
+      calendarFirstDayOfWeek: "sunday",
     });
     expect(january.calendarRowMonth).toBe("January 2024");
   });
 
   it("build the month row with custom formatting", () => {
     const january = buildCalendar({
-      month: fromDateId("2024-01-01"),
-      firstDayOfWeek: "sunday",
+      calendarMonth: fromDateId("2024-01-01"),
+      calendarFirstDayOfWeek: "sunday",
       calendarRowMonthFormat: "MMM yy",
     });
     expect(january.calendarRowMonth).toBe("Jan 24");
@@ -23,24 +23,24 @@ describe("buildCalendar", () => {
 
   it("builds the week days row starting on sunday", () => {
     const january = buildCalendar({
-      month: fromDateId("2024-01-01"),
-      firstDayOfWeek: "sunday",
+      calendarMonth: fromDateId("2024-01-01"),
+      calendarFirstDayOfWeek: "sunday",
     });
     expect(january.weekDaysList).toEqual(["S", "M", "T", "W", "T", "F", "S"]);
   });
 
   it("builds the week days row starting on monday", () => {
     const january = buildCalendar({
-      month: fromDateId("2024-01-01"),
-      firstDayOfWeek: "monday",
+      calendarMonth: fromDateId("2024-01-01"),
+      calendarFirstDayOfWeek: "monday",
     });
     expect(january.weekDaysList).toEqual(["M", "T", "W", "T", "F", "S", "S"]);
   });
 
   it("builds the weeks row", () => {
     const { weeksList } = buildCalendar({
-      month: fromDateId("2024-02-01"),
-      firstDayOfWeek: "sunday",
+      calendarMonth: fromDateId("2024-02-01"),
+      calendarFirstDayOfWeek: "sunday",
     });
 
     // February 2024 has 5 weeks
@@ -124,8 +124,8 @@ describe("buildCalendar", () => {
 
   it("build the weeks row with custom formatting", () => {
     const { weeksList } = buildCalendar({
-      month: fromDateId("2024-03-01"),
-      firstDayOfWeek: "sunday",
+      calendarMonth: fromDateId("2024-03-01"),
+      calendarFirstDayOfWeek: "sunday",
       calendarItemDayFormat: "dd",
     });
     expect(weeksList[0][6].id).toBe("2024-03-02");
@@ -134,9 +134,11 @@ describe("buildCalendar", () => {
 
   it("handles the expected range", () => {
     const { weeksList } = buildCalendar({
-      month: fromDateId("2024-02-01"),
-      firstDayOfWeek: "sunday",
-      activeDateRanges: [{ startId: "2024-02-03", endId: "2024-02-05" }],
+      calendarMonth: fromDateId("2024-02-01"),
+      calendarFirstDayOfWeek: "sunday",
+      calendarActiveDateRanges: [
+        { startId: "2024-02-03", endId: "2024-02-05" },
+      ],
     });
 
     expect(weeksList[0][6].id).toBe("2024-02-03");

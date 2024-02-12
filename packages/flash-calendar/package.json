@@ -20,11 +20,13 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "@shopify/flash-list": "*"
   },
   "devDependencies": {
     "@marceloterreiro/eslint-config": "*",
     "@marceloterreiro/tsconfig": "*",
+    "@shopify/flash-list": "1.6.3",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint": "^8.56.0",
     "@types/bun": "^1.0.5",

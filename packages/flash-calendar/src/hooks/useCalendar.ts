@@ -25,7 +25,7 @@ const getNumberOfEmptyCellsAtStart = (
   return startOfMonthDay === 0 ? 6 : startOfMonthDay - 1;
 };
 
-type DayShape = {
+export type DayShape = {
   date: Date;
   /** The day displayed in the desired format from `calendarItemDayFormat` */
   displayLabel: string;
@@ -49,7 +49,7 @@ type DayShape = {
 export type BuildCalendarParams = {
   /** The desired month for this calendar. It can be any date within the month.
    * The function normalizes the value. */
-  month: Date;
+  calendarMonth: Date;
   /**
    * Which `date-fns` token to format the calendar header.
    * @default "MMMM yyyy" e.g. "January 2022"
@@ -69,16 +69,16 @@ export type BuildCalendarParams = {
    * The day of the week to start the calendar with.
    * @default "sunday"
    */
-  firstDayOfWeek?: "sunday" | "monday";
+  calendarFirstDayOfWeek?: "sunday" | "monday";
   /**
    * The active date ranges to highlight in the calendar.
    */
-  activeDateRanges?: { startId?: string; endId?: string }[];
+  calendarActiveDateRanges?: { startId?: string; endId?: string }[];
 };
 
 const getRangeState = (
   id: string,
-  activeDateRanges: BuildCalendarParams["activeDateRanges"]
+  activeDateRanges: BuildCalendarParams["calendarActiveDateRanges"]
 ) => {
   const activeRange = activeDateRanges?.find(({ startId, endId }) => {
     // Regular range
@@ -109,12 +109,12 @@ const getRangeState = (
  * Builds a calendar based on the given parameters.
  */
 export const buildCalendar = ({
-  month,
-  firstDayOfWeek = "sunday",
+  calendarMonth: month,
+  calendarFirstDayOfWeek = "sunday",
   calendarRowMonthFormat = "MMMM yyyy",
   calendarItemWeekNameFormat = "EEEEE",
   calendarItemDayFormat = "d",
-  activeDateRanges,
+  calendarActiveDateRanges,
 }: BuildCalendarParams) => {
   const monthStart = startOfMonth(month);
   const monthStartId = toDateId(monthStart);
@@ -123,10 +123,10 @@ export const buildCalendar = ({
 
   const emptyDaysAtStart = getNumberOfEmptyCellsAtStart(
     monthStart,
-    firstDayOfWeek
+    calendarFirstDayOfWeek
   );
 
-  const startOfWeekIndex = firstDayOfWeek === "sunday" ? 0 : 1;
+  const startOfWeekIndex = calendarFirstDayOfWeek === "sunday" ? 0 : 1;
   const today = toDateId(new Date());
 
   // The first day to iterate is the first day of the month minus the empty days at the start
@@ -146,7 +146,7 @@ export const buildCalendar = ({
           isStartOfMonth: false,
           isStartOfWeek: dayToIterate.getDay() === startOfWeekIndex,
           isToday: id === today,
-          ...getRangeState(id, activeDateRanges),
+          ...getRangeState(id, calendarActiveDateRanges),
         };
         dayToIterate = addDays(dayToIterate, 1);
         return dayShape;
@@ -171,7 +171,7 @@ export const buildCalendar = ({
       isToday: id === today,
       isStartOfMonth: id === monthStartId,
       isEndOfMonth: id === monthEndId,
-      ...getRangeState(id, activeDateRanges),
+      ...getRangeState(id, calendarActiveDateRanges),
     });
     dayToIterate = addDays(dayToIterate, 1);
   }
@@ -192,7 +192,7 @@ export const buildCalendar = ({
         isStartOfMonth: false,
         isStartOfWeek: dayToIterate.getDay() === startOfWeekIndex,
         isToday: id === today,
-        ...getRangeState(id, activeDateRanges),
+        ...getRangeState(id, calendarActiveDateRanges),
       };
       dayToIterate = addDays(dayToIterate, 1);
       return dayShape;
@@ -200,7 +200,7 @@ export const buildCalendar = ({
   );
 
   const startOfWeekDate = startOfWeek(month, {
-    weekStartsOn: firstDayOfWeek === "sunday" ? 0 : 1,
+    weekStartsOn: calendarFirstDayOfWeek === "sunday" ? 0 : 1,
   });
   const weekDaysList = range(1, 7).map((i) =>
     format(addDays(startOfWeekDate, i - 1), calendarItemWeekNameFormat)

@@ -5,7 +5,7 @@ import {
 } from "@/components/CalendarItemDay";
 import { CalendarItemEmpty } from "@/components/CalendarItemEmpty";
 import { CalendarItemWeekName } from "@/components/CalendarItemWeekName";
-// import { CalendarList } from "@/components/CalendarList";
+import { CalendarList } from "@/components/CalendarList";
 import { CalendarRowMonth } from "@/components/CalendarRowMonth";
 import { CalendarRowWeek } from "@/components/CalendarRowWeek";
 
@@ -15,20 +15,27 @@ type CalendarItemDayNamespace = {
 
 const CalendarItemDayWithNamespace =
   CalendarItemDay as CalendarItemDayNamespace;
-CalendarItemDayWithNamespace.Container = CalendarItemDayContainer;
 
-const Day = CalendarItemDayWithNamespace;
+CalendarItemDayWithNamespace.Container = CalendarItemDayContainer;
+export type {
+  CalendarItemDayContainerProps,
+  CalendarItemDayProps,
+} from "@/components/CalendarItemDay";
 
 type CalendarItemNamespace = {
-  Day: typeof Day;
+  Day: typeof CalendarItemDayWithNamespace;
   WeekName: typeof CalendarItemWeekName;
   Empty: typeof CalendarItemEmpty;
 };
 
 const CalendarItemWithNamespace = {} as CalendarItemNamespace;
-CalendarItemWithNamespace.Day = Day;
+CalendarItemWithNamespace.Day = CalendarItemDayWithNamespace;
+
 CalendarItemWithNamespace.WeekName = CalendarItemWeekName;
+export type { CalendarItemWeekNameProps } from "@/components/CalendarItemWeekName";
+
 CalendarItemWithNamespace.Empty = CalendarItemEmpty;
+export type { CalendarItemEmptyProps } from "@/components/CalendarItemEmpty";
 
 type CalendarRowNamespace = {
   Month: typeof CalendarRowMonth;
@@ -37,17 +44,22 @@ type CalendarRowNamespace = {
 
 const CalendarRowWithNamespace = {} as CalendarRowNamespace;
 CalendarRowWithNamespace.Month = CalendarRowMonth;
+export type { CalendarRowMonthProps } from "@/components/CalendarRowMonth";
+
 CalendarRowWithNamespace.Week = CalendarRowWeek;
+export type { CalendarRowWeekProps } from "@/components/CalendarRowWeek";
 
 type CalendarNamespace = {
   Item: typeof CalendarItemWithNamespace;
   Row: typeof CalendarRowWithNamespace;
-  //   List: typeof CalendarList;
+  List: typeof CalendarList;
 } & typeof CalendarDefault;
 
 const CalendarWithNamespace = CalendarDefault as CalendarNamespace;
 CalendarWithNamespace.Item = CalendarItemWithNamespace;
 CalendarWithNamespace.Row = CalendarRowWithNamespace;
-// CalendarWithNamespace.List = CalendarList;
+
+CalendarWithNamespace.List = CalendarList;
+export type { CalendarListProps } from "@/components/CalendarList";
 
 export const Calendar = CalendarWithNamespace;

@@ -56,6 +56,16 @@ export interface CalendarProps extends BuildCalendarParams {
    * @default 32
    */
   calendarDayHeight?: number;
+  /**
+   * The height of the week day's header.
+   * @default `calendarDayHeight`
+   */
+  calendarWeekHeaderHeight?: number;
+  /**
+   * The height of the month header.
+   * @default 20
+   */
+  calendarMonthHeaderHeight?: number;
   /** Theme to customize the calendar component. */
   theme?: CalendarTheme;
 }
@@ -68,6 +78,8 @@ export const Calendar = memo(
     calendarRowHorizontalSpacing = 8,
     theme,
     calendarDayHeight = 32,
+    calendarMonthHeaderHeight = 20,
+    calendarWeekHeaderHeight = calendarDayHeight,
     ...buildCalendarParams
   }: CalendarProps) => {
     const { calendarRowMonth, weeksList, weekDaysList } =
@@ -78,13 +90,16 @@ export const Calendar = memo(
         alignItems="center"
         spacing={calendarRowVerticalSpacing as keyof typeof tokens.spacing}
       >
-        <CalendarRowMonth height={20} theme={theme?.rowMonth}>
+        <CalendarRowMonth
+          height={calendarMonthHeaderHeight}
+          theme={theme?.rowMonth}
+        >
           {uppercaseFirstLetter(calendarRowMonth)}
         </CalendarRowMonth>
         <CalendarRowWeek spacing={8} theme={theme?.rowWeek}>
           {weekDaysList.map((weekDay, i) => (
             <CalendarItemWeekName
-              height={calendarDayHeight}
+              height={calendarWeekHeaderHeight}
               key={i}
               theme={theme?.itemWeekName}
             >

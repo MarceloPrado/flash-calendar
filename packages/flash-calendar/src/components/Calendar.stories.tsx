@@ -14,7 +14,7 @@ const CalendarMeta: Meta<typeof Calendar> = {
   title: "Calendar",
   component: Calendar,
   argTypes: {
-    firstDayOfWeek: {
+    calendarFirstDayOfWeek: {
       control: {
         type: "select",
       },
@@ -26,13 +26,13 @@ const CalendarMeta: Meta<typeof Calendar> = {
     calendarItemWeekNameFormat: { type: "string" },
   },
   args: {
-    firstDayOfWeek: "sunday",
-    month: startOfThisMonth,
+    calendarFirstDayOfWeek: "sunday",
+    calendarMonth: startOfThisMonth,
     calendarItemDayFormat: "d",
     calendarItemWeekNameFormat: "EEEEE",
     calendarRowMonthFormat: "MMMM yyyy",
     disabledDates: ["2024-01-01", "2024-01-02"],
-    activeDateRanges: [
+    calendarActiveDateRanges: [
       {
         startId: toDateId(add(startOfThisMonth, { days: 3 })),
         endId: toDateId(add(startOfThisMonth, { days: 8 })),
@@ -55,20 +55,20 @@ export const DisabledDates: StoryObj<typeof Calendar> = {
       "2024-01-16",
       "2024-01-17",
     ],
-    month: fromDateId("2024-01-01"),
+    calendarMonth: fromDateId("2024-01-01"),
   },
 };
 
 export const ActiveDateRanges: StoryObj<typeof Calendar> = {
   args: {
-    activeDateRanges: [
+    calendarActiveDateRanges: [
       { startId: "2024-01-04", endId: "2024-01-06" },
       { startId: "2024-01-10", endId: "2024-01-12" },
       //   Incomplete
       { startId: "2024-01-24" },
       { endId: "2024-01-29" },
     ],
-    month: fromDateId("2024-01-01"),
+    calendarMonth: fromDateId("2024-01-01"),
   },
 };
 
@@ -88,14 +88,14 @@ export const LinearTheme = () => {
     <View style={styles.linearContainer}>
       <Calendar
         calendarItemWeekNameFormat="iiiiii"
-        month={new Date()}
-        activeDateRanges={[
+        calendarMonth={new Date()}
+        calendarActiveDateRanges={[
           {
             startId: toDateId(add(startOfThisMonth, { days: 3 })),
             endId: toDateId(add(startOfThisMonth, { days: 8 })),
           },
         ]}
-        firstDayOfWeek="sunday"
+        calendarFirstDayOfWeek="sunday"
         onDayPress={loggingHandler("onDayPress")}
         theme={{
           rowMonth: {
