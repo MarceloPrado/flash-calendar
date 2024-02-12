@@ -1,21 +1,32 @@
 import { Calendar as CalendarDefault } from "@/components/Calendar";
 import {
   CalendarItemDay,
-  CalendarItemEmpty,
+  CalendarItemDayContainer,
 } from "@/components/CalendarItemDay";
+import { CalendarItemEmpty } from "@/components/CalendarItemEmpty";
 import { CalendarItemWeekName } from "@/components/CalendarItemWeekName";
 // import { CalendarList } from "@/components/CalendarList";
 import { CalendarRowMonth } from "@/components/CalendarRowMonth";
 import { CalendarRowWeek } from "@/components/CalendarRowWeek";
 
+type CalendarItemDayNamespace = {
+  Container: typeof CalendarItemDayContainer;
+} & typeof CalendarItemDay;
+
+const CalendarItemDayWithNamespace =
+  CalendarItemDay as CalendarItemDayNamespace;
+CalendarItemDayWithNamespace.Container = CalendarItemDayContainer;
+
+const Day = CalendarItemDayWithNamespace;
+
 type CalendarItemNamespace = {
-  Day: typeof CalendarItemDay;
+  Day: typeof Day;
   WeekName: typeof CalendarItemWeekName;
   Empty: typeof CalendarItemEmpty;
 };
 
 const CalendarItemWithNamespace = {} as CalendarItemNamespace;
-CalendarItemWithNamespace.Day = CalendarItemDay;
+CalendarItemWithNamespace.Day = Day;
 CalendarItemWithNamespace.WeekName = CalendarItemWeekName;
 CalendarItemWithNamespace.Empty = CalendarItemEmpty;
 

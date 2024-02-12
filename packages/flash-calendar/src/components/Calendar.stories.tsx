@@ -1,9 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { add, startOfMonth } from "date-fns";
+import { StyleSheet, View } from "react-native";
 
 import { Calendar } from "./Calendar";
 
 import { paddingDecorator } from "@/developer/decorators";
-import { fromDateId } from "@/helpers/dates";
+import { loggingHandler } from "@/developer/loggginHandler";
+import { fromDateId, toDateId } from "@/helpers/dates";
+
+const startOfThisMonth = startOfMonth(new Date());
 
 const CalendarMeta: Meta<typeof Calendar> = {
   title: "Calendar",
@@ -22,12 +27,17 @@ const CalendarMeta: Meta<typeof Calendar> = {
   },
   args: {
     firstDayOfWeek: "sunday",
-    month: fromDateId("2024-01-01"),
+    month: startOfThisMonth,
     calendarItemDayFormat: "d",
     calendarItemWeekNameFormat: "EEEEE",
     calendarRowMonthFormat: "MMMM yyyy",
     disabledDates: ["2024-01-01", "2024-01-02"],
-    activeDateRanges: [{ startId: "2024-01-28", endId: "2024-01-30" }],
+    activeDateRanges: [
+      {
+        startId: toDateId(add(startOfThisMonth, { days: 3 })),
+        endId: toDateId(add(startOfThisMonth, { days: 8 })),
+      },
+    ],
   },
   decorators: [paddingDecorator],
 };
@@ -60,4 +70,86 @@ export const ActiveDateRanges: StoryObj<typeof Calendar> = {
     ],
     month: fromDateId("2024-01-01"),
   },
+};
+
+const styles = StyleSheet.create({
+  linearContainer: {
+    flex: 1,
+    backgroundColor: "#252630",
+    // Remove padding decorator to fill bg color
+    margin: -12,
+    padding: 12,
+  },
+});
+
+const linearAccent = "#585ABF";
+export const LinearTheme = () => {
+  return (
+    <View style={styles.linearContainer}>
+      <Calendar
+        calendarItemWeekNameFormat="iiiiii"
+        month={new Date()}
+        activeDateRanges={[
+          {
+            startId: toDateId(add(startOfThisMonth, { days: 3 })),
+            endId: toDateId(add(startOfThisMonth, { days: 8 })),
+          },
+        ]}
+        firstDayOfWeek="sunday"
+        onDayPress={loggingHandler("onDayPress")}
+        theme={{
+          rowMonth: {
+            content: {
+              textAlign: "left",
+              color: "rgba(255, 255, 255, 0.5)",
+              fontWeight: "700",
+            },
+          },
+          rowWeek: {
+            container: {
+              borderBottomWidth: 1,
+              borderBottomColor: "rgba(255, 255, 255, 0.1)",
+              borderStyle: "solid",
+            },
+          },
+          itemWeekName: { content: { color: "rgba(255, 255, 255, 0.5)" } },
+          itemDayContainer: {
+            activeDayFiller: {
+              backgroundColor: linearAccent,
+            },
+          },
+          itemDay: {
+            idle: ({ isPressed }) => ({
+              container: {
+                backgroundColor: isPressed ? linearAccent : "transparent",
+                borderRadius: 4,
+              },
+              content: {
+                color: "#ffffff",
+              },
+            }),
+            today: ({ isPressed }) => ({
+              container: {
+                borderColor: "rgba(255, 255, 255, 0.5)",
+                borderRadius: isPressed ? 4 : 16,
+                backgroundColor: isPressed ? linearAccent : "transparent",
+              },
+              content: {
+                color: isPressed ? "#ffffff" : "rgba(255, 255, 255, 0.5)",
+              },
+            }),
+            active: ({ isEndOfRange, isStartOfRange }) => ({
+              container: {
+                backgroundColor: linearAccent,
+                borderTopLeftRadius: isStartOfRange ? 4 : 0,
+                borderBottomLeftRadius: isStartOfRange ? 4 : 0,
+                borderTopRightRadius: isEndOfRange ? 4 : 0,
+                borderBottomRightRadius: isEndOfRange ? 4 : 0,
+              },
+            }),
+          },
+        }}
+      />
+    </View>
+  );
 };

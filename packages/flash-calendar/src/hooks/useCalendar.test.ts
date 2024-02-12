@@ -131,4 +131,22 @@ describe("buildCalendar", () => {
     expect(weeksList[0][6].id).toBe("2024-03-02");
     expect(weeksList[0][6].displayLabel).toBe("02");
   });
+
+  it("handles the expected range", () => {
+    const { weeksList } = buildCalendar({
+      month: fromDateId("2024-02-01"),
+      firstDayOfWeek: "sunday",
+      activeDateRanges: [{ startId: "2024-02-03", endId: "2024-02-05" }],
+    });
+
+    expect(weeksList[0][6].id).toBe("2024-02-03");
+    expect(weeksList[0][6].isStartOfRange).toBe(true);
+    expect(weeksList[0][6].state).toBe("active");
+    expect(weeksList[0][6].isEndOfRange).toBe(false);
+
+    expect(weeksList[1][1].id).toBe("2024-02-05");
+    expect(weeksList[1][1].isEndOfRange).toBe(true);
+    expect(weeksList[1][1].state).toBe("active");
+    expect(weeksList[1][1].isStartOfRange).toBe(false);
+  });
 });

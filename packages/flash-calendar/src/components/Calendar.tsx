@@ -3,33 +3,59 @@ import { memo } from "react";
 import {
   CalendarItemDay,
   CalendarItemDayContainer,
-  CalendarItemEmpty,
+  CalendarItemDayContainerProps,
+  CalendarItemDayProps,
+  DayState,
 } from "@/components/CalendarItemDay";
-import { CalendarItemWeekName } from "@/components/CalendarItemWeekName";
+import {
+  CalendarItemEmpty,
+  CalendarItemEmptyProps,
+} from "@/components/CalendarItemEmpty";
+import {
+  CalendarItemWeekName,
+  CalendarItemWeekNameProps,
+} from "@/components/CalendarItemWeekName";
 import {
   CalendarRowMonth,
   CalendarRowMonthProps,
 } from "@/components/CalendarRowMonth";
-import { CalendarRowWeek } from "@/components/CalendarRowWeek";
+import {
+  CalendarRowWeek,
+  CalendarRowWeekProps,
+} from "@/components/CalendarRowWeek";
 import { VStack } from "@/components/VStack";
 import { uppercaseFirstLetter } from "@/helpers/strings";
 import { tokens } from "@/helpers/tokens";
 import { BuildCalendarParams, useCalendar } from "@/hooks/useCalendar";
 
 export type CalendarTheme = {
-  rowMonthTheme: CalendarRowMonthProps["theme"];
+  rowMonth?: CalendarRowMonthProps["theme"];
+  rowWeek?: CalendarRowWeekProps["theme"];
+  itemWeekName?: CalendarItemWeekNameProps["theme"];
+  itemEmpty?: CalendarItemEmptyProps["theme"];
+  itemDayContainer?: CalendarItemDayContainerProps["theme"];
+  itemDay?: CalendarItemDayProps["theme"];
 };
 
 export interface CalendarProps extends BuildCalendarParams {
   onDayPress: (dateId: string, date: Date) => void;
   disabledDates?: string[];
-  activeDateRanges?: { startId?: string; endId?: string }[];
   /**
    * The spacing between each calendar row (the month header, the week days row,
    * and the weeks row)
    * @default 8
    */
-  calendarRowSpacing?: number;
+  calendarRowVerticalSpacing?: number;
+  /**
+   * The spacing between each day in the weeks row.
+   * @default 8
+   */
+  calendarRowHorizontalSpacing?: number;
+  /**
+   * The height of each day cell.
+   * @default 32
+   */
+  calendarDayHeight?: number;
   /** Theme to customize the calendar component. */
   theme?: CalendarTheme;
 }
@@ -38,9 +64,10 @@ export const Calendar = memo(
   ({
     onDayPress,
     disabledDates,
-    activeDateRanges,
-    calendarRowSpacing = 8,
+    calendarRowVerticalSpacing = 8,
+    calendarRowHorizontalSpacing = 8,
     theme,
+    calendarDayHeight = 32,
     ...buildCalendarParams
   }: CalendarProps) => {
     const { calendarRowMonth, weeksList, weekDaysList } =
@@ -49,14 +76,20 @@ export const Calendar = memo(
     return (
       <VStack
         alignItems="center"
-        spacing={calendarRowSpacing as keyof typeof tokens.spacing}
+        spacing={calendarRowVerticalSpacing as keyof typeof tokens.spacing}
       >
-        <CalendarRowMonth height={20} theme={theme?.rowMonthTheme}>
+        <CalendarRowMonth height={20} theme={theme?.rowMonth}>
           {uppercaseFirstLetter(calendarRowMonth)}
         </CalendarRowMonth>
-        <CalendarRowWeek spacing={8}>
+        <CalendarRowWeek spacing={8} theme={theme?.rowWeek}>
           {weekDaysList.map((weekDay, i) => (
-            <CalendarItemWeekName key={i}>{weekDay}</CalendarItemWeekName>
+            <CalendarItemWeekName
+              height={calendarDayHeight}
+              key={i}
+              theme={theme?.itemWeekName}
+            >
+              {weekDay}
+            </CalendarItemWeekName>
           ))}
         </CalendarRowWeek>
         {weeksList.map((week, index) => (
@@ -64,44 +97,43 @@ export const Calendar = memo(
             {week.map((dayProps) => {
               const {
                 isDifferentMonth,
-                id,
-                displayLabel,
-                isToday,
-                date,
-                isEndOfWeek,
                 isStartOfWeek,
+                id,
+                isRangeValid,
+                isEndOfWeek,
+                isEndOfRange,
+                state,
+                displayLabel,
+                isStartOfRange,
+                date,
+                isToday,
               } = dayProps;
               if (isDifferentMonth) {
                 return (
                   <CalendarItemDayContainer
                     key={id}
                     isStartOfWeek={isStartOfWeek}
+                    theme={theme?.itemDayContainer}
+                    daySpacing={calendarRowHorizontalSpacing}
+                    dayHeight={calendarDayHeight}
                   >
-                    <CalendarItemEmpty key={id} />
+                    <CalendarItemEmpty
+                      key={id}
+                      height={calendarDayHeight}
+                      theme={theme?.itemEmpty}
+                    />
                   </CalendarItemDayContainer>
                 );
               }
 
-              const activeRange = activeDateRanges?.find(
-                ({ startId, endId }) => {
-                  // Regular range
-                  if (startId && endId) {
-                    return id >= startId && id <= endId;
-                  } else if (startId) {
-                    return id === startId;
-                  } else if (endId) {
-                    return id === endId;
-                  }
-                  return false;
-                }
-              );
-
-              const isRangeValid =
-                activeRange &&
-                activeRange.startId !== undefined &&
-                activeRange.endId !== undefined;
-
-              const isEndOfRange = id === activeRange?.endId;
+              let safeState: DayState = "idle";
+              if (state === "active") {
+                safeState = "active";
+              } else if (disabledDates?.includes(id)) {
+                safeState = "disabled";
+              } else if (isToday) {
+                safeState = "today";
+              }
 
               return (
                 <CalendarItemDayContainer
@@ -110,23 +142,18 @@ export const Calendar = memo(
                     isRangeValid && !isEndOfWeek && !isEndOfRange
                   }
                   isStartOfWeek={isStartOfWeek}
+                  theme={theme?.itemDayContainer}
+                  daySpacing={calendarRowHorizontalSpacing}
+                  dayHeight={calendarDayHeight}
                 >
                   <CalendarItemDay
                     id={id}
-                    isEndOfRange={id === activeRange?.endId || !isRangeValid}
-                    isStartOfRange={
-                      id === activeRange?.startId || !isRangeValid
-                    }
+                    isEndOfRange={isEndOfRange || !isRangeValid}
+                    isStartOfRange={isStartOfRange || !isRangeValid}
                     onPress={(_id) => onDayPress(_id, date)}
-                    state={
-                      activeRange
-                        ? "active"
-                        : disabledDates?.includes(id)
-                        ? "disabled"
-                        : isToday
-                        ? "today"
-                        : "idle"
-                    }
+                    state={safeState}
+                    height={calendarDayHeight}
+                    theme={theme?.itemDay}
                   >
                     {displayLabel}
                   </CalendarItemDay>

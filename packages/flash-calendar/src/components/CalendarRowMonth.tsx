@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { memo, useMemo } from "react";
-import { StyleSheet, Text, View, ViewStyle } from "react-native";
+import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
 
 type CalendarRowMonthTheme = {
   container?: ViewStyle;
-  content?: ViewStyle;
+  content?: TextStyle;
 };
 
 export interface CalendarRowMonthProps {

@@ -1,4 +1,3 @@
-import { borderRadius, darken, padding } from "polished";
 import type { ReactNode } from "react";
 import { memo, useCallback, useMemo } from "react";
 import {
@@ -11,117 +10,143 @@ import {
 } from "react-native";
 
 import { tokens } from "@/helpers/tokens";
-import { exhaustiveCheck } from "@/helpers/types";
-
-export const DAY_HEIGHT = 32;
-
-/** The gap between each day */
-const DAY_GAP = tokens.spacing[8];
 
 const styles = StyleSheet.create({
-  container: {
-    ...padding(6),
+  baseContainer: {
+    padding: 6,
     alignItems: "center",
+    justifyContent: "center",
     borderRadius: 16,
     flex: 1,
-    height: DAY_HEIGHT,
-    justifyContent: "center",
   },
-  empty: {
-    ...padding(6),
-    flex: 1,
-    height: DAY_HEIGHT,
+  baseContent: {
+    color: tokens.colors.content.primary,
+    textAlign: "center",
   },
 });
 
 export type DayState = "idle" | "active" | "today" | "disabled";
 
-const createStyles = ({
-  state,
-  isEndOfRange,
-  isStartOfRange,
-}: Pick<CalendarItemDayProps, "state" | "isStartOfRange" | "isEndOfRange">): {
+type DayTheme = {
   container: ViewStyle;
-  textStyle: TextStyle;
-} => {
-  const textStyle = { color: tokens.colors.content.primary };
+  content: TextStyle;
+};
+type CalendarItemDayTheme = Record<
+  DayState,
+  (params: {
+    isStartOfRange: boolean;
+    isEndOfRange: boolean;
+    isPressed: boolean;
+  }) => DayTheme
+>;
 
-  const baseContainerStyles: ViewStyle = { ...styles.container };
-
-  switch (state) {
-    case "active": {
-      let updatedContainer: ViewStyle = {
-        ...baseContainerStyles,
-        backgroundColor: tokens.colors.background.primary,
-      };
-
-      // Reset
-      updatedContainer.borderRadius = 0;
-
-      if (isStartOfRange) {
-        updatedContainer = {
-          ...updatedContainer,
-          ...borderRadius("left", 16),
+const baseStyles: CalendarItemDayTheme = {
+  active: ({ isPressed, isStartOfRange, isEndOfRange }) => {
+    const baseStyles: DayTheme = isPressed
+      ? {
+          container: {
+            ...styles.baseContainer,
+            backgroundColor: "#424242",
+          },
+          content: {
+            ...styles.baseContent,
+            color: tokens.colors.content.inverse.primary,
+          },
+        }
+      : {
+          container: {
+            ...styles.baseContainer,
+            backgroundColor: tokens.colors.background.primary,
+          },
+          content: {
+            ...styles.baseContent,
+            color: tokens.colors.content.inverse.primary,
+          },
         };
-      }
-      if (isEndOfRange) {
-        updatedContainer = {
-          ...updatedContainer,
-          ...borderRadius("right", 16),
-        };
-      }
-      if (!isStartOfRange && !isEndOfRange) {
-        updatedContainer.borderRadius = 0;
-      }
 
-      return {
-        container: updatedContainer,
-        textStyle: { color: tokens.colors.content.inverse.primary },
-      };
+    baseStyles.container.borderRadius = 0;
+    if (isStartOfRange) {
+      baseStyles.container.borderTopLeftRadius = 16;
+      baseStyles.container.borderBottomLeftRadius = 16;
     }
-    case "today": {
-      return {
-        container: {
-          ...baseContainerStyles,
-          borderColor: tokens.colors.borders.default,
-          borderStyle: "solid",
-          borderWidth: 2,
-        },
-        textStyle,
-      };
+    if (isEndOfRange) {
+      baseStyles.container.borderTopRightRadius = 16;
+      baseStyles.container.borderBottomRightRadius = 16;
     }
-    case "idle": {
-      return {
-        container: {
-          ...baseContainerStyles,
-          backgroundColor: tokens.colors.background.tertiary,
-        },
-        textStyle,
-      };
+    if (!isStartOfRange && !isEndOfRange) {
+      baseStyles.container.borderRadius = 0;
     }
-    case "disabled": {
-      return {
-        container: {
-          ...baseContainerStyles,
-          backgroundColor: tokens.colors.transparent,
-        },
-        textStyle: {
-          color: tokens.colors.content.disabled,
-        },
-      };
-    }
-    default:
-      exhaustiveCheck(state);
-  }
+    return baseStyles;
+  },
+  disabled: () => ({
+    container: styles.baseContainer,
+    content: {
+      ...styles.baseContent,
+      color: tokens.colors.content.disabled,
+    },
+  }),
+  idle: ({ isPressed }) => {
+    return isPressed
+      ? {
+          container: {
+            ...styles.baseContainer,
+            backgroundColor: tokens.colors.background.tertiary,
+          },
+          content: {
+            ...styles.baseContent,
+            color: tokens.colors.content.primary,
+          },
+        }
+      : {
+          container: styles.baseContainer,
+          content: styles.baseContent,
+        };
+  },
+  today: ({ isPressed }) => {
+    return isPressed
+      ? {
+          container: {
+            ...styles.baseContainer,
+            backgroundColor: tokens.colors.background.tertiaryPressed,
+          },
+          content: styles.baseContent,
+        }
+      : {
+          container: {
+            ...styles.baseContainer,
+            borderColor: tokens.colors.borders.default,
+            borderStyle: "solid",
+            borderWidth: 1,
+          },
+          content: styles.baseContent,
+        };
+  },
 };
 
 export interface CalendarItemDayProps {
   children: ReactNode;
   id: string;
+  /** Whether this day is the end of a range. Useful to control the border
+   * radius. */
   isEndOfRange?: boolean;
+  /** Whether this day is the start of a range. Useful to control the border
+   * radius. */
   isStartOfRange?: boolean;
   onPress: (id: string) => void;
+  /** The current state of this day */
   state: DayState;
+  theme?: Partial<
+    Record<
+      DayState,
+      (params: {
+        isStartOfRange: boolean;
+        isEndOfRange: boolean;
+        isPressed: boolean;
+      }) => Partial<DayTheme>
+    >
+  >;
+  /** The cell's height */
+  height: number;
 }
 
 export const CalendarItemDay = memo(
@@ -132,12 +157,9 @@ export const CalendarItemDay = memo(
     isStartOfRange,
     onPress,
     children,
+    theme,
+    height,
   }: CalendarItemDayProps) => {
-    const { container: containerStyles, textStyle } = useMemo(
-      () => createStyles({ state, isStartOfRange, isEndOfRange }),
-      [state, isStartOfRange, isEndOfRange]
-    );
-
     const handlePress = useCallback(() => {
       onPress?.(id);
     }, [id, onPress]);
@@ -146,18 +168,46 @@ export const CalendarItemDay = memo(
       <Pressable
         disabled={state === "disabled"}
         onPress={handlePress}
-        style={({ pressed }) => ({
-          ...containerStyles,
-          backgroundColor: pressed
-            ? darken(0.1, tokens.colors.background.tertiary)
-            : containerStyles.backgroundColor,
-        })}
+        style={({ pressed: isPressed }) => {
+          const params = {
+            isPressed,
+            isEndOfRange: isEndOfRange ?? false,
+            isStartOfRange: isStartOfRange ?? false,
+          };
+          const { container } = baseStyles[state](params);
+          return {
+            ...container,
+            height,
+            ...theme?.[state]?.(params).container,
+          };
+        }}
       >
-        <Text style={textStyle}>{children}</Text>
+        {({ pressed: isPressed }) => {
+          const params = {
+            isPressed,
+            isEndOfRange: isEndOfRange ?? false,
+            isStartOfRange: isStartOfRange ?? false,
+          };
+          const { content } = baseStyles[state](params);
+          return (
+            <Text style={{ ...content, ...theme?.[state]?.(params).content }}>
+              {children}
+            </Text>
+          );
+        }}
       </Pressable>
     );
   }
 );
+
+type CalendarItemDayContainerTheme = {
+  /** An empty view that acts as a spacer between each day. The spacing is
+   * controlled by the `daySpacing` prop. */
+  spacer?: ViewStyle;
+  /** An absolute positioned filler to join the active days together in a single
+   * complete range. */
+  activeDayFiller?: ViewStyle;
+};
 
 export interface CalendarItemDayContainerProps {
   children: ReactNode;
@@ -167,6 +217,13 @@ export interface CalendarItemDayContainerProps {
    * as a visual effect to join the active days together in a complete range.
    */
   shouldShowActiveDayFiller?: boolean;
+  theme?: CalendarItemDayContainerTheme;
+  /**
+   * The spacing between each day
+   */
+  daySpacing: number;
+  /** The day's height */
+  dayHeight: number;
 }
 
 export const CalendarItemDayContainer = memo(
@@ -174,15 +231,19 @@ export const CalendarItemDayContainer = memo(
     children,
     isStartOfWeek,
     shouldShowActiveDayFiller,
+    theme,
+    daySpacing,
+    dayHeight,
   }: CalendarItemDayContainerProps) => {
     const spacerStyles = useMemo<ViewStyle>(() => {
       return {
         position: "relative",
-        marginLeft: isStartOfWeek ? 0 : DAY_GAP,
+        marginLeft: isStartOfWeek ? 0 : daySpacing,
         flex: 1,
-        height: DAY_HEIGHT,
+        height: dayHeight,
+        ...theme?.spacer,
       };
-    }, [isStartOfWeek]);
+    }, [dayHeight, daySpacing, isStartOfWeek, theme?.spacer]);
 
     const activeDayFiller = useMemo<ViewStyle | null>(() => {
       if (!shouldShowActiveDayFiller) {
@@ -193,11 +254,12 @@ export const CalendarItemDayContainer = memo(
         position: "absolute",
         top: 0,
         bottom: 0,
-        right: -(DAY_GAP + 1), // +1 to cover the 1px gap
-        width: DAY_GAP + 2, // +2 to cover the 1px gap (distributes evenly on both sides)
+        right: -(daySpacing + 1), // +1 to cover the 1px gap
+        width: daySpacing + 2, // +2 to cover the 1px gap (distributes evenly on both sides)
         backgroundColor: tokens.colors.background.primary,
+        ...theme?.activeDayFiller,
       };
-    }, [shouldShowActiveDayFiller]);
+    }, [daySpacing, shouldShowActiveDayFiller, theme?.activeDayFiller]);
 
     return (
       <View style={spacerStyles}>
@@ -207,5 +269,3 @@ export const CalendarItemDayContainer = memo(
     );
   }
 );
-
-export const CalendarItemEmpty = memo(() => <View style={styles.empty} />);

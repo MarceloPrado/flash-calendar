@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { memo } from "react";
-import { StyleSheet } from "react-native";
+import { memo, useMemo } from "react";
+import { StyleSheet, ViewStyle } from "react-native";
 
 import { HStack } from "@/components/HStack";
 import { tokens } from "@/helpers/tokens";
@@ -8,7 +8,12 @@ import { tokens } from "@/helpers/tokens";
 export interface CalendarRowWeekProps {
   children: ReactNode;
   spacing?: keyof typeof tokens.spacing;
+  theme?: CalendarRowWeekTheme;
 }
+
+type CalendarRowWeekTheme = {
+  container?: ViewStyle;
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -17,15 +22,22 @@ const styles = StyleSheet.create({
 });
 
 export const CalendarRowWeek = memo(
-  ({ children, spacing = 0 }: CalendarRowWeekProps) => (
-    <HStack
-      alignItems="center"
-      grow
-      justifyContent="space-between"
-      spacing={spacing}
-      style={styles.container}
-    >
-      {children}
-    </HStack>
-  )
+  ({ children, spacing = 0, theme }: CalendarRowWeekProps) => {
+    const { containerStyles } = useMemo(() => {
+      return {
+        containerStyles: { ...styles.container, ...(theme?.container ?? {}) },
+      };
+    }, [theme?.container]);
+    return (
+      <HStack
+        alignItems="center"
+        grow
+        justifyContent="space-between"
+        spacing={spacing}
+        style={containerStyles}
+      >
+        {children}
+      </HStack>
+    );
+  }
 );

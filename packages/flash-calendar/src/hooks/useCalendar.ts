@@ -8,6 +8,7 @@ import {
 } from "date-fns";
 import { useMemo } from "react";
 
+import { DayState } from "@/components/CalendarItemDay";
 import { toDateId } from "@/helpers/dates";
 import { range } from "@/helpers/numbers";
 
@@ -34,6 +35,13 @@ type DayShape = {
   isStartOfMonth: boolean;
   isStartOfWeek: boolean;
   isToday: boolean;
+
+  // Range related
+  isStartOfRange: boolean;
+  isEndOfRange: boolean;
+  state?: DayState;
+  isRangeValid: boolean;
+
   /** The ID of this date is the `YYYY-MM-DD` representation */
   id: string;
 };
@@ -57,7 +65,44 @@ export type BuildCalendarParams = {
    * @default "d" e.g. "1"
    */
   calendarItemDayFormat?: string;
-  firstDayOfWeek: "sunday" | "monday";
+  /**
+   * The day of the week to start the calendar with.
+   * @default "sunday"
+   */
+  firstDayOfWeek?: "sunday" | "monday";
+  /**
+   * The active date ranges to highlight in the calendar.
+   */
+  activeDateRanges?: { startId?: string; endId?: string }[];
+};
+
+const getRangeState = (
+  id: string,
+  activeDateRanges: BuildCalendarParams["activeDateRanges"]
+) => {
+  const activeRange = activeDateRanges?.find(({ startId, endId }) => {
+    // Regular range
+    if (startId && endId) {
+      return id >= startId && id <= endId;
+    } else if (startId) {
+      return id === startId;
+    } else if (endId) {
+      return id === endId;
+    }
+    return false;
+  });
+
+  const isRangeValid =
+    activeRange &&
+    activeRange.startId !== undefined &&
+    activeRange.endId !== undefined;
+
+  return {
+    isStartOfRange: id === activeRange?.startId,
+    isEndOfRange: id === activeRange?.endId,
+    isRangeValid: isRangeValid ?? false,
+    state: activeRange ? ("active" as const) : undefined,
+  };
 };
 
 /**
@@ -65,10 +110,11 @@ export type BuildCalendarParams = {
  */
 export const buildCalendar = ({
   month,
-  firstDayOfWeek,
+  firstDayOfWeek = "sunday",
   calendarRowMonthFormat = "MMMM yyyy",
   calendarItemWeekNameFormat = "EEEEE",
   calendarItemDayFormat = "d",
+  activeDateRanges,
 }: BuildCalendarParams) => {
   const monthStart = startOfMonth(month);
   const monthStartId = toDateId(monthStart);
@@ -100,6 +146,7 @@ export const buildCalendar = ({
           isStartOfMonth: false,
           isStartOfWeek: dayToIterate.getDay() === startOfWeekIndex,
           isToday: id === today,
+          ...getRangeState(id, activeDateRanges),
         };
         dayToIterate = addDays(dayToIterate, 1);
         return dayShape;
@@ -124,6 +171,7 @@ export const buildCalendar = ({
       isToday: id === today,
       isStartOfMonth: id === monthStartId,
       isEndOfMonth: id === monthEndId,
+      ...getRangeState(id, activeDateRanges),
     });
     dayToIterate = addDays(dayToIterate, 1);
   }
@@ -144,6 +192,7 @@ export const buildCalendar = ({
         isStartOfMonth: false,
         isStartOfWeek: dayToIterate.getDay() === startOfWeekIndex,
         isToday: id === today,
+        ...getRangeState(id, activeDateRanges),
       };
       dayToIterate = addDays(dayToIterate, 1);
       return dayShape;

@@ -14,6 +14,7 @@ export const tokens = {
     background: {
       primary: "#000000",
       tertiary: "#EDEFEE",
+      tertiaryPressed: "#D1D2D3",
     },
     borders: {
       default: "#E0E0E0",

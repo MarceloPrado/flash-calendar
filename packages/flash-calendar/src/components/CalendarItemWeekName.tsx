@@ -1,35 +1,47 @@
 import type { ReactNode } from "react";
 import { memo, useMemo } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 
-import { DAY_HEIGHT } from "@/components/CalendarItemDay";
 import { tokens } from "@/helpers/tokens";
-
-export const CALENDAR_ITEM_WEEK_DAY_HEIGHT = DAY_HEIGHT;
 
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flex: 1,
-    height: CALENDAR_ITEM_WEEK_DAY_HEIGHT,
     justifyContent: "center",
     padding: tokens.spacing[6],
   },
+  content: {
+    color: tokens.colors.content.primary,
+  },
 });
+
+type CalendarItemWeekNameTheme = {
+  container?: ViewStyle;
+  content?: TextStyle;
+};
 
 export interface CalendarItemWeekNameProps {
   children: ReactNode;
+  /**
+   * The height of the week name, needed to correctly measure the calendar's
+   */
+  height: number;
+  /** The theme of the week name, useful for customizing the component. */
+  theme?: CalendarItemWeekNameTheme;
 }
 
 export const CalendarItemWeekName = memo(
-  ({ children }: CalendarItemWeekNameProps) => {
-    const textStyles = useMemo(() => {
-      return { color: tokens.colors.content.primary };
-    }, []);
+  ({ children, height, theme }: CalendarItemWeekNameProps) => {
+    const { containerStyles, contentStyles } = useMemo(() => {
+      const containerStyles = [styles.container, { height }, theme?.container];
+      const contentStyles = [styles.content, theme?.content];
+      return { containerStyles, contentStyles };
+    }, [height, theme?.container, theme?.content]);
 
     return (
-      <View style={styles.container}>
-        <Text style={textStyles}>{children}</Text>
+      <View style={containerStyles}>
+        <Text style={contentStyles}>{children}</Text>
       </View>
     );
   }
