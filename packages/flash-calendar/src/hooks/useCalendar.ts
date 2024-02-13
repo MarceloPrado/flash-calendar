@@ -164,6 +164,7 @@ export const buildCalendar = (params: BuildCalendarParams) => {
   );
 
   const startOfWeekIndex = calendarFirstDayOfWeek === "sunday" ? 0 : 1;
+  const endOfWeekIndex = calendarFirstDayOfWeek === "sunday" ? 6 : 0;
   const today = toDateId(new Date());
 
   // The first day to iterate is the first day of the month minus the empty days at the start
@@ -179,7 +180,7 @@ export const buildCalendar = (params: BuildCalendarParams) => {
           id,
           isDifferentMonth: true,
           isEndOfMonth: false,
-          isEndOfWeek: dayToIterate.getDay() === 6,
+          isEndOfWeek: dayToIterate.getDay() === endOfWeekIndex,
           isStartOfMonth: false,
           isStartOfWeek: dayToIterate.getDay() === startOfWeekIndex,
           isToday: id === today,
@@ -203,11 +204,11 @@ export const buildCalendar = (params: BuildCalendarParams) => {
       displayLabel: format(dayToIterate, calendarItemDayFormat),
       id,
       isDifferentMonth: false,
-      isEndOfWeek: dayToIterate.getDay() === 6,
+      isEndOfMonth: id === monthEndId,
+      isEndOfWeek: dayToIterate.getDay() === endOfWeekIndex,
+      isStartOfMonth: id === monthStartId,
       isStartOfWeek: dayToIterate.getDay() === startOfWeekIndex,
       isToday: id === today,
-      isStartOfMonth: id === monthStartId,
-      isEndOfMonth: id === monthEndId,
       ...getRangeState(id, params),
     });
     dayToIterate = addDays(dayToIterate, 1);
@@ -225,7 +226,7 @@ export const buildCalendar = (params: BuildCalendarParams) => {
         id,
         isDifferentMonth: true,
         isEndOfMonth: false,
-        isEndOfWeek: dayToIterate.getDay() === 6,
+        isEndOfWeek: dayToIterate.getDay() === endOfWeekIndex,
         isStartOfMonth: false,
         isStartOfWeek: dayToIterate.getDay() === startOfWeekIndex,
         isToday: id === today,

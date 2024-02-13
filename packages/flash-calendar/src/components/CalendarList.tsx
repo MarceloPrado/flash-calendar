@@ -204,9 +204,9 @@ export const CalendarList = memo(
               return acc + currentHeight;
             }, 0);
 
+          // Wait for the next render cycle to ensure the list has been
+          // updated with the new months.
           setTimeout(() => {
-            // Wait for the next render cycle to ensure the list has been
-            // updated with the new months.
             flashListRef.current?.scrollToOffset({
               offset: currentOffset,
               animated,

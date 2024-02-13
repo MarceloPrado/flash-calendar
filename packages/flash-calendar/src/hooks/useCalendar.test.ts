@@ -183,5 +183,25 @@ describe("buildCalendar", () => {
     expect(maxDateOrBefore.every((day) => day.state === "idle")).toBe(true);
   });
 
-  it.todo('isLastDayOfWeek respects the "calendarFirstDayOfWeek" parameter');
+  it('isLastDayOfWeek respects "sunday" as last day of week', () => {
+    const january = buildCalendar({
+      calendarMonthId: "2024-01-01",
+      calendarFirstDayOfWeek: "sunday",
+    });
+    const firstWeek = january.weeksList[0];
+    const lastDay = firstWeek[firstWeek.length - 1];
+    expect(lastDay.id).toBe("2024-01-06");
+    expect(lastDay.isEndOfWeek).toBe(true);
+  });
+
+  it('isLastDayOfWeek respects "monday" as last day of week', () => {
+    const january = buildCalendar({
+      calendarMonthId: "2024-01-01",
+      calendarFirstDayOfWeek: "monday",
+    });
+    const firstWeek = january.weeksList[0];
+    const lastDay = firstWeek[firstWeek.length - 1];
+    expect(lastDay.id).toBe("2024-01-07");
+    expect(lastDay.isEndOfWeek).toBe(true);
+  });
 });
