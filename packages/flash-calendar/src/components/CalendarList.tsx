@@ -1,12 +1,23 @@
 import { FlashList, FlashListProps } from "@shopify/flash-list";
-import { add, getWeeksInMonth, startOfMonth, sub } from "date-fns";
-import { memo, useCallback, useMemo, useRef, useState } from "react";
+import { startOfMonth } from "date-fns";
+import {
+  Ref,
+  forwardRef,
+  memo,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from "react";
 import { View } from "react-native";
 
 import { Calendar, CalendarProps } from "@/components/Calendar";
-import { fromDateId, toDateId } from "@/helpers/dates";
-
-type MonthShape = { id: string; date: Date; numberOfWeeks: number };
+import { toDateId } from "@/helpers/dates";
+import {
+  MonthShape,
+  getHeightForMonth,
+  useCalendarList,
+} from "@/hooks/useCalendarList";
 
 const keyExtractor = (month: MonthShape) => month.id;
 
@@ -44,259 +55,184 @@ export interface CalendarListProps
   CalendarScrollComponent?: typeof FlashList;
 }
 
-const getMonthHeight = ({
-  calendarRowVerticalSpacing,
-  calendarDayHeight,
-  calendarWeekHeaderHeight,
-  calendarMonthHeaderHeight,
-  index,
-  month,
-  spacing,
-}: {
-  month: MonthShape;
-  index: number;
-  spacing: number;
-  calendarMonthHeaderHeight: number;
-  calendarRowVerticalSpacing: number;
-  calendarDayHeight: number;
-  calendarWeekHeaderHeight: number;
-}) => {
-  const headerHeight =
-    calendarMonthHeaderHeight +
-    calendarRowVerticalSpacing +
-    calendarWeekHeaderHeight;
-
-  const weekHeight = calendarDayHeight + calendarRowVerticalSpacing;
-
-  return (
-    headerHeight +
-    month.numberOfWeeks * weekHeight +
-    (index === 0 ? 0 : spacing)
-  );
-};
-
-const buildMonthList = (
-  startingMonth: Date,
-  numberOfMonths: number,
-  firstDayOfWeek: CalendarProps["calendarFirstDayOfWeek"] = "sunday"
-): MonthShape[] => {
-  const months = [
-    {
-      id: toDateId(startingMonth),
-      date: startingMonth,
-      numberOfWeeks: getWeeksInMonth(startingMonth, {
-        weekStartsOn: firstDayOfWeek === "sunday" ? 0 : 1,
-      }),
-    },
-  ];
-
-  for (let i = 1; i <= numberOfMonths; i++) {
-    const month = add(startingMonth, { months: i });
-    const numberOfWeeks = getWeeksInMonth(month, {
-      weekStartsOn: firstDayOfWeek === "sunday" ? 0 : 1,
-    });
-
-    months.push({
-      id: toDateId(month),
-      date: month,
-      numberOfWeeks,
-    });
-  }
-  return months;
+export type CalendarListRef = {
+  scrollToDate: (date: Date, animated: boolean) => void;
 };
 
 export const CalendarList = memo(
-  ({
-    calendarInitialMonthId: baseInitialMonthId,
-    calendarPastScrollRangeInMonths = 12,
-    calendarFutureScrollRangeInMonths = 12,
-    calendarFirstDayOfWeek = "sunday",
-    CalendarScrollComponent = FlashList,
+  forwardRef(
+    (
+      {
+        // List-related props
+        calendarInitialMonthId,
+        calendarPastScrollRangeInMonths = 12,
+        calendarFutureScrollRangeInMonths = 12,
+        calendarFirstDayOfWeek = "sunday",
+        CalendarScrollComponent = FlashList,
 
-    // Spacings
-    calendarSpacing = 20,
-    calendarRowHorizontalSpacing,
+        // Spacings
+        calendarSpacing = 20,
+        calendarRowHorizontalSpacing,
+        calendarRowVerticalSpacing = 8,
 
-    // Heights
-    calendarMonthHeaderHeight = 20,
-    calendarDayHeight = 32,
-    calendarRowVerticalSpacing = 8,
-    calendarWeekHeaderHeight = calendarDayHeight,
+        // Heights
+        calendarMonthHeaderHeight = 20,
+        calendarDayHeight = 32,
+        calendarWeekHeaderHeight = calendarDayHeight,
 
-    // Other props
-    theme,
-
-    ...props
-  }: CalendarListProps) => {
-    const { initialMonth, initialMonthId } = useMemo(() => {
-      const baseDate = baseInitialMonthId
-        ? fromDateId(baseInitialMonthId)
-        : fromDateId(toDateId(new Date()));
-      const baseStartOfMonth = startOfMonth(baseDate);
-
-      return {
-        initialMonth: baseStartOfMonth,
-        initialMonthId: toDateId(baseStartOfMonth),
-      };
-    }, [baseInitialMonthId]);
-
-    const {
-      onDayPress,
-      calendarActiveDateRanges: activeDateRanges,
-      disabledDates,
-      calendarItemDayFormat,
-      calendarItemWeekNameFormat,
-      calendarRowMonthFormat,
-      ...flatListProps
-    } = props;
-
-    const calendarProps = useMemo(
-      (): Omit<CalendarProps, "calendarMonth"> => ({
-        calendarFirstDayOfWeek,
+        // Other props
+        theme,
+        ...props
+      }: CalendarListProps,
+      ref: Ref<CalendarListRef>
+    ) => {
+      const {
         onDayPress,
         calendarActiveDateRanges: activeDateRanges,
         disabledDates,
         calendarItemDayFormat,
         calendarItemWeekNameFormat,
         calendarRowMonthFormat,
-        calendarDayHeight,
-        calendarMonthHeaderHeight,
-        calendarRowHorizontalSpacing,
-        calendarRowVerticalSpacing,
-        calendarWeekHeaderHeight,
-        theme,
-      }),
-      [
-        activeDateRanges,
-        calendarDayHeight,
-        calendarItemDayFormat,
-        calendarItemWeekNameFormat,
-        calendarMonthHeaderHeight,
-        calendarRowHorizontalSpacing,
-        calendarRowMonthFormat,
-        calendarRowVerticalSpacing,
-        calendarWeekHeaderHeight,
-        disabledDates,
-        calendarFirstDayOfWeek,
-        onDayPress,
-        theme,
-      ]
-    );
+        ...flatListProps
+      } = props;
 
-    const [monthList, setMonthList] = useState<MonthShape[]>(() => {
-      const currentMonth = startOfMonth(initialMonth);
-      const startingMonth = sub(currentMonth, {
-        months: calendarPastScrollRangeInMonths,
-      });
-
-      return buildMonthList(
-        startingMonth,
-        calendarPastScrollRangeInMonths + calendarFutureScrollRangeInMonths,
-        calendarFirstDayOfWeek
-      );
-    });
-
-    const handleOnEndReached = useCallback(() => {
-      setMonthList((prev) => {
-        const lastMonth = prev[prev.length - 1].date;
-        const [_duplicateLastMonth, ...newMonths] = buildMonthList(
-          lastMonth,
-          calendarFutureScrollRangeInMonths,
-          calendarFirstDayOfWeek
-        );
-
-        return [...prev, ...newMonths];
-      });
-    }, [calendarFirstDayOfWeek, calendarFutureScrollRangeInMonths]);
-
-    const initialMonthIndex = useMemo(() => {
-      const index = monthList.findIndex((i) => i.id === initialMonthId);
-      return index;
-    }, [initialMonthId, monthList]);
-
-    const handleOverrideItemLayout = useCallback<
-      NonNullable<FlashListProps<MonthShape>["overrideItemLayout"]>
-    >(
-      (layout, item, index) => {
-        const monthHeight = getMonthHeight({
-          month: item,
-          index,
-          spacing: calendarSpacing,
+      const calendarProps = useMemo(
+        (): Omit<CalendarProps, "calendarMonth"> => ({
+          calendarFirstDayOfWeek,
+          onDayPress,
+          calendarActiveDateRanges: activeDateRanges,
+          disabledDates,
+          calendarItemDayFormat,
+          calendarItemWeekNameFormat,
+          calendarRowMonthFormat,
           calendarDayHeight,
           calendarMonthHeaderHeight,
+          calendarRowHorizontalSpacing,
           calendarRowVerticalSpacing,
           calendarWeekHeaderHeight,
+          theme,
+        }),
+        [
+          activeDateRanges,
+          calendarDayHeight,
+          calendarItemDayFormat,
+          calendarItemWeekNameFormat,
+          calendarMonthHeaderHeight,
+          calendarRowHorizontalSpacing,
+          calendarRowMonthFormat,
+          calendarRowVerticalSpacing,
+          calendarWeekHeaderHeight,
+          disabledDates,
+          calendarFirstDayOfWeek,
+          onDayPress,
+          theme,
+        ]
+      );
+
+      const { initialMonthIndex, monthList, appendMonths, addMissingMonths } =
+        useCalendarList({
+          calendarFirstDayOfWeek,
+          calendarFutureScrollRangeInMonths,
+          calendarPastScrollRangeInMonths,
+          calendarInitialMonthId,
         });
 
-        layout.size = monthHeight;
-      },
-      [
-        calendarDayHeight,
-        calendarMonthHeaderHeight,
-        calendarRowVerticalSpacing,
-        calendarSpacing,
-        calendarWeekHeaderHeight,
-      ]
-    );
+      const handleOnEndReached = useCallback(() => {
+        appendMonths(calendarFutureScrollRangeInMonths);
+      }, [appendMonths, calendarFutureScrollRangeInMonths]);
 
-    const flashListRef = useRef<FlashList<MonthShape>>(null);
-
-    const onLoad = useCallback(() => {
-      const currentOffset = monthList.slice(0, initialMonthIndex).reduce(
-        (acc, month, index) =>
-          acc +
-          getMonthHeight({
-            month,
-            index,
+      const handleOverrideItemLayout = useCallback<
+        NonNullable<FlashListProps<MonthShape>["overrideItemLayout"]>
+      >(
+        (layout, item) => {
+          const monthHeight = getHeightForMonth({
+            month: item,
             spacing: calendarSpacing,
             calendarDayHeight,
             calendarMonthHeaderHeight,
             calendarRowVerticalSpacing,
             calendarWeekHeaderHeight,
-          }),
-        0
+          });
+
+          layout.size = monthHeight;
+        },
+        [
+          calendarDayHeight,
+          calendarMonthHeaderHeight,
+          calendarRowVerticalSpacing,
+          calendarSpacing,
+          calendarWeekHeaderHeight,
+        ]
       );
-      flashListRef.current?.scrollToOffset({
-        offset: currentOffset + calendarSpacing / 2,
-        animated: false,
-      });
-    }, [
-      calendarDayHeight,
-      calendarMonthHeaderHeight,
-      calendarRowVerticalSpacing,
-      calendarSpacing,
-      calendarWeekHeaderHeight,
-      initialMonthIndex,
-      monthList,
-    ]);
 
-    const calendarContainerStyle = useMemo(() => {
-      return { paddingTop: calendarSpacing };
-    }, [calendarSpacing]);
+      const flashListRef = useRef<FlashList<MonthShape>>(null);
 
-    return (
-      <CalendarScrollComponent
-        data={monthList}
-        estimatedItemSize={273}
-        initialScrollIndex={initialMonthIndex}
-        keyExtractor={keyExtractor}
-        onEndReached={handleOnEndReached}
-        onLoad={onLoad}
-        overrideItemLayout={handleOverrideItemLayout}
-        extraData={activeDateRanges}
-        ref={flashListRef}
-        renderItem={({ item, index }) =>
-          index === 0 ? (
-            <Calendar calendarMonth={item.date} {...calendarProps} />
-          ) : (
+      useImperativeHandle(ref, () => ({
+        scrollToDate(date, animated) {
+          const monthId = toDateId(startOfMonth(date));
+
+          let baseMonthList = monthList;
+          let index = baseMonthList.findIndex((month) => month.id === monthId);
+
+          if (index === -1) {
+            console.log("Adidng new months");
+            baseMonthList = addMissingMonths(monthId);
+            index = baseMonthList.findIndex((month) => month.id === monthId);
+          }
+
+          const currentOffset = baseMonthList
+            .slice(0, index)
+            .reduce((acc, month) => {
+              const currentHeight = getHeightForMonth({
+                month,
+                spacing: calendarSpacing,
+                calendarDayHeight,
+                calendarMonthHeaderHeight,
+                calendarRowVerticalSpacing,
+                calendarWeekHeaderHeight,
+              });
+
+              return acc + currentHeight;
+            }, 0);
+
+          setTimeout(() => {
+            // Wait for the next render cycle to ensure the list has been
+            // updated with the new months.
+            flashListRef.current?.scrollToOffset({
+              offset: currentOffset,
+              animated,
+            });
+          }, 0);
+        },
+      }));
+
+      const renderCounter = useRef(0);
+      renderCounter.current++;
+      console.log(`Rendered ${renderCounter.current} times`);
+
+      const calendarContainerStyle = useMemo(() => {
+        return { paddingBottom: calendarSpacing };
+      }, [calendarSpacing]);
+
+      return (
+        <CalendarScrollComponent
+          data={monthList}
+          estimatedItemSize={273}
+          initialScrollIndex={initialMonthIndex}
+          keyExtractor={keyExtractor}
+          onEndReached={handleOnEndReached}
+          overrideItemLayout={handleOverrideItemLayout}
+          extraData={activeDateRanges}
+          ref={flashListRef}
+          renderItem={({ item }) => (
             <View style={calendarContainerStyle}>
               <Calendar calendarMonth={item.date} {...calendarProps} />
             </View>
-          )
-        }
-        showsVerticalScrollIndicator={false}
-        {...flatListProps}
-      />
-    );
-  }
+          )}
+          showsVerticalScrollIndicator={false}
+          {...flatListProps}
+        />
+      );
+    }
+  )
 );

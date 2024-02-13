@@ -58,7 +58,7 @@ export interface CalendarProps extends BuildCalendarParams {
   calendarDayHeight?: number;
   /**
    * The height of the week day's header.
-   * @default `calendarDayHeight`
+   * @default calendarDayHeight
    */
   calendarWeekHeaderHeight?: number;
   /**

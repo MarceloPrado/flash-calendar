@@ -1,12 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { useState } from "react";
-import { Text } from "react-native";
+import { add, startOfMonth, sub } from "date-fns";
+import { useRef, useState } from "react";
+import { Button, Text, View } from "react-native";
 
-import { CalendarList } from "./CalendarList";
+import { CalendarList, CalendarListRef } from "./CalendarList";
 
+import { HStack } from "@/components/HStack";
 import { VStack } from "@/components/VStack";
 import { paddingDecorator } from "@/developer/decorators";
 import { loggingHandler } from "@/developer/loggginHandler";
+import { toDateId } from "@/helpers/dates";
 
 const CalendarListMeta: Meta<typeof CalendarList> = {
   title: "CalendarList",
@@ -53,14 +56,12 @@ export const WithShortRanges: StoryObj<typeof CalendarList> = {
 };
 
 export const SparseCalendar = () => {
-  const [show, setShown] = useState(true);
   const [selectedDate, setSelectedDate] = useState<undefined | string>(
     undefined
   );
 
   const onDayPress = (dateId: string) => {
     setSelectedDate(dateId);
-    setShown(false);
   };
 
   return (
@@ -68,7 +69,6 @@ export const SparseCalendar = () => {
       <Text>Selected date: {selectedDate}</Text>
 
       <CalendarList
-        // month={selectedDate ? fromDateId(selectedDate) : undefined}
         calendarActiveDateRanges={[
           {
             startId: selectedDate,
@@ -84,6 +84,82 @@ export const SparseCalendar = () => {
         calendarSpacing={48}
         calendarRowHorizontalSpacing={16}
       />
+    </VStack>
+  );
+};
+
+export const ImperativeScrolling = () => {
+  const [currentMonth, setCurrentMonth] = useState(startOfMonth(new Date()));
+
+  const ref = useRef<CalendarListRef>(null);
+
+  return (
+    <VStack spacing={20} grow alignItems="center">
+      <HStack spacing={12}>
+        <Button
+          title="Past month"
+          onPress={() => {
+            const pastMonth = sub(currentMonth, { months: 1 });
+            setCurrentMonth(pastMonth);
+            ref.current?.scrollToDate(pastMonth, true);
+          }}
+        />
+        <Text>Current: {toDateId(currentMonth)}</Text>
+        <Button
+          title="Next month"
+          onPress={() => {
+            const nextMonth = add(currentMonth, { months: 1 });
+            setCurrentMonth(nextMonth);
+            ref.current?.scrollToDate(nextMonth, true);
+          }}
+        />
+      </HStack>
+      <HStack spacing={12}>
+        <Button
+          title="Past year"
+          onPress={() => {
+            const pastYear = sub(currentMonth, { years: 1 });
+            setCurrentMonth(pastYear);
+            ref.current?.scrollToDate(pastYear, true);
+          }}
+        />
+        <Button
+          title="Today"
+          onPress={() => {
+            const thisMonth = startOfMonth(new Date());
+            setCurrentMonth(thisMonth);
+            ref.current?.scrollToDate(thisMonth, true);
+          }}
+        />
+        <Button
+          title="Next year"
+          onPress={() => {
+            const nextYear = add(currentMonth, { years: 1 });
+            setCurrentMonth(nextYear);
+            ref.current?.scrollToDate(nextYear, true);
+          }}
+        />
+      </HStack>
+      <View
+        // This hardcoded height is just to simplify testing the programmatic scrolling
+        style={{
+          height: 32 * 8,
+          width: "100%",
+          backgroundColor: "rgba(0,0,0,.05)",
+        }}
+      >
+        <CalendarList
+          onDayPress={loggingHandler("onDayPress")}
+          calendarInitialMonthId={toDateId(currentMonth)}
+          calendarPastScrollRangeInMonths={0}
+          calendarFutureScrollRangeInMonths={0}
+          calendarSpacing={20}
+          calendarRowVerticalSpacing={0}
+          calendarMonthHeaderHeight={32}
+          calendarWeekHeaderHeight={32}
+          ref={ref}
+        />
+      </View>
     </VStack>
   );
 };
