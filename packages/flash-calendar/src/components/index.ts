@@ -54,6 +54,11 @@ type CalendarNamespace = {
   Row: typeof CalendarRowWithNamespace;
   List: typeof CalendarList;
 } & typeof CalendarDefault;
+export {
+  CalendarOnDayPress,
+  CalendarProps,
+  CalendarTheme,
+} from "@/components/Calendar";
 
 const CalendarWithNamespace = CalendarDefault as CalendarNamespace;
 CalendarWithNamespace.Item = CalendarItemWithNamespace;

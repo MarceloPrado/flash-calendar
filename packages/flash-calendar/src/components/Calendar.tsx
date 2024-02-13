@@ -37,8 +37,10 @@ export type CalendarTheme = {
   itemDay?: CalendarItemDayProps["theme"];
 };
 
+export type CalendarOnDayPress = (dateId: string, date: Date) => void;
+
 export interface CalendarProps extends UseCalendarParams {
-  onDayPress: (dateId: string, date: Date) => void;
+  onDayPress: CalendarOnDayPress;
   disabledDates?: string[];
   /**
    * The spacing between each calendar row (the month header, the week days row,

@@ -55,6 +55,11 @@ export interface CalendarListProps
    * @default FlashList
    */
   CalendarScrollComponent?: typeof FlashList;
+
+  /**
+   * Allows overriding the default `Calendar` component.
+   */
+  renderItem?: FlashListProps<CalendarMonth>["renderItem"];
 }
 
 export type CalendarListRef = {
