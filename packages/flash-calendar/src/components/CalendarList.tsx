@@ -175,7 +175,6 @@ export const CalendarList = memo(
           let index = baseMonthList.findIndex((month) => month.id === monthId);
 
           if (index === -1) {
-            console.log("Adidng new months");
             baseMonthList = addMissingMonths(monthId);
             index = baseMonthList.findIndex((month) => month.id === monthId);
           }
@@ -205,10 +204,6 @@ export const CalendarList = memo(
           }, 0);
         },
       }));
-
-      const renderCounter = useRef(0);
-      renderCounter.current++;
-      console.log(`Rendered ${renderCounter.current} times`);
 
       const calendarContainerStyle = useMemo(() => {
         return { paddingBottom: calendarSpacing };
