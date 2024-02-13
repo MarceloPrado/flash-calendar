@@ -1,7 +1,7 @@
 import { useMemo, type ReactNode } from "react";
 import { StyleSheet, View, type ViewStyle } from "react-native";
 
-import { tokens } from "@/helpers/tokens";
+import { BaseTheme } from "@/helpers/tokens";
 
 const styles = StyleSheet.create({
   container: {
@@ -20,7 +20,7 @@ export interface HStackProps {
   children: ReactNode;
   grow?: boolean;
   shrink?: boolean;
-  spacing?: keyof typeof tokens.spacing;
+  spacing?: keyof BaseTheme["spacing"];
   wrap?: ViewStyle["flexWrap"];
   backgroundColor?: string;
   style?: ViewStyle;

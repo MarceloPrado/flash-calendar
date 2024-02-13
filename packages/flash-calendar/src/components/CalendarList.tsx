@@ -14,16 +14,16 @@ import { View } from "react-native";
 import { Calendar, CalendarProps } from "@/components/Calendar";
 import { toDateId } from "@/helpers/dates";
 import {
-  MonthShape,
+  CalendarMonth,
   getHeightForMonth,
   useCalendarList,
 } from "@/hooks/useCalendarList";
 
-const keyExtractor = (month: MonthShape) => month.id;
+const keyExtractor = (month: CalendarMonth) => month.id;
 
 export interface CalendarListProps
   extends Omit<CalendarProps, "calendarMonthId">,
-    Omit<FlashListProps<MonthShape>, "renderItem" | "data"> {
+    Omit<FlashListProps<CalendarMonth>, "renderItem" | "data"> {
   /**
    * How many months to show before the current month
    * @default 12
@@ -152,7 +152,7 @@ export const CalendarList = memo(
       }, [appendMonths, calendarFutureScrollRangeInMonths]);
 
       const handleOverrideItemLayout = useCallback<
-        NonNullable<FlashListProps<MonthShape>["overrideItemLayout"]>
+        NonNullable<FlashListProps<CalendarMonth>["overrideItemLayout"]>
       >(
         (layout, item) => {
           const monthHeight = getHeightForMonth({
@@ -175,7 +175,7 @@ export const CalendarList = memo(
         ]
       );
 
-      const flashListRef = useRef<FlashList<MonthShape>>(null);
+      const flashListRef = useRef<FlashList<CalendarMonth>>(null);
 
       useImperativeHandle(ref, () => ({
         scrollToDate(date, animated) {

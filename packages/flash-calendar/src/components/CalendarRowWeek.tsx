@@ -3,11 +3,11 @@ import { memo, useMemo } from "react";
 import { StyleSheet, ViewStyle } from "react-native";
 
 import { HStack } from "@/components/HStack";
-import { tokens } from "@/helpers/tokens";
+import { BaseTheme } from "@/helpers/tokens";
 
 export interface CalendarRowWeekProps {
   children: ReactNode;
-  spacing?: keyof typeof tokens.spacing;
+  spacing?: keyof BaseTheme["spacing"];
   theme?: CalendarRowWeekTheme;
 }
 

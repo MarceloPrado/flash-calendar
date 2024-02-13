@@ -160,6 +160,9 @@ export const LinearTheme = () => {
                 borderTopRightRadius: isEndOfRange ? 4 : 0,
                 borderBottomRightRadius: isEndOfRange ? 4 : 0,
               },
+              content: {
+                color: "#ffffff",
+              },
             }),
           },
         }}

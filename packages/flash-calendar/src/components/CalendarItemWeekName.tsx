@@ -2,18 +2,17 @@ import type { ReactNode } from "react";
 import { memo, useMemo } from "react";
 import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 
-import { tokens } from "@/helpers/tokens";
+import { lightTheme } from "@/helpers/tokens";
+import { useTheme } from "@/hooks/useTheme";
 
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flex: 1,
     justifyContent: "center",
-    padding: tokens.spacing[6],
+    padding: lightTheme.spacing[6],
   },
-  content: {
-    color: tokens.colors.content.primary,
-  },
+  content: {},
 });
 
 type CalendarItemWeekNameTheme = {
@@ -33,11 +32,16 @@ export interface CalendarItemWeekNameProps {
 
 export const CalendarItemWeekName = memo(
   ({ children, height, theme }: CalendarItemWeekNameProps) => {
+    const { colors } = useTheme();
     const { containerStyles, contentStyles } = useMemo(() => {
       const containerStyles = [styles.container, { height }, theme?.container];
-      const contentStyles = [styles.content, theme?.content];
+      const contentStyles = [
+        styles.content,
+        { color: colors.content.primary },
+        theme?.content,
+      ];
       return { containerStyles, contentStyles };
-    }, [height, theme?.container, theme?.content]);
+    }, [colors.content.primary, height, theme?.container, theme?.content]);
 
     return (
       <View style={containerStyles}>

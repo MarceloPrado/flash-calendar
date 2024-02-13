@@ -11,13 +11,20 @@ import { CalendarProps } from "@/components/Calendar";
 import { fromDateId, toDateId } from "@/helpers/dates";
 import { UseCalendarParams } from "@/hooks/useCalendar";
 
-export type MonthShape = { id: string; date: Date; numberOfWeeks: number };
+export type CalendarMonth = { id: string; date: Date; numberOfWeeks: number };
 
-export const buildMonthList = (
+const buildMonthList = (
   startingMonth: Date,
-  numberOfMonths: number,
+  endingMonth: Date,
   firstDayOfWeek: CalendarProps["calendarFirstDayOfWeek"] = "sunday"
-): MonthShape[] => {
+): CalendarMonth[] => {
+  const startingMonthId = toDateId(startingMonth);
+  const endingMonthId = toDateId(endingMonth);
+
+  if (startingMonthId === endingMonthId) {
+    return [];
+  }
+
   const months = [
     {
       id: toDateId(startingMonth),
@@ -27,6 +34,8 @@ export const buildMonthList = (
       }),
     },
   ];
+
+  const numberOfMonths = differenceInMonths(endingMonth, startingMonth);
 
   for (let i = 1; i <= numberOfMonths; i++) {
     const month = add(startingMonth, { months: i });
@@ -43,18 +52,30 @@ export const buildMonthList = (
   return months;
 };
 
-interface UseCalendarListParams
+export interface UseCalendarListParams
   extends Pick<UseCalendarParams, "calendarMinDateId" | "calendarMaxDateId"> {
   /**
    * The initial month to open the calendar to, as a `YYYY-MM-DD` string.
    * @default today
    */
   calendarInitialMonthId?: string;
+  /**
+   * How many months to show before the current month. Only applicable if
+   * `calendarMinDateId` is not set.
+   */
   calendarPastScrollRangeInMonths: number;
+  /**
+   * How many months to show after the current month. Applicable if
+   * `calendarMaxDateId` is not set.
+   */
   calendarFutureScrollRangeInMonths: number;
   calendarFirstDayOfWeek: "monday" | "sunday";
 }
 
+/**
+ * Returns a list of months to display in the calendar, and methods to append
+ * and prepend months to the list.
+ */
 export const useCalendarList = ({
   calendarInitialMonthId,
   calendarPastScrollRangeInMonths,
@@ -75,17 +96,18 @@ export const useCalendarList = ({
     };
   }, [calendarInitialMonthId]);
 
-  const [monthList, setMonthList] = useState<MonthShape[]>(() => {
+  const [monthList, setMonthList] = useState<CalendarMonth[]>(() => {
     const currentMonth = startOfMonth(initialMonth);
-    const startingMonth = sub(currentMonth, {
-      months: calendarPastScrollRangeInMonths,
-    });
 
-    return buildMonthList(
-      startingMonth,
-      calendarPastScrollRangeInMonths + calendarFutureScrollRangeInMonths,
-      calendarFirstDayOfWeek
-    );
+    const startingMonth = calendarMinDateId
+      ? fromDateId(calendarMinDateId)
+      : sub(currentMonth, { months: calendarPastScrollRangeInMonths });
+
+    const endingMonth = calendarMaxDateId
+      ? fromDateId(calendarMaxDateId)
+      : add(currentMonth, { months: calendarFutureScrollRangeInMonths });
+
+    return buildMonthList(startingMonth, endingMonth, calendarFirstDayOfWeek);
   });
 
   /**
@@ -93,21 +115,18 @@ export const useCalendarList = ({
    */
   const appendMonths = useCallback(
     (numberOfMonths: number) => {
-      const lastMonth = monthList[monthList.length - 1].date;
+      const startingMonth = monthList[monthList.length - 1].date;
+      const endingMonth = calendarMaxDateId
+        ? fromDateId(calendarMaxDateId)
+        : add(startingMonth, { months: numberOfMonths });
+
       const [_duplicateLastMonth, ...newMonths] = buildMonthList(
-        lastMonth,
-        numberOfMonths,
+        startingMonth,
+        endingMonth,
         calendarFirstDayOfWeek
       );
 
-      let newMonthList = [...monthList, ...newMonths];
-
-      if (calendarMaxDateId) {
-        newMonthList = newMonthList.filter(
-          (month) => month.id <= calendarMaxDateId
-        );
-      }
-
+      const newMonthList = [...monthList, ...newMonths];
       setMonthList(newMonthList);
       return newMonthList;
     },
@@ -116,20 +135,18 @@ export const useCalendarList = ({
 
   const prependMonths = useCallback(
     (numberOfMonths: number) => {
-      const firstMonth = monthList[0].date;
+      const endingMonth = monthList[0].date;
+      const startingMonth = calendarMinDateId
+        ? fromDateId(calendarMinDateId)
+        : sub(endingMonth, { months: numberOfMonths });
+
       const newMonths = buildMonthList(
-        sub(firstMonth, { months: numberOfMonths + 1 }),
-        numberOfMonths,
+        startingMonth,
+        endingMonth,
         calendarFirstDayOfWeek
       );
-      let newMonthList = [...newMonths, ...monthList];
 
-      if (calendarMinDateId) {
-        newMonthList = newMonthList.filter(
-          (month) => month.id >= calendarMinDateId
-        );
-      }
-
+      const newMonthList = [...newMonths, ...monthList];
       setMonthList(newMonthList);
       return newMonthList;
     },
@@ -191,7 +208,7 @@ export const getHeightForMonth = ({
   month,
   spacing,
 }: {
-  month: MonthShape;
+  month: CalendarMonth;
   spacing: number;
   calendarMonthHeaderHeight: number;
   calendarRowVerticalSpacing: number;

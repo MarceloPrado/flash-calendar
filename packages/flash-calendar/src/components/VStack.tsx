@@ -8,7 +8,7 @@ import {
 } from "react";
 import { StyleSheet, View, type ViewStyle } from "react-native";
 
-import { tokens } from "@/helpers/tokens";
+import { BaseTheme } from "@/helpers/tokens";
 
 const styles = StyleSheet.create({
   container: {
@@ -22,7 +22,7 @@ export type VStackDividerProps = {
 
 export interface VStackProps {
   children: ReactNode;
-  spacing?: keyof typeof tokens.spacing;
+  spacing?: keyof BaseTheme["spacing"];
 
   alignItems?: ViewStyle["alignItems"];
   justifyContent?: ViewStyle["justifyContent"];

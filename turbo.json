@@ -11,12 +11,6 @@
     "clean": {
       "outputs": []
     },
-    "test": {
-      "dependsOn": ["build"],
-      "inputs": ["**/*.{ts,tsx,js,jsx}"],
-      "env": ["TZ"]
-
-    },
     "dev": {
       "cache": false,
       "persistent": true

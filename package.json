@@ -12,7 +12,7 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "test": "turbo test"
+    "test": "bun test"
   },
   "devDependencies": {
     "@marceloterreiro/eslint-config": "*",

@@ -1,5 +1,8 @@
-import { ReactNode } from "react";
-import { StyleSheet, View } from "react-native";
+import type { PropsWithChildren, ReactNode } from "react";
+import { memo, useMemo } from "react";
+import { StyleSheet, View, type ViewStyle } from "react-native";
+
+import { useTheme } from "@/hooks/useTheme";
 
 const styles = StyleSheet.create({
   centered: {
@@ -11,6 +14,9 @@ const styles = StyleSheet.create({
     padding: 12,
     flex: 1,
   },
+  container: {
+    flex: 1,
+  },
 });
 
 export const centeredDecorator = (storyFn: () => ReactNode) => (
@@ -19,4 +25,24 @@ export const centeredDecorator = (storyFn: () => ReactNode) => (
 
 export const paddingDecorator = (storyFn: () => ReactNode) => (
   <View style={styles.paddedContainer}>{storyFn()}</View>
+);
+
+const BackgroundStory = memo(({ children }: PropsWithChildren) => {
+  const { colors } = useTheme();
+  const containerStyles = useMemo<ViewStyle[]>(
+    () => [
+      styles.container,
+      {
+        backgroundColor: colors.background.primary,
+      },
+    ],
+    [colors]
+  );
+
+  console.log(containerStyles);
+  return <View style={containerStyles}>{children}</View>;
+});
+
+export const backgroundDecorator = (storyFn: () => ReactNode) => (
+  <BackgroundStory>{storyFn()}</BackgroundStory>
 );

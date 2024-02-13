@@ -25,7 +25,7 @@ import {
 } from "@/components/CalendarRowWeek";
 import { VStack } from "@/components/VStack";
 import { uppercaseFirstLetter } from "@/helpers/strings";
-import { tokens } from "@/helpers/tokens";
+import { BaseTheme } from "@/helpers/tokens";
 import { UseCalendarParams, useCalendar } from "@/hooks/useCalendar";
 
 export type CalendarTheme = {
@@ -88,7 +88,7 @@ export const Calendar = memo(
     return (
       <VStack
         alignItems="center"
-        spacing={calendarRowVerticalSpacing as keyof typeof tokens.spacing}
+        spacing={calendarRowVerticalSpacing as keyof BaseTheme["spacing"]}
       >
         <CalendarRowMonth
           height={calendarMonthHeaderHeight}

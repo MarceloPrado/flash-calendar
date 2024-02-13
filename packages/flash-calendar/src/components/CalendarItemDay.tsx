@@ -9,8 +9,9 @@ import {
   type ViewStyle,
 } from "react-native";
 
-import { tokens } from "@/helpers/tokens";
+import { BaseTheme } from "@/helpers/tokens";
 import { CalendarDay } from "@/hooks/useCalendar";
+import { useTheme } from "@/hooks/useTheme";
 
 const styles = StyleSheet.create({
   baseContainer: {
@@ -21,7 +22,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   baseContent: {
-    color: tokens.colors.content.primary,
     textAlign: "center",
   },
 });
@@ -41,87 +41,94 @@ type CalendarItemDayTheme = Record<
   }) => DayTheme
 >;
 
-const baseStyles: CalendarItemDayTheme = {
-  active: ({ isPressed, isStartOfRange, isEndOfRange }) => {
-    const baseStyles: DayTheme = isPressed
-      ? {
-          container: {
-            ...styles.baseContainer,
-            backgroundColor: "#424242",
-          },
-          content: {
-            ...styles.baseContent,
-            color: tokens.colors.content.inverse.primary,
-          },
-        }
-      : {
-          container: {
-            ...styles.baseContainer,
-            backgroundColor: tokens.colors.background.primary,
-          },
-          content: {
-            ...styles.baseContent,
-            color: tokens.colors.content.inverse.primary,
-          },
-        };
+const buildBaseStyles = (theme: BaseTheme): CalendarItemDayTheme => {
+  const baseContent = {
+    ...styles.baseContent,
+    color: theme.colors.content.primary,
+  };
 
-    baseStyles.container.borderRadius = 0;
-    if (isStartOfRange) {
-      baseStyles.container.borderTopLeftRadius = 16;
-      baseStyles.container.borderBottomLeftRadius = 16;
-    }
-    if (isEndOfRange) {
-      baseStyles.container.borderTopRightRadius = 16;
-      baseStyles.container.borderBottomRightRadius = 16;
-    }
-    if (!isStartOfRange && !isEndOfRange) {
+  return {
+    active: ({ isPressed, isStartOfRange, isEndOfRange }) => {
+      const baseStyles: DayTheme = isPressed
+        ? {
+            container: {
+              ...styles.baseContainer,
+              backgroundColor: theme.colors.background.tertiary,
+            },
+            content: {
+              ...baseContent,
+              color: theme.colors.content.primary,
+            },
+          }
+        : {
+            container: {
+              ...styles.baseContainer,
+              backgroundColor: theme.colors.background.inverse.primary,
+            },
+            content: {
+              ...baseContent,
+              color: theme.colors.content.inverse.primary,
+            },
+          };
+
       baseStyles.container.borderRadius = 0;
-    }
-    return baseStyles;
-  },
-  disabled: () => ({
-    container: styles.baseContainer,
-    content: {
-      ...styles.baseContent,
-      color: tokens.colors.content.disabled,
+      if (isStartOfRange) {
+        baseStyles.container.borderTopLeftRadius = 16;
+        baseStyles.container.borderBottomLeftRadius = 16;
+      }
+      if (isEndOfRange) {
+        baseStyles.container.borderTopRightRadius = 16;
+        baseStyles.container.borderBottomRightRadius = 16;
+      }
+      if (!isStartOfRange && !isEndOfRange) {
+        baseStyles.container.borderRadius = 0;
+      }
+      return baseStyles;
     },
-  }),
-  idle: ({ isPressed }) => {
-    return isPressed
-      ? {
-          container: {
-            ...styles.baseContainer,
-            backgroundColor: tokens.colors.background.tertiary,
-          },
-          content: {
-            ...styles.baseContent,
-            color: tokens.colors.content.primary,
-          },
-        }
-      : {
-          container: styles.baseContainer,
-          content: styles.baseContent,
-        };
-  },
-  today: ({ isPressed }) => {
-    return isPressed
-      ? {
-          container: {
-            ...styles.baseContainer,
-            backgroundColor: tokens.colors.background.tertiaryPressed,
-          },
-          content: styles.baseContent,
-        }
-      : {
-          container: {
-            ...styles.baseContainer,
-            borderColor: tokens.colors.borders.default,
-            borderStyle: "solid",
-            borderWidth: 1,
-          },
-          content: styles.baseContent,
-        };
-  },
+    disabled: () => ({
+      container: styles.baseContainer,
+      content: {
+        ...baseContent,
+        color: theme.colors.content.disabled,
+      },
+    }),
+    idle: ({ isPressed }) => {
+      return isPressed
+        ? {
+            container: {
+              ...styles.baseContainer,
+              backgroundColor: theme.colors.background.tertiary,
+            },
+            content: {
+              ...baseContent,
+              color: theme.colors.content.primary,
+            },
+          }
+        : {
+            container: styles.baseContainer,
+            content: baseContent,
+          };
+    },
+    today: ({ isPressed }) => {
+      return isPressed
+        ? {
+            container: {
+              ...styles.baseContainer,
+              backgroundColor: theme.colors.background.tertiaryPressed,
+            },
+            content: baseContent,
+          }
+        : {
+            container: {
+              ...styles.baseContainer,
+              borderColor: theme.colors.borders.default,
+              borderStyle: "solid",
+              borderWidth: 1,
+            },
+            content: baseContent,
+          };
+    },
+  };
 };
 
 export interface CalendarItemDayProps {
@@ -144,6 +151,11 @@ export interface CalendarItemDayProps {
 
 export const CalendarItemDay = memo(
   ({ onPress, children, theme, height, metadata }: CalendarItemDayProps) => {
+    const baseTheme = useTheme();
+    const baseStyles = useMemo(() => {
+      return buildBaseStyles(baseTheme);
+    }, [baseTheme]);
+
     const handlePress = useCallback(() => {
       onPress?.(metadata.id);
     }, [metadata.id, onPress]);
@@ -225,6 +237,7 @@ export const CalendarItemDayContainer = memo(
     daySpacing,
     dayHeight,
   }: CalendarItemDayContainerProps) => {
+    const baseTheme = useTheme();
     const spacerStyles = useMemo<ViewStyle>(() => {
       return {
         position: "relative",
@@ -246,10 +259,15 @@ export const CalendarItemDayContainer = memo(
         bottom: 0,
         right: -(daySpacing + 1), // +1 to cover the 1px gap
         width: daySpacing + 2, // +2 to cover the 1px gap (distributes evenly on both sides)
-        backgroundColor: tokens.colors.background.primary,
+        backgroundColor: baseTheme.colors.background.inverse.primary,
         ...theme?.activeDayFiller,
       };
-    }, [daySpacing, shouldShowActiveDayFiller, theme?.activeDayFiller]);
+    }, [
+      baseTheme.colors.background.inverse.primary,
+      daySpacing,
+      shouldShowActiveDayFiller,
+      theme?.activeDayFiller,
+    ]);
 
     return (
       <View style={spacerStyles}>
