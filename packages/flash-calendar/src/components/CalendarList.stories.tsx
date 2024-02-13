@@ -163,3 +163,19 @@ export const ImperativeScrolling = () => {
     </VStack>
   );
 };
+
+export const MinAndMaxDates = () => {
+  return (
+    <VStack spacing={20} grow alignItems="center">
+      <Text>This calendar list is only available for the 2024 period</Text>
+      <View style={{ flex: 1, width: "100%" }}>
+        <CalendarList
+          onDayPress={loggingHandler("onDayPress")}
+          calendarInitialMonthId={"2024-02-13"}
+          calendarMinDateId={"2024-01-01"}
+          calendarMaxDateId={"2024-12-31"}
+        />
+      </View>
+    </VStack>
+  );
+};

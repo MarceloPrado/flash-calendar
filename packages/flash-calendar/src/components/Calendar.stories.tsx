@@ -6,7 +6,7 @@ import { Calendar } from "./Calendar";
 
 import { paddingDecorator } from "@/developer/decorators";
 import { loggingHandler } from "@/developer/loggginHandler";
-import { fromDateId, toDateId } from "@/helpers/dates";
+import { toDateId } from "@/helpers/dates";
 
 const startOfThisMonth = startOfMonth(new Date());
 
@@ -27,7 +27,7 @@ const CalendarMeta: Meta<typeof Calendar> = {
   },
   args: {
     calendarFirstDayOfWeek: "sunday",
-    calendarMonth: startOfThisMonth,
+    calendarMonthId: toDateId(startOfThisMonth),
     calendarItemDayFormat: "d",
     calendarItemWeekNameFormat: "EEEEE",
     calendarRowMonthFormat: "MMMM yyyy",
@@ -55,7 +55,15 @@ export const DisabledDates: StoryObj<typeof Calendar> = {
       "2024-01-16",
       "2024-01-17",
     ],
-    calendarMonth: fromDateId("2024-01-01"),
+    calendarMonthId: "2024-01-01",
+  },
+};
+
+export const MinAndMaxDates: StoryObj<typeof Calendar> = {
+  args: {
+    calendarMonthId: "2024-03-01",
+    calendarMinDateId: "2024-03-10",
+    calendarMaxDateId: "2024-03-20",
   },
 };
 
@@ -68,7 +76,7 @@ export const ActiveDateRanges: StoryObj<typeof Calendar> = {
       { startId: "2024-01-24" },
       { endId: "2024-01-29" },
     ],
-    calendarMonth: fromDateId("2024-01-01"),
+    calendarMonthId: "2024-01-01",
   },
 };
 
@@ -88,7 +96,7 @@ export const LinearTheme = () => {
     <View style={styles.linearContainer}>
       <Calendar
         calendarItemWeekNameFormat="iiiiii"
-        calendarMonth={new Date()}
+        calendarMonthId={toDateId(startOfThisMonth)}
         calendarActiveDateRanges={[
           {
             startId: toDateId(add(startOfThisMonth, { days: 3 })),

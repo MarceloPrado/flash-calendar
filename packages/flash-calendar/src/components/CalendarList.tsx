@@ -22,7 +22,7 @@ import {
 const keyExtractor = (month: MonthShape) => month.id;
 
 export interface CalendarListProps
-  extends Omit<CalendarProps, "calendarMonth">,
+  extends Omit<CalendarProps, "calendarMonthId">,
     Omit<FlashListProps<MonthShape>, "renderItem" | "data"> {
   /**
    * How many months to show before the current month
@@ -36,14 +36,16 @@ export interface CalendarListProps
   calendarFutureScrollRangeInMonths?: number;
 
   /**
-   * The spacing between each `<Calendar />` component.
+   * The vertical spacing between each `<Calendar />` component.
    * @default 20
    */
   calendarSpacing?: number;
 
   /**
    * The initial month to open the calendar to, as a `YYYY-MM-DD` string.
-   * @default today
+   * Defaults to the current month.
+   *
+   * **Tip**: To convert to date ID, use `toDateId(date)`.
    */
   calendarInitialMonthId?: string;
 
@@ -93,37 +95,43 @@ export const CalendarList = memo(
         calendarItemDayFormat,
         calendarItemWeekNameFormat,
         calendarRowMonthFormat,
+        calendarMaxDateId,
+        calendarMinDateId,
         ...flatListProps
       } = props;
 
       const calendarProps = useMemo(
-        (): Omit<CalendarProps, "calendarMonth"> => ({
-          calendarFirstDayOfWeek,
-          onDayPress,
+        (): Omit<CalendarProps, "calendarMonthId"> => ({
           calendarActiveDateRanges: activeDateRanges,
-          disabledDates,
+          calendarDayHeight,
+          calendarFirstDayOfWeek,
           calendarItemDayFormat,
           calendarItemWeekNameFormat,
-          calendarRowMonthFormat,
-          calendarDayHeight,
+          calendarMaxDateId,
+          calendarMinDateId,
           calendarMonthHeaderHeight,
           calendarRowHorizontalSpacing,
+          calendarRowMonthFormat,
           calendarRowVerticalSpacing,
           calendarWeekHeaderHeight,
+          disabledDates,
+          onDayPress,
           theme,
         }),
         [
           activeDateRanges,
           calendarDayHeight,
+          calendarFirstDayOfWeek,
           calendarItemDayFormat,
           calendarItemWeekNameFormat,
+          calendarMaxDateId,
+          calendarMinDateId,
           calendarMonthHeaderHeight,
           calendarRowHorizontalSpacing,
           calendarRowMonthFormat,
           calendarRowVerticalSpacing,
           calendarWeekHeaderHeight,
           disabledDates,
-          calendarFirstDayOfWeek,
           onDayPress,
           theme,
         ]
@@ -135,6 +143,8 @@ export const CalendarList = memo(
           calendarFutureScrollRangeInMonths,
           calendarPastScrollRangeInMonths,
           calendarInitialMonthId,
+          calendarMaxDateId,
+          calendarMinDateId,
         });
 
       const handleOnEndReached = useCallback(() => {
@@ -221,7 +231,7 @@ export const CalendarList = memo(
           ref={flashListRef}
           renderItem={({ item }) => (
             <View style={calendarContainerStyle}>
-              <Calendar calendarMonth={item.date} {...calendarProps} />
+              <Calendar calendarMonthId={item.id} {...calendarProps} />
             </View>
           )}
           showsVerticalScrollIndicator={false}

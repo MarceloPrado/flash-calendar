@@ -9,6 +9,7 @@ import { useCallback, useMemo, useState } from "react";
 
 import { CalendarProps } from "@/components/Calendar";
 import { fromDateId, toDateId } from "@/helpers/dates";
+import { BuildCalendarParams } from "@/hooks/useCalendar";
 
 export type MonthShape = { id: string; date: Date; numberOfWeeks: number };
 
@@ -42,7 +43,8 @@ export const buildMonthList = (
   return months;
 };
 
-type UseCalendarListParams = {
+interface UseCalendarListParams
+  extends Pick<BuildCalendarParams, "calendarMinDateId" | "calendarMaxDateId"> {
   /**
    * The initial month to open the calendar to, as a `YYYY-MM-DD` string.
    * @default today
@@ -51,13 +53,15 @@ type UseCalendarListParams = {
   calendarPastScrollRangeInMonths: number;
   calendarFutureScrollRangeInMonths: number;
   calendarFirstDayOfWeek: "monday" | "sunday";
-};
+}
 
 export const useCalendarList = ({
   calendarInitialMonthId,
   calendarPastScrollRangeInMonths,
   calendarFutureScrollRangeInMonths,
   calendarFirstDayOfWeek,
+  calendarMaxDateId,
+  calendarMinDateId,
 }: UseCalendarListParams) => {
   const { initialMonth, initialMonthId } = useMemo(() => {
     const baseDate = calendarInitialMonthId
@@ -95,11 +99,19 @@ export const useCalendarList = ({
         numberOfMonths,
         calendarFirstDayOfWeek
       );
-      const newMonthList = [...monthList, ...newMonths];
+
+      let newMonthList = [...monthList, ...newMonths];
+
+      if (calendarMaxDateId) {
+        newMonthList = newMonthList.filter(
+          (month) => month.id <= calendarMaxDateId
+        );
+      }
+
       setMonthList(newMonthList);
       return newMonthList;
     },
-    [calendarFirstDayOfWeek, monthList]
+    [calendarFirstDayOfWeek, calendarMaxDateId, monthList]
   );
 
   const prependMonths = useCallback(
@@ -110,11 +122,18 @@ export const useCalendarList = ({
         numberOfMonths,
         calendarFirstDayOfWeek
       );
-      const newMonthList = [...newMonths, ...monthList];
+      let newMonthList = [...newMonths, ...monthList];
+
+      if (calendarMinDateId) {
+        newMonthList = newMonthList.filter(
+          (month) => month.id >= calendarMinDateId
+        );
+      }
+
       setMonthList(newMonthList);
       return newMonthList;
     },
-    [calendarFirstDayOfWeek, monthList]
+    [calendarFirstDayOfWeek, calendarMinDateId, monthList]
   );
 
   const addMissingMonths = useCallback(

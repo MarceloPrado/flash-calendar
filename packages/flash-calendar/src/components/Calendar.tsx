@@ -141,13 +141,14 @@ export const Calendar = memo(
                 );
               }
 
-              let safeState: DayState = "idle";
-              if (state === "active") {
-                safeState = "active";
-              } else if (disabledDates?.includes(id)) {
-                safeState = "disabled";
-              } else if (isToday) {
-                safeState = "today";
+              let safeState: DayState = state;
+              // We only want to override idle states.
+              if (safeState === "idle") {
+                if (disabledDates?.includes(id)) {
+                  safeState = "disabled";
+                } else if (isToday) {
+                  safeState = "today";
+                }
               }
 
               return (

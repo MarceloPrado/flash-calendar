@@ -9,7 +9,7 @@ import {
 import { useMemo } from "react";
 
 import { DayState } from "@/components/CalendarItemDay";
-import { toDateId } from "@/helpers/dates";
+import { fromDateId, toDateId } from "@/helpers/dates";
 import { range } from "@/helpers/numbers";
 
 const getNumberOfEmptyCellsAtStart = (
@@ -29,8 +29,11 @@ export type DayShape = {
   date: Date;
   /** The day displayed in the desired format from `calendarItemDayFormat` */
   displayLabel: string;
+  /** Does this day belong to a different month? */
   isDifferentMonth: boolean;
+  /** Is this the last day of the month? */
   isEndOfMonth: boolean;
+  /** Is this the last day of the week? */
   isEndOfWeek: boolean;
   isStartOfMonth: boolean;
   isStartOfWeek: boolean;
@@ -39,7 +42,7 @@ export type DayShape = {
   // Range related
   isStartOfRange: boolean;
   isEndOfRange: boolean;
-  state?: DayState;
+  state: DayState;
   isRangeValid: boolean;
 
   /** The ID of this date is the `YYYY-MM-DD` representation */
@@ -47,9 +50,28 @@ export type DayShape = {
 };
 
 export type BuildCalendarParams = {
-  /** The desired month for this calendar. It can be any date within the month.
-   * The function normalizes the value. */
-  calendarMonth: Date;
+  /**
+   * The calendar's month. It can be any date within the month, since it gets
+   * normalized to the first day of the month.
+   *
+   * **Tip**: To convert to date ID, use `toDateId(date)`.
+   */
+  calendarMonthId: string;
+  /**
+   * The minimum date allowed to be selected (inclusive). Dates earlier than
+   * this will be disabled.
+   *
+   * **Tip**: To convert to date ID, use `toDateId(date)`.
+   */
+  calendarMinDateId?: string;
+  /**
+   * The maximum date allowed to be selected (inclusive). Dates later than this
+   * will be disabled.
+   *
+   * **Tip**: To convert to date ID, use `toDateId(date)`.
+   */
+  calendarMaxDateId?: string;
+
   /**
    * Which `date-fns` token to format the calendar header.
    * @default "MMMM yyyy" e.g. "January 2022"
@@ -78,9 +100,13 @@ export type BuildCalendarParams = {
 
 const getRangeState = (
   id: string,
-  activeDateRanges: BuildCalendarParams["calendarActiveDateRanges"]
+  {
+    calendarActiveDateRanges,
+    calendarMinDateId,
+    calendarMaxDateId,
+  }: BuildCalendarParams
 ) => {
-  const activeRange = activeDateRanges?.find(({ startId, endId }) => {
+  const activeRange = calendarActiveDateRanges?.find(({ startId, endId }) => {
     // Regular range
     if (startId && endId) {
       return id >= startId && id <= endId;
@@ -97,25 +123,36 @@ const getRangeState = (
     activeRange.startId !== undefined &&
     activeRange.endId !== undefined;
 
+  let state: DayState = activeRange ? ("active" as const) : "idle";
+
+  if (
+    (calendarMinDateId && id < calendarMinDateId) ||
+    (calendarMaxDateId && id > calendarMaxDateId)
+  ) {
+    state = "disabled";
+  }
+
   return {
     isStartOfRange: id === activeRange?.startId,
     isEndOfRange: id === activeRange?.endId,
     isRangeValid: isRangeValid ?? false,
-    state: activeRange ? ("active" as const) : undefined,
+    state,
   };
 };
 
 /**
  * Builds a calendar based on the given parameters.
  */
-export const buildCalendar = ({
-  calendarMonth: month,
-  calendarFirstDayOfWeek = "sunday",
-  calendarRowMonthFormat = "MMMM yyyy",
-  calendarItemWeekNameFormat = "EEEEE",
-  calendarItemDayFormat = "d",
-  calendarActiveDateRanges,
-}: BuildCalendarParams) => {
+export const buildCalendar = (params: BuildCalendarParams) => {
+  const {
+    calendarMonthId: monthId,
+    calendarFirstDayOfWeek = "sunday",
+    calendarRowMonthFormat = "MMMM yyyy",
+    calendarItemWeekNameFormat = "EEEEE",
+    calendarItemDayFormat = "d",
+  } = params;
+
+  const month = fromDateId(monthId);
   const monthStart = startOfMonth(month);
   const monthStartId = toDateId(monthStart);
   const monthEnd = endOfMonth(month);
@@ -146,7 +183,7 @@ export const buildCalendar = ({
           isStartOfMonth: false,
           isStartOfWeek: dayToIterate.getDay() === startOfWeekIndex,
           isToday: id === today,
-          ...getRangeState(id, calendarActiveDateRanges),
+          ...getRangeState(id, params),
         };
         dayToIterate = addDays(dayToIterate, 1);
         return dayShape;
@@ -171,7 +208,7 @@ export const buildCalendar = ({
       isToday: id === today,
       isStartOfMonth: id === monthStartId,
       isEndOfMonth: id === monthEndId,
-      ...getRangeState(id, calendarActiveDateRanges),
+      ...getRangeState(id, params),
     });
     dayToIterate = addDays(dayToIterate, 1);
   }
@@ -192,7 +229,7 @@ export const buildCalendar = ({
         isStartOfMonth: false,
         isStartOfWeek: dayToIterate.getDay() === startOfWeekIndex,
         isToday: id === today,
-        ...getRangeState(id, calendarActiveDateRanges),
+        ...getRangeState(id, params),
       };
       dayToIterate = addDays(dayToIterate, 1);
       return dayShape;
