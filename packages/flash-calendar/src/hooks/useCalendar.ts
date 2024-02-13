@@ -2,6 +2,7 @@ import {
   addDays,
   endOfMonth,
   format,
+  isWeekend,
   startOfMonth,
   startOfWeek,
   sub,
@@ -25,6 +26,10 @@ const getNumberOfEmptyCellsAtStart = (
   return startOfMonthDay === 0 ? 6 : startOfMonthDay - 1;
 };
 
+/**
+ * The type of each day in the calendar. Has a few pre-computed properties to
+ * help increase re-rendering performance.
+ */
 export type DayShape = {
   date: Date;
   /** The day displayed in the desired format from `calendarItemDayFormat` */
@@ -35,16 +40,24 @@ export type DayShape = {
   isEndOfMonth: boolean;
   /** Is this the last day of the week? */
   isEndOfWeek: boolean;
+  /** Is this the first day of the month? */
   isStartOfMonth: boolean;
+  /** Is this the first day of the week? */
   isStartOfWeek: boolean;
+  /** Is this day part of the weekend? */
+  isWeekend: boolean;
+  /** Is this the current day? */
   isToday: boolean;
 
   // Range related
+  /** Is this the start of a range? */
   isStartOfRange: boolean;
+  /**  Is this the end of a range? */
   isEndOfRange: boolean;
+  /** The state of the day */
   state: DayState;
+  /** Is the range valid (has both start and end dates set)? */
   isRangeValid: boolean;
-
   /** The ID of this date is the `YYYY-MM-DD` representation */
   id: string;
 };
@@ -184,6 +197,7 @@ export const buildCalendar = (params: BuildCalendarParams) => {
           isStartOfMonth: false,
           isStartOfWeek: dayToIterate.getDay() === startOfWeekIndex,
           isToday: id === today,
+          isWeekend: isWeekend(dayToIterate),
           ...getRangeState(id, params),
         };
         dayToIterate = addDays(dayToIterate, 1);
@@ -209,6 +223,7 @@ export const buildCalendar = (params: BuildCalendarParams) => {
       isStartOfMonth: id === monthStartId,
       isStartOfWeek: dayToIterate.getDay() === startOfWeekIndex,
       isToday: id === today,
+      isWeekend: isWeekend(dayToIterate),
       ...getRangeState(id, params),
     });
     dayToIterate = addDays(dayToIterate, 1);
@@ -230,6 +245,7 @@ export const buildCalendar = (params: BuildCalendarParams) => {
         isStartOfMonth: false,
         isStartOfWeek: dayToIterate.getDay() === startOfWeekIndex,
         isToday: id === today,
+        isWeekend: isWeekend(dayToIterate),
         ...getRangeState(id, params),
       };
       dayToIterate = addDays(dayToIterate, 1);

@@ -183,25 +183,58 @@ describe("buildCalendar", () => {
     expect(maxDateOrBefore.every((day) => day.state === "idle")).toBe(true);
   });
 
-  it('isLastDayOfWeek respects "sunday" as last day of week', () => {
-    const january = buildCalendar({
-      calendarMonthId: "2024-01-01",
-      calendarFirstDayOfWeek: "sunday",
+  describe("isLastDayOfWeek", () => {
+    it('isLastDayOfWeek respects "sunday" as last day of week', () => {
+      const january = buildCalendar({
+        calendarMonthId: "2024-01-01",
+        calendarFirstDayOfWeek: "sunday",
+      });
+      const firstWeek = january.weeksList[0];
+      const lastDay = firstWeek[firstWeek.length - 1];
+      expect(lastDay.id).toBe("2024-01-06");
+      expect(lastDay.isEndOfWeek).toBe(true);
     });
-    const firstWeek = january.weeksList[0];
-    const lastDay = firstWeek[firstWeek.length - 1];
-    expect(lastDay.id).toBe("2024-01-06");
-    expect(lastDay.isEndOfWeek).toBe(true);
+
+    it('isLastDayOfWeek respects "monday" as last day of week', () => {
+      const january = buildCalendar({
+        calendarMonthId: "2024-01-01",
+        calendarFirstDayOfWeek: "monday",
+      });
+      const firstWeek = january.weeksList[0];
+      const lastDay = firstWeek[firstWeek.length - 1];
+      expect(lastDay.id).toBe("2024-01-07");
+      expect(lastDay.isEndOfWeek).toBe(true);
+    });
   });
 
-  it('isLastDayOfWeek respects "monday" as last day of week', () => {
-    const january = buildCalendar({
-      calendarMonthId: "2024-01-01",
-      calendarFirstDayOfWeek: "monday",
+  describe("isWeekend", () => {
+    it("starting on sunday", () => {
+      const january = buildCalendar({
+        calendarMonthId: "2024-01-01",
+        calendarFirstDayOfWeek: "sunday",
+      });
+      const firstWeek = january.weeksList[0];
+      const sunday = firstWeek[0];
+      const saturday = firstWeek[firstWeek.length - 1];
+      const friday = firstWeek[firstWeek.length - 2];
+
+      expect(friday.isWeekend).toBeFalse();
+      expect(sunday.isWeekend).toBeTrue();
+      expect(saturday.isWeekend).toBeTrue();
     });
-    const firstWeek = january.weeksList[0];
-    const lastDay = firstWeek[firstWeek.length - 1];
-    expect(lastDay.id).toBe("2024-01-07");
-    expect(lastDay.isEndOfWeek).toBe(true);
+    it("starting on monday", () => {
+      const january = buildCalendar({
+        calendarMonthId: "2024-01-01",
+        calendarFirstDayOfWeek: "monday",
+      });
+      const firstWeek = january.weeksList[0];
+      const sunday = firstWeek[firstWeek.length - 1];
+      const saturday = firstWeek[firstWeek.length - 2];
+      const friday = firstWeek[firstWeek.length - 3];
+
+      expect(friday.isWeekend).toBeFalse();
+      expect(sunday.isWeekend).toBeTrue();
+      expect(saturday.isWeekend).toBeTrue();
+    });
   });
 });
