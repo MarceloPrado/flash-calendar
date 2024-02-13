@@ -30,7 +30,7 @@ const getNumberOfEmptyCellsAtStart = (
  * The type of each day in the calendar. Has a few pre-computed properties to
  * help increase re-rendering performance.
  */
-export type DayShape = {
+export type CalendarDay = {
   date: Date;
   /** The day displayed in the desired format from `calendarItemDayFormat` */
   displayLabel: string;
@@ -62,7 +62,7 @@ export type DayShape = {
   id: string;
 };
 
-export type BuildCalendarParams = {
+export type UseCalendarParams = {
   /**
    * The calendar's month. It can be any date within the month, since it gets
    * normalized to the first day of the month.
@@ -117,7 +117,7 @@ const getRangeState = (
     calendarActiveDateRanges,
     calendarMinDateId,
     calendarMaxDateId,
-  }: BuildCalendarParams
+  }: UseCalendarParams
 ) => {
   const activeRange = calendarActiveDateRanges?.find(({ startId, endId }) => {
     // Regular range
@@ -156,7 +156,7 @@ const getRangeState = (
 /**
  * Builds a calendar based on the given parameters.
  */
-export const buildCalendar = (params: BuildCalendarParams) => {
+export const buildCalendar = (params: UseCalendarParams) => {
   const {
     calendarMonthId: monthId,
     calendarFirstDayOfWeek = "sunday",
@@ -183,11 +183,11 @@ export const buildCalendar = (params: BuildCalendarParams) => {
   // The first day to iterate is the first day of the month minus the empty days at the start
   let dayToIterate = sub(monthStart, { days: emptyDaysAtStart });
 
-  const weeksList: DayShape[][] = [
+  const weeksList: CalendarDay[][] = [
     [
-      ...range(1, emptyDaysAtStart).map((): DayShape => {
+      ...range(1, emptyDaysAtStart).map((): CalendarDay => {
         const id = toDateId(dayToIterate);
-        const dayShape: DayShape = {
+        const dayShape: CalendarDay = {
           date: dayToIterate,
           displayLabel: format(dayToIterate, calendarItemDayFormat),
           id,
@@ -235,7 +235,7 @@ export const buildCalendar = (params: BuildCalendarParams) => {
   lastWeek.push(
     ...range(1, emptyDaysAtEnd).map(() => {
       const id = toDateId(dayToIterate);
-      const dayShape: DayShape = {
+      const dayShape: CalendarDay = {
         date: dayToIterate,
         displayLabel: format(dayToIterate, calendarItemDayFormat),
         id,
@@ -270,5 +270,5 @@ export const buildCalendar = (params: BuildCalendarParams) => {
 /**
  * Returns a memoized calendar based on the given parameters.
  */
-export const useCalendar = (buildCalendarParams: BuildCalendarParams) =>
-  useMemo(() => buildCalendar(buildCalendarParams), [buildCalendarParams]);
+export const useCalendar = (params: UseCalendarParams) =>
+  useMemo(() => buildCalendar(params), [params]);

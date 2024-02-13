@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
   },
   content: {
     textAlign: "center",
+    width: "100%",
   },
 });
 

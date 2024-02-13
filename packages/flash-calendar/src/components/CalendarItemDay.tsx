@@ -10,6 +10,7 @@ import {
 } from "react-native";
 
 import { tokens } from "@/helpers/tokens";
+import { CalendarDay } from "@/hooks/useCalendar";
 
 const styles = StyleSheet.create({
   baseContainer: {
@@ -125,24 +126,16 @@ const baseStyles: CalendarItemDayTheme = {
 
 export interface CalendarItemDayProps {
   children: ReactNode;
-  id: string;
-  /** Whether this day is the end of a range. Useful to control the border
-   * radius. */
-  isEndOfRange?: boolean;
-  /** Whether this day is the start of a range. Useful to control the border
-   * radius. */
-  isStartOfRange?: boolean;
   onPress: (id: string) => void;
-  /** The current state of this day */
-  state: DayState;
+  metadata: CalendarDay;
   theme?: Partial<
     Record<
       DayState,
-      (params: {
-        isStartOfRange: boolean;
-        isEndOfRange: boolean;
-        isPressed: boolean;
-      }) => Partial<DayTheme>
+      (
+        params: CalendarDay & {
+          isPressed: boolean;
+        }
+      ) => Partial<DayTheme>
     >
   >;
   /** The cell's height */
@@ -150,47 +143,44 @@ export interface CalendarItemDayProps {
 }
 
 export const CalendarItemDay = memo(
-  ({
-    state,
-    id,
-    isEndOfRange,
-    isStartOfRange,
-    onPress,
-    children,
-    theme,
-    height,
-  }: CalendarItemDayProps) => {
+  ({ onPress, children, theme, height, metadata }: CalendarItemDayProps) => {
     const handlePress = useCallback(() => {
-      onPress?.(id);
-    }, [id, onPress]);
+      onPress?.(metadata.id);
+    }, [metadata.id, onPress]);
 
     return (
       <Pressable
-        disabled={state === "disabled"}
+        disabled={metadata.state === "disabled"}
         onPress={handlePress}
         style={({ pressed: isPressed }) => {
           const params = {
             isPressed,
-            isEndOfRange: isEndOfRange ?? false,
-            isStartOfRange: isStartOfRange ?? false,
+            isEndOfRange: metadata.isEndOfRange ?? false,
+            isStartOfRange: metadata.isStartOfRange ?? false,
           };
-          const { container } = baseStyles[state](params);
+          const { container } = baseStyles[metadata.state](params);
           return {
             ...container,
             height,
-            ...theme?.[state]?.(params).container,
+            ...theme?.[metadata.state]?.({ ...metadata, isPressed }).container,
           };
         }}
       >
         {({ pressed: isPressed }) => {
           const params = {
             isPressed,
-            isEndOfRange: isEndOfRange ?? false,
-            isStartOfRange: isStartOfRange ?? false,
+            isEndOfRange: metadata.isEndOfRange ?? false,
+            isStartOfRange: metadata.isStartOfRange ?? false,
           };
-          const { content } = baseStyles[state](params);
+          const { content } = baseStyles[metadata.state](params);
           return (
-            <Text style={{ ...content, ...theme?.[state]?.(params).content }}>
+            <Text
+              style={{
+                ...content,
+                ...theme?.[metadata.state]?.({ ...metadata, isPressed })
+                  .content,
+              }}
+            >
               {children}
             </Text>
           );

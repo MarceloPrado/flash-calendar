@@ -9,7 +9,7 @@ import { useCallback, useMemo, useState } from "react";
 
 import { CalendarProps } from "@/components/Calendar";
 import { fromDateId, toDateId } from "@/helpers/dates";
-import { BuildCalendarParams } from "@/hooks/useCalendar";
+import { UseCalendarParams } from "@/hooks/useCalendar";
 
 export type MonthShape = { id: string; date: Date; numberOfWeeks: number };
 
@@ -44,7 +44,7 @@ export const buildMonthList = (
 };
 
 interface UseCalendarListParams
-  extends Pick<BuildCalendarParams, "calendarMinDateId" | "calendarMaxDateId"> {
+  extends Pick<UseCalendarParams, "calendarMinDateId" | "calendarMaxDateId"> {
   /**
    * The initial month to open the calendar to, as a `YYYY-MM-DD` string.
    * @default today

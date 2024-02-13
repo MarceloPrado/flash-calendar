@@ -104,6 +104,9 @@ export const LinearTheme = () => {
           },
         ]}
         calendarFirstDayOfWeek="sunday"
+        calendarDayHeight={30}
+        calendarRowVerticalSpacing={16}
+        calendarRowHorizontalSpacing={16}
         onDayPress={loggingHandler("onDayPress")}
         theme={{
           rowMonth: {
@@ -127,19 +130,22 @@ export const LinearTheme = () => {
             },
           },
           itemDay: {
-            idle: ({ isPressed }) => ({
+            idle: ({ isPressed, isWeekend }) => ({
               container: {
                 backgroundColor: isPressed ? linearAccent : "transparent",
                 borderRadius: 4,
               },
               content: {
-                color: "#ffffff",
+                color:
+                  isWeekend && !isPressed
+                    ? "rgba(255, 255, 255, 0.5)"
+                    : "#ffffff",
               },
             }),
             today: ({ isPressed }) => ({
               container: {
                 borderColor: "rgba(255, 255, 255, 0.5)",
-                borderRadius: isPressed ? 4 : 16,
+                borderRadius: isPressed ? 4 : 30,
                 backgroundColor: isPressed ? linearAccent : "transparent",
               },
               content: {

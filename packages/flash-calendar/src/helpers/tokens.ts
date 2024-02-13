@@ -1,5 +1,6 @@
 /**
  * Minimal design systems tokens for the Flash Calendar component.
+ * @internal
  */
 export const tokens = {
   colors: {

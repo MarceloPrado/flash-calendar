@@ -1,5 +1,3 @@
-// export const toDateId = (date: Date): string => format(date, "yyyy-MM-dd");
-
 import { parseISO } from "date-fns";
 
 /**
@@ -10,6 +8,9 @@ export function toDateId(date: Date) {
   return date.toISOString().slice(0, 10);
 }
 
+/**
+ * Converts a date ID to a `Date` object, correctly accounting for timezone.
+ */
 export function fromDateId(dateId: string) {
   return parseISO(dateId);
 }

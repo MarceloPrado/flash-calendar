@@ -26,7 +26,7 @@ import {
 import { VStack } from "@/components/VStack";
 import { uppercaseFirstLetter } from "@/helpers/strings";
 import { tokens } from "@/helpers/tokens";
-import { BuildCalendarParams, useCalendar } from "@/hooks/useCalendar";
+import { UseCalendarParams, useCalendar } from "@/hooks/useCalendar";
 
 export type CalendarTheme = {
   rowMonth?: CalendarRowMonthProps["theme"];
@@ -37,7 +37,7 @@ export type CalendarTheme = {
   itemDay?: CalendarItemDayProps["theme"];
 };
 
-export interface CalendarProps extends BuildCalendarParams {
+export interface CalendarProps extends UseCalendarParams {
   onDayPress: (dateId: string, date: Date) => void;
   disabledDates?: string[];
   /**
@@ -163,11 +163,13 @@ export const Calendar = memo(
                   dayHeight={calendarDayHeight}
                 >
                   <CalendarItemDay
-                    id={id}
-                    isEndOfRange={isEndOfRange || !isRangeValid}
-                    isStartOfRange={isStartOfRange || !isRangeValid}
+                    metadata={{
+                      ...dayProps,
+                      isEndOfRange: isEndOfRange || !isRangeValid,
+                      isStartOfRange: isStartOfRange || !isRangeValid,
+                      state: safeState,
+                    }}
                     onPress={(_id) => onDayPress(_id, date)}
-                    state={safeState}
                     height={calendarDayHeight}
                     theme={theme?.itemDay}
                   >

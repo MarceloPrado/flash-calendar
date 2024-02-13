@@ -3,7 +3,7 @@ export { toDateId, fromDateId } from "./helpers/dates";
 
 export {
   useCalendar,
-  type BuildCalendarParams,
-  type DayShape,
+  type UseCalendarParams as BuildCalendarParams,
+  type CalendarDay,
   buildCalendar,
 } from "./hooks/useCalendar";
