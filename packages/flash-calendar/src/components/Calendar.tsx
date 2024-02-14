@@ -5,7 +5,6 @@ import {
   CalendarItemDayContainer,
   CalendarItemDayContainerProps,
   CalendarItemDayProps,
-  DayState,
 } from "@/components/CalendarItemDay";
 import {
   CalendarItemEmpty,
@@ -37,11 +36,10 @@ export type CalendarTheme = {
   itemDay?: CalendarItemDayProps["theme"];
 };
 
-export type CalendarOnDayPress = (dateId: string, date: Date) => void;
+export type CalendarOnDayPress = (dateId: string) => void;
 
 export interface CalendarProps extends UseCalendarParams {
   onDayPress: CalendarOnDayPress;
-  disabledDates?: string[];
   /**
    * The spacing between each calendar row (the month header, the week days row,
    * and the weeks row)
@@ -75,7 +73,6 @@ export interface CalendarProps extends UseCalendarParams {
 export const Calendar = memo(
   ({
     onDayPress,
-    disabledDates,
     calendarRowVerticalSpacing = 8,
     calendarRowHorizontalSpacing = 8,
     theme,
@@ -84,6 +81,7 @@ export const Calendar = memo(
     calendarWeekHeaderHeight = calendarDayHeight,
     ...buildCalendarParams
   }: CalendarProps) => {
+    console.log(buildCalendarParams);
     const { calendarRowMonth, weeksList, weekDaysList } =
       useCalendar(buildCalendarParams);
 
@@ -119,11 +117,7 @@ export const Calendar = memo(
                 isRangeValid,
                 isEndOfWeek,
                 isEndOfRange,
-                state,
                 displayLabel,
-                isStartOfRange,
-                date,
-                isToday,
               } = dayProps;
               if (isDifferentMonth) {
                 return (
@@ -143,16 +137,6 @@ export const Calendar = memo(
                 );
               }
 
-              let safeState: DayState = state;
-              // We only want to override idle states.
-              if (safeState === "idle") {
-                if (disabledDates?.includes(id)) {
-                  safeState = "disabled";
-                } else if (isToday) {
-                  safeState = "today";
-                }
-              }
-
               return (
                 <CalendarItemDayContainer
                   key={id}
@@ -165,13 +149,8 @@ export const Calendar = memo(
                   dayHeight={calendarDayHeight}
                 >
                   <CalendarItemDay
-                    metadata={{
-                      ...dayProps,
-                      isEndOfRange: isEndOfRange || !isRangeValid,
-                      isStartOfRange: isStartOfRange || !isRangeValid,
-                      state: safeState,
-                    }}
-                    onPress={(_id) => onDayPress(_id, date)}
+                    metadata={dayProps}
+                    onPress={onDayPress}
                     height={calendarDayHeight}
                     theme={theme?.itemDay}
                   >

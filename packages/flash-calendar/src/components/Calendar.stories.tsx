@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { add, startOfMonth } from "date-fns";
+import { add, endOfMonth, startOfMonth, sub } from "date-fns";
 import { StyleSheet, View } from "react-native";
 
 import { Calendar } from "./Calendar";
@@ -8,7 +8,16 @@ import { paddingDecorator } from "@/developer/decorators";
 import { loggingHandler } from "@/developer/loggginHandler";
 import { toDateId } from "@/helpers/dates";
 
-const startOfThisMonth = startOfMonth(new Date());
+const today = new Date();
+
+const startOfThisMonth = startOfMonth(today);
+const endOfThisMonth = endOfMonth(today);
+
+console.log(`
+End of this month ISO: ${endOfThisMonth.toISOString()}
+End of this month: ${toDateId(endOfThisMonth)}
+
+`);
 
 const CalendarMeta: Meta<typeof Calendar> = {
   title: "Calendar",
@@ -21,21 +30,38 @@ const CalendarMeta: Meta<typeof Calendar> = {
       options: ["monday", "sunday"],
     },
     onDayPress: { action: "onDayPress" },
-    calendarItemDayFormat: { type: "string" },
-    calendarRowMonthFormat: { type: "string" },
-    calendarItemWeekNameFormat: { type: "string" },
+    calendarDayFormat: { type: "string" },
+    calendarMonthFormat: { type: "string" },
+    calendarWeekDayFormat: { type: "string" },
   },
+
+  /**
+   * This serves as a kitchen-sink test. It shows most day states working together:
+   * - Today
+   * - Active ranges (single + multiple days)
+   * - Disabled (min/max + specific dates)
+   * - Idle
+   */
   args: {
     calendarFirstDayOfWeek: "sunday",
     calendarMonthId: toDateId(startOfThisMonth),
-    calendarItemDayFormat: "d",
-    calendarItemWeekNameFormat: "EEEEE",
-    calendarRowMonthFormat: "MMMM yyyy",
-    disabledDates: ["2024-01-01", "2024-01-02"],
+    calendarDayFormat: "d",
+    calendarWeekDayFormat: "EEEEE",
+    calendarMonthFormat: "MMMM yyyy",
+    calendarDisabledDateIds: [
+      toDateId(add(today, { days: 1 })),
+      toDateId(sub(today, { days: 1 })),
+    ],
+    calendarMinDateId: toDateId(add(startOfThisMonth, { days: 2 })),
+    calendarMaxDateId: toDateId(sub(endOfThisMonth, { days: 2 })),
     calendarActiveDateRanges: [
       {
         startId: toDateId(add(startOfThisMonth, { days: 3 })),
         endId: toDateId(add(startOfThisMonth, { days: 8 })),
+      },
+      {
+        startId: toDateId(add(startOfThisMonth, { days: 15 })),
+        endId: toDateId(add(startOfThisMonth, { days: 15 })),
       },
     ],
   },
@@ -48,7 +74,7 @@ export const Default: StoryObj<typeof Calendar> = {};
 
 export const DisabledDates: StoryObj<typeof Calendar> = {
   args: {
-    disabledDates: [
+    calendarDisabledDateIds: [
       "2024-01-01",
       "2024-01-02",
       "2024-01-03",
@@ -95,7 +121,7 @@ export const LinearTheme = () => {
   return (
     <View style={styles.linearContainer}>
       <Calendar
-        calendarItemWeekNameFormat="iiiiii"
+        calendarWeekDayFormat="iiiiii"
         calendarMonthId={toDateId(startOfThisMonth)}
         calendarActiveDateRanges={[
           {

@@ -1,28 +1,32 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { add, format, startOfMonth, sub, toDate } from "date-fns";
+import { add, format, startOfMonth, sub } from "date-fns";
 import { useCallback, useRef, useState } from "react";
 import {
   Button,
-  Text,
-  View,
-  StyleSheet,
-  ViewBase,
   Pressable,
+  StyleSheet,
+  Text,
+  TextStyle,
+  View,
 } from "react-native";
 
-import { CalendarList, CalendarListRef } from "./CalendarList";
-
-import { Calendar } from "@/components";
-import { CalendarOnDayPress } from "@/components/Calendar";
+import {
+  Calendar,
+  CalendarProps,
+  CalendarOnDayPress,
+  CalendarListRef,
+  CalendarTheme,
+} from "@/components";
 import { HStack } from "@/components/HStack";
 import { VStack } from "@/components/VStack";
 import { paddingDecorator } from "@/developer/decorators";
 import { loggingHandler } from "@/developer/loggginHandler";
-import { toDateId } from "@/helpers/dates";
+import { fromDateId, toDateId } from "@/helpers/dates";
+import { useCalendar } from "@/hooks/useCalendar";
 
-const CalendarListMeta: Meta<typeof CalendarList> = {
-  title: "CalendarList",
-  component: CalendarList,
+const CalendarListMeta: Meta<typeof Calendar.List> = {
+  title: "Calendar.List",
+  component: Calendar.List,
   argTypes: {},
   args: {
     onDayPress: loggingHandler("onDayPress"),
@@ -34,16 +38,16 @@ const CalendarListMeta: Meta<typeof CalendarList> = {
 
 export default CalendarListMeta;
 
-export const Default: StoryObj<typeof CalendarList> = {};
+export const Default: StoryObj<typeof Calendar.List> = {};
 
-export const WithCustomSpacing: StoryObj<typeof CalendarList> = {
+export const WithCustomSpacing: StoryObj<typeof Calendar.List> = {
   args: {
     calendarRowVerticalSpacing: 0,
     calendarRowHorizontalSpacing: 4,
   },
 };
 
-export const WithDateRangeAndDisabledDates: StoryObj<typeof CalendarList> = {
+export const WithDateRangeAndDisabledDates: StoryObj<typeof Calendar.List> = {
   args: {
     calendarActiveDateRanges: [
       {
@@ -51,12 +55,12 @@ export const WithDateRangeAndDisabledDates: StoryObj<typeof CalendarList> = {
         endId: "2024-01-28",
       },
     ],
-    disabledDates: ["2024-01-01", "2024-01-02"],
+    calendarDisabledDateIds: ["2024-01-01", "2024-01-02"],
     calendarInitialMonthId: "2024-01-01",
   },
 };
 
-export const WithShortRanges: StoryObj<typeof CalendarList> = {
+export const WithShortRanges: StoryObj<typeof Calendar.List> = {
   args: {
     calendarPastScrollRangeInMonths: 1,
     calendarFutureScrollRangeInMonths: 1,
@@ -77,7 +81,7 @@ export const SparseCalendar = () => {
     <VStack spacing={24} grow>
       <Text>Selected date: {selectedDate}</Text>
 
-      <CalendarList
+      <Calendar.List
         calendarActiveDateRanges={[
           {
             startId: selectedDate,
@@ -157,7 +161,7 @@ export const ImperativeScrolling = () => {
           backgroundColor: "rgba(0,0,0,.05)",
         }}
       >
-        <CalendarList
+        <Calendar.List
           onDayPress={loggingHandler("onDayPress")}
           calendarInitialMonthId={toDateId(currentMonth)}
           calendarPastScrollRangeInMonths={0}
@@ -178,7 +182,7 @@ export const MinAndMaxDates = () => {
     <VStack spacing={20} grow alignItems="center">
       <Text>This calendar list is only available for the 2024 period</Text>
       <View style={{ flex: 1, width: "100%" }}>
-        <CalendarList
+        <Calendar.List
           onDayPress={loggingHandler("onDayPress")}
           calendarInitialMonthId={"2024-02-13"}
           calendarMinDateId={"2024-01-01"}
@@ -222,10 +226,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
   },
-  windowHeader: {
+  windowsXpText: {
     color: "#ffffff",
     width: "100%",
-    textAlign: "left",
     textShadowColor: "rgba(0, 0, 0, 1)",
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 1,
@@ -246,12 +249,31 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     backgroundColor: BLUE_COLOR,
   },
+
+  weekDivider: {
+    height: 2,
+    backgroundColor: "#000000",
+    position: "absolute",
+    left: 4,
+    right: 4,
+    bottom: 0,
+  },
 });
+
+const WindowsXpText = ({
+  children,
+  style,
+}: {
+  children: string;
+  style?: TextStyle;
+}) => {
+  return <Text style={[styles.windowsXpText, style]}>{children}</Text>;
+};
 
 const WindowHeader = ({ children }: { children: string }) => {
   return (
     <View style={styles.windowHeaderContainer}>
-      <Text style={styles.windowHeader}>{children}</Text>
+      <WindowsXpText>{children}</WindowsXpText>
     </View>
   );
 };
@@ -315,6 +337,89 @@ const WindowsXpButton = ({
   );
 };
 
+const DAY_HEIGHT = 30;
+const MONTH_HEADER_HEIGHT = 40;
+
+const calendarTheme: CalendarTheme = {
+  rowMonth: {
+    container: { backgroundColor: BLUE_COLOR },
+    content: {
+      ...styles.windowsXpText,
+    },
+  },
+  itemWeekName: { content: { color: BLUE_COLOR } },
+};
+
+const WindowsXpCalendar = (props: CalendarProps) => {
+  const { calendarRowMonth, weekDaysList, weeksList } = useCalendar(props);
+
+  return (
+    <View
+      style={{
+        backgroundColor: "white",
+        borderStyle: "solid",
+        borderWidth: 1,
+        borderColor: BLUE_COLOR,
+      }}
+    >
+      <Calendar.Row.Month
+        height={MONTH_HEADER_HEIGHT}
+        theme={calendarTheme.rowMonth}
+      >
+        {calendarRowMonth}
+      </Calendar.Row.Month>
+
+      <Calendar.Row.Week spacing={4}>
+        {weekDaysList.map((day, i) => (
+          <Calendar.Item.WeekName
+            height={DAY_HEIGHT}
+            key={i}
+            theme={calendarTheme.itemWeekName}
+          >
+            {day}
+          </Calendar.Item.WeekName>
+        ))}
+        <View style={styles.weekDivider} />
+      </Calendar.Row.Week>
+
+      {weeksList.map((week, i) => (
+        <Calendar.Row.Week key={i}>
+          {week.map((day) => {
+            let state = day.state;
+            // FIXME: this is a terrible API. It should come correctly mapped from the hook.
+            // We only want to override idle states.
+            if (state === "idle") {
+              if (day.isToday) {
+                state = "today";
+              }
+            }
+
+            return (
+              <Calendar.Item.Day.Container
+                dayHeight={DAY_HEIGHT}
+                daySpacing={4}
+                isStartOfWeek={day.isStartOfWeek}
+                key={day.id}
+              >
+                <Calendar.Item.Day
+                  height={DAY_HEIGHT}
+                  metadata={{
+                    ...day,
+                    state,
+                  }}
+                  onPress={props.onDayPress}
+                >
+                  {day.displayLabel}
+                </Calendar.Item.Day>
+              </Calendar.Item.Day.Container>
+            );
+          })}
+        </Calendar.Row.Week>
+      ))}
+    </View>
+  );
+};
+
 export const Composable = () => {
   const [isPickerVisible, setIsPickerVisible] = useState(false);
   const [currentDate, setCurrentDate] = useState(startOfMonth(new Date()));
@@ -323,8 +428,8 @@ export const Composable = () => {
     setIsPickerVisible(true);
   }, []);
 
-  const handleDayPress = useCallback<CalendarOnDayPress>((dateId, date) => {
-    setCurrentDate(date);
+  const handleDayPress = useCallback<CalendarOnDayPress>((dateId) => {
+    setCurrentDate(fromDateId(dateId));
   }, []);
 
   return (
@@ -341,14 +446,22 @@ export const Composable = () => {
           </WindowsXpButton>
 
           {isPickerVisible && (
-            <View style={{}}>
-              <CalendarList
+            <View
+              style={{
+                height: MONTH_HEADER_HEIGHT + DAY_HEIGHT + DAY_HEIGHT * 6,
+              }}
+            >
+              <Calendar.List
                 calendarInitialMonthId={toDateId(currentDate)}
                 onDayPress={handleDayPress}
+                calendarPastScrollRangeInMonths={0}
+                calendarFutureScrollRangeInMonths={0}
+                calendarWeekDayFormat="E"
                 renderItem={({ item }) => (
-                  <VStack spacing={0}>
-                    <Calendar.Row.Month>{item.id}</Calendar.Row.Month>
-                  </VStack>
+                  <WindowsXpCalendar
+                    calendarMonthId={item.id}
+                    {...item.calendarProps}
+                  />
                 )}
               />
             </View>

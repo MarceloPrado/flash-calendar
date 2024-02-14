@@ -26,13 +26,29 @@ const getNumberOfEmptyCellsAtStart = (
   return startOfMonthDay === 0 ? 6 : startOfMonthDay - 1;
 };
 
+/** All fields that affects the day's state. */
+type CalendarDayStateFields = {
+  /** Is this day disabled? */
+  isDisabled: boolean;
+  /** Is this the current day? */
+  isToday: boolean;
+  /** Is this the start of a range? */
+  isStartOfRange: boolean;
+  /**  Is this the end of a range? */
+  isEndOfRange: boolean;
+  /** The state of the day */
+  state: DayState;
+  /** Is the range valid (has both start and end dates set)? */
+  isRangeValid: boolean;
+};
+
 /**
  * The type of each day in the calendar. Has a few pre-computed properties to
  * help increase re-rendering performance.
  */
 export type CalendarDay = {
   date: Date;
-  /** The day displayed in the desired format from `calendarItemDayFormat` */
+  /** The day displayed in the desired format from `calendarDayFormat` */
   displayLabel: string;
   /** Does this day belong to a different month? */
   isDifferentMonth: boolean;
@@ -46,21 +62,10 @@ export type CalendarDay = {
   isStartOfWeek: boolean;
   /** Is this day part of the weekend? */
   isWeekend: boolean;
-  /** Is this the current day? */
-  isToday: boolean;
 
-  // Range related
-  /** Is this the start of a range? */
-  isStartOfRange: boolean;
-  /**  Is this the end of a range? */
-  isEndOfRange: boolean;
-  /** The state of the day */
-  state: DayState;
-  /** Is the range valid (has both start and end dates set)? */
-  isRangeValid: boolean;
   /** The ID of this date is the `YYYY-MM-DD` representation */
   id: string;
-};
+} & CalendarDayStateFields;
 
 export type UseCalendarParams = {
   /**
@@ -89,17 +94,17 @@ export type UseCalendarParams = {
    * Which `date-fns` token to format the calendar header.
    * @default "MMMM yyyy" e.g. "January 2022"
    */
-  calendarRowMonthFormat?: string;
+  calendarMonthFormat?: string;
   /**
    * Which `date-fns` token to format the week name.
    * @default "EEEEE" e.g. "S"
    */
-  calendarItemWeekNameFormat?: string;
+  calendarWeekDayFormat?: string;
   /**
    * Which `date-fns` token to format the day.
    * @default "d" e.g. "1"
    */
-  calendarItemDayFormat?: string;
+  calendarDayFormat?: string;
   /**
    * The day of the week to start the calendar with.
    * @default "sunday"
@@ -109,16 +114,32 @@ export type UseCalendarParams = {
    * The active date ranges to highlight in the calendar.
    */
   calendarActiveDateRanges?: { startId?: string; endId?: string }[];
+  /**
+   * The disabled date IDs. Dates in this list will be in the `disabled` state
+   * unless they are part of an active range.
+   */
+  calendarDisabledDateIds?: string[];
 };
 
-const getRangeState = (
-  id: string,
-  {
-    calendarActiveDateRanges,
-    calendarMinDateId,
-    calendarMaxDateId,
-  }: UseCalendarParams
-) => {
+type GetStateFields = Pick<
+  UseCalendarParams,
+  | "calendarActiveDateRanges"
+  | "calendarMinDateId"
+  | "calendarMaxDateId"
+  | "calendarDisabledDateIds"
+> & {
+  todayId: string;
+  id: string;
+};
+
+const getStateFields = ({
+  todayId,
+  id,
+  calendarActiveDateRanges,
+  calendarMinDateId,
+  calendarMaxDateId,
+  calendarDisabledDateIds,
+}: GetStateFields): CalendarDayStateFields => {
   const activeRange = calendarActiveDateRanges?.find(({ startId, endId }) => {
     // Regular range
     if (startId && endId) {
@@ -136,20 +157,28 @@ const getRangeState = (
     activeRange.startId !== undefined &&
     activeRange.endId !== undefined;
 
-  let state: DayState = activeRange ? ("active" as const) : "idle";
+  const isDisabled =
+    (calendarDisabledDateIds?.includes(id) ||
+      (calendarMinDateId && id < calendarMinDateId) ||
+      (calendarMaxDateId && id > calendarMaxDateId)) === true;
 
-  if (
-    (calendarMinDateId && id < calendarMinDateId) ||
-    (calendarMaxDateId && id > calendarMaxDateId)
-  ) {
-    state = "disabled";
-  }
+  const isToday = todayId === id;
+
+  const state: DayState = activeRange
+    ? ("active" as const)
+    : isDisabled
+    ? "disabled"
+    : isToday
+    ? "today"
+    : "idle";
 
   return {
     isStartOfRange: id === activeRange?.startId,
     isEndOfRange: id === activeRange?.endId,
     isRangeValid: isRangeValid ?? false,
     state,
+    isDisabled,
+    isToday,
   };
 };
 
@@ -160,9 +189,9 @@ export const buildCalendar = (params: UseCalendarParams) => {
   const {
     calendarMonthId: monthId,
     calendarFirstDayOfWeek = "sunday",
-    calendarRowMonthFormat = "MMMM yyyy",
-    calendarItemWeekNameFormat = "EEEEE",
-    calendarItemDayFormat = "d",
+    calendarMonthFormat = "MMMM yyyy",
+    calendarWeekDayFormat = "EEEEE",
+    calendarDayFormat = "d",
   } = params;
 
   const month = fromDateId(monthId);
@@ -178,7 +207,8 @@ export const buildCalendar = (params: UseCalendarParams) => {
 
   const startOfWeekIndex = calendarFirstDayOfWeek === "sunday" ? 0 : 1;
   const endOfWeekIndex = calendarFirstDayOfWeek === "sunday" ? 6 : 0;
-  const today = toDateId(new Date());
+
+  const todayId = toDateId(new Date());
 
   // The first day to iterate is the first day of the month minus the empty days at the start
   let dayToIterate = sub(monthStart, { days: emptyDaysAtStart });
@@ -187,18 +217,22 @@ export const buildCalendar = (params: UseCalendarParams) => {
     [
       ...range(1, emptyDaysAtStart).map((): CalendarDay => {
         const id = toDateId(dayToIterate);
+
         const dayShape: CalendarDay = {
           date: dayToIterate,
-          displayLabel: format(dayToIterate, calendarItemDayFormat),
+          displayLabel: format(dayToIterate, calendarDayFormat),
           id,
           isDifferentMonth: true,
           isEndOfMonth: false,
           isEndOfWeek: dayToIterate.getDay() === endOfWeekIndex,
           isStartOfMonth: false,
           isStartOfWeek: dayToIterate.getDay() === startOfWeekIndex,
-          isToday: id === today,
           isWeekend: isWeekend(dayToIterate),
-          ...getRangeState(id, params),
+          ...getStateFields({
+            ...params,
+            todayId,
+            id,
+          }),
         };
         dayToIterate = addDays(dayToIterate, 1);
         return dayShape;
@@ -215,16 +249,19 @@ export const buildCalendar = (params: UseCalendarParams) => {
     const id = toDateId(dayToIterate);
     weeksList[weeksList.length - 1].push({
       date: dayToIterate,
-      displayLabel: format(dayToIterate, calendarItemDayFormat),
+      displayLabel: format(dayToIterate, calendarDayFormat),
       id,
       isDifferentMonth: false,
       isEndOfMonth: id === monthEndId,
       isEndOfWeek: dayToIterate.getDay() === endOfWeekIndex,
       isStartOfMonth: id === monthStartId,
       isStartOfWeek: dayToIterate.getDay() === startOfWeekIndex,
-      isToday: id === today,
       isWeekend: isWeekend(dayToIterate),
-      ...getRangeState(id, params),
+      ...getStateFields({
+        ...params,
+        todayId,
+        id,
+      }),
     });
     dayToIterate = addDays(dayToIterate, 1);
   }
@@ -237,16 +274,19 @@ export const buildCalendar = (params: UseCalendarParams) => {
       const id = toDateId(dayToIterate);
       const dayShape: CalendarDay = {
         date: dayToIterate,
-        displayLabel: format(dayToIterate, calendarItemDayFormat),
+        displayLabel: format(dayToIterate, calendarDayFormat),
         id,
         isDifferentMonth: true,
         isEndOfMonth: false,
         isEndOfWeek: dayToIterate.getDay() === endOfWeekIndex,
         isStartOfMonth: false,
         isStartOfWeek: dayToIterate.getDay() === startOfWeekIndex,
-        isToday: id === today,
         isWeekend: isWeekend(dayToIterate),
-        ...getRangeState(id, params),
+        ...getStateFields({
+          ...params,
+          todayId,
+          id,
+        }),
       };
       dayToIterate = addDays(dayToIterate, 1);
       return dayShape;
@@ -257,12 +297,12 @@ export const buildCalendar = (params: UseCalendarParams) => {
     weekStartsOn: calendarFirstDayOfWeek === "sunday" ? 0 : 1,
   });
   const weekDaysList = range(1, 7).map((i) =>
-    format(addDays(startOfWeekDate, i - 1), calendarItemWeekNameFormat)
+    format(addDays(startOfWeekDate, i - 1), calendarWeekDayFormat)
   );
 
   return {
     weeksList,
-    calendarRowMonth: format(month, calendarRowMonthFormat),
+    calendarRowMonth: format(month, calendarMonthFormat),
     weekDaysList,
   };
 };

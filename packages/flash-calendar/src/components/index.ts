@@ -65,6 +65,10 @@ CalendarWithNamespace.Item = CalendarItemWithNamespace;
 CalendarWithNamespace.Row = CalendarRowWithNamespace;
 
 CalendarWithNamespace.List = CalendarList;
-export type { CalendarListProps } from "@/components/CalendarList";
+export type {
+  CalendarListProps,
+  CalendarListRef,
+  CalendarMonthEnhanced,
+} from "@/components/CalendarList";
 
 export const Calendar = CalendarWithNamespace;

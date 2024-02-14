@@ -1,4 +1,5 @@
 import { expect, it, describe, beforeEach, afterEach } from "bun:test";
+import { endOfMonth } from "date-fns";
 
 import { fromDateId, toDateId } from "@/helpers/dates";
 
@@ -16,6 +17,10 @@ describe("toDateId", () => {
     });
     it("January 31th, 2024", () => {
       expect(toDateId(new Date("2024-01-31T03:00:00.000Z"))).toBe("2024-01-31");
+
+      const january = new Date("2024-01-01T03:00:00.000Z");
+      const endOfJanuary = endOfMonth(january);
+      expect(toDateId(endOfJanuary)).toBe("2024-01-31");
     });
     it("February 1st, 2024", () => {
       expect(toDateId(new Date("2024-02-01T03:00:00.000Z"))).toBe("2024-02-01");
@@ -23,10 +28,17 @@ describe("toDateId", () => {
     it("February 10th, 2024", () => {
       expect(toDateId(new Date("2024-02-10T03:00:00.000Z"))).toBe("2024-02-10");
     });
+
+    it("February 29th, 2024", () => {
+      const february = new Date("2024-02-01T03:00:00.000Z");
+      const endOfFebruary = endOfMonth(february);
+      expect(toDateId(endOfFebruary)).toBe("2024-02-29");
+    });
+
     it("convert between ID -> Date -> ID returns the original result", () => {
-      const id = "2024-02-01";
+      const id = "2024-02-01T03:00:00.000Z";
       const date = new Date(id);
-      expect(toDateId(date)).toBe(id);
+      expect(toDateId(date)).toBe(id.split("T")[0]);
     });
   });
 

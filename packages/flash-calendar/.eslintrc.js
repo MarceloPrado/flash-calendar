@@ -8,5 +8,6 @@ module.exports = {
   },
   rules: {
     "react-hooks/exhaustive-deps": "error",
+    "turbo/no-undeclared-env-vars": "off",
   },
 };

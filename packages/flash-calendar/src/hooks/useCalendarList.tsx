@@ -11,7 +11,11 @@ import { CalendarProps } from "@/components/Calendar";
 import { fromDateId, toDateId } from "@/helpers/dates";
 import { UseCalendarParams } from "@/hooks/useCalendar";
 
-export type CalendarMonth = { id: string; date: Date; numberOfWeeks: number };
+export type CalendarMonth = {
+  id: string;
+  date: Date;
+  numberOfWeeks: number;
+};
 
 const buildMonthList = (
   startingMonth: Date,
@@ -21,7 +25,7 @@ const buildMonthList = (
   const startingMonthId = toDateId(startingMonth);
   const endingMonthId = toDateId(endingMonth);
 
-  if (startingMonthId === endingMonthId) {
+  if (endingMonthId < startingMonthId) {
     return [];
   }
 
@@ -34,6 +38,10 @@ const buildMonthList = (
       }),
     },
   ];
+
+  if (startingMonthId === endingMonthId) {
+    return months;
+  }
 
   const numberOfMonths = differenceInMonths(endingMonth, startingMonth);
 
@@ -115,12 +123,16 @@ export const useCalendarList = ({
    */
   const appendMonths = useCallback(
     (numberOfMonths: number) => {
-      const startingMonth = monthList[monthList.length - 1].date;
+      // Last month + 1
+      const startingMonth = add(monthList[monthList.length - 1].date, {
+        months: 1,
+      });
+
       const endingMonth = calendarMaxDateId
         ? fromDateId(calendarMaxDateId)
-        : add(startingMonth, { months: numberOfMonths });
+        : add(startingMonth, { months: numberOfMonths - 1 });
 
-      const [_duplicateLastMonth, ...newMonths] = buildMonthList(
+      const newMonths = buildMonthList(
         startingMonth,
         endingMonth,
         calendarFirstDayOfWeek
@@ -135,10 +147,11 @@ export const useCalendarList = ({
 
   const prependMonths = useCallback(
     (numberOfMonths: number) => {
-      const endingMonth = monthList[0].date;
+      const endingMonth = sub(monthList[0].date, { months: 1 });
+
       const startingMonth = calendarMinDateId
         ? fromDateId(calendarMinDateId)
-        : sub(endingMonth, { months: numberOfMonths });
+        : sub(endingMonth, { months: numberOfMonths - 1 });
 
       const newMonths = buildMonthList(
         startingMonth,

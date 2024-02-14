@@ -161,4 +161,17 @@ describe("useCalendarList", () => {
       expect(result.current.monthList).toEqual(currentMonthList);
     });
   });
+
+  it("Data is correctly built when future/past ranges are 0", () => {
+    const { result } = renderHook(() =>
+      useCalendarList({
+        calendarFirstDayOfWeek: "sunday",
+        calendarFutureScrollRangeInMonths: 0,
+        calendarPastScrollRangeInMonths: 0,
+      })
+    );
+
+    const currentMonthList = result.current.monthList;
+    expect(currentMonthList).toHaveLength(1);
+  });
 });

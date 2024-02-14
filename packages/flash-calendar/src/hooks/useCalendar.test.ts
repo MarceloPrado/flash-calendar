@@ -1,4 +1,4 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it, setSystemTime } from "bun:test";
 
 import { buildCalendar } from "@/hooks/useCalendar";
 
@@ -15,7 +15,7 @@ describe("buildCalendar", () => {
     const january = buildCalendar({
       calendarMonthId: "2024-01-01",
       calendarFirstDayOfWeek: "sunday",
-      calendarRowMonthFormat: "MMM yy",
+      calendarMonthFormat: "MMM yy",
     });
     expect(january.calendarRowMonth).toBe("Jan 24");
   });
@@ -125,7 +125,7 @@ describe("buildCalendar", () => {
     const { weeksList } = buildCalendar({
       calendarMonthId: "2024-03-01",
       calendarFirstDayOfWeek: "sunday",
-      calendarItemDayFormat: "dd",
+      calendarDayFormat: "dd",
     });
     expect(weeksList[0][6].id).toBe("2024-03-02");
     expect(weeksList[0][6].displayLabel).toBe("02");
@@ -152,9 +152,9 @@ describe("buildCalendar", () => {
   });
 
   it("calendarMinDate", () => {
-    const calendarMinDateId = "2024-02-10";
+    const calendarMinDateId = "2024-01-10";
     const february = buildCalendar({
-      calendarMonthId: "2024-02-01",
+      calendarMonthId: "2024-01-01",
       calendarMinDateId,
       calendarFirstDayOfWeek: "sunday",
     });
@@ -235,6 +235,145 @@ describe("buildCalendar", () => {
       expect(friday.isWeekend).toBeFalse();
       expect(sunday.isWeekend).toBeTrue();
       expect(saturday.isWeekend).toBeTrue();
+    });
+  });
+
+  describe("state", () => {
+    it("active: supersedes today", () => {
+      // Mock clock
+      setSystemTime(new Date("2024-01-10"));
+
+      const january = buildCalendar({
+        calendarMonthId: "2024-01-01",
+        calendarActiveDateRanges: [
+          { startId: "2024-01-10", endId: "2024-01-10" },
+        ],
+      });
+
+      expect(january.weeksList[1][3].id).toBe("2024-01-10");
+      expect(january.weeksList[1][3].isToday).toBeTrue();
+
+      // Even though it's today, the active state supersedes it
+      expect(january.weeksList[1][3].state).toBe("active");
+      expect(january.weeksList[1][3].isStartOfRange).toBeTrue();
+      expect(january.weeksList[1][3].isEndOfRange).toBeTrue();
+
+      // Reset clock
+      setSystemTime();
+    });
+
+    it("active: supersedes disabled (with calendarDisabledDateIds)", () => {
+      const january = buildCalendar({
+        calendarMonthId: "2024-01-01",
+        calendarActiveDateRanges: [
+          { startId: "2024-01-10", endId: "2024-01-10" },
+        ],
+        calendarDisabledDateIds: ["2024-01-10"],
+      });
+
+      expect(january.weeksList[1][3].id).toBe("2024-01-10");
+      expect(january.weeksList[1][3].isDisabled).toBeTrue();
+
+      // Even though it's disabled, the active state supersedes it
+      expect(january.weeksList[1][3].state).toBe("active");
+      expect(january.weeksList[1][3].isStartOfRange).toBeTrue();
+      expect(january.weeksList[1][3].isEndOfRange).toBeTrue();
+    });
+
+    it("active: supersedes disabled (with min)", () => {
+      const january = buildCalendar({
+        calendarMonthId: "2024-01-01",
+        calendarActiveDateRanges: [
+          { startId: "2024-01-10", endId: "2024-01-10" },
+        ],
+        calendarMinDateId: "2024-01-15",
+      });
+
+      expect(january.weeksList[1][3].id).toBe("2024-01-10");
+      expect(january.weeksList[1][3].isDisabled).toBeTrue();
+
+      // Even though it's disabled, the active state supersedes it
+      expect(january.weeksList[1][3].state).toBe("active");
+      expect(january.weeksList[1][3].isStartOfRange).toBeTrue();
+      expect(january.weeksList[1][3].isEndOfRange).toBeTrue();
+    });
+
+    it("active: supersedes disabled (with max)", () => {
+      const january = buildCalendar({
+        calendarMonthId: "2024-01-01",
+        calendarActiveDateRanges: [
+          { startId: "2024-01-10", endId: "2024-01-10" },
+        ],
+        calendarMaxDateId: "2024-01-09",
+      });
+
+      expect(january.weeksList[1][3].id).toBe("2024-01-10");
+      expect(january.weeksList[1][3].isDisabled).toBeTrue();
+
+      // Even though it's disabled, the active state supersedes it
+      expect(january.weeksList[1][3].state).toBe("active");
+      expect(january.weeksList[1][3].isStartOfRange).toBeTrue();
+      expect(january.weeksList[1][3].isEndOfRange).toBeTrue();
+    });
+
+    it("active: supersedes idle", () => {
+      const january = buildCalendar({
+        calendarMonthId: "2024-01-01",
+        calendarActiveDateRanges: [
+          { startId: "2024-01-10", endId: "2024-01-10" },
+        ],
+      });
+
+      expect(january.weeksList[1][3].id).toBe("2024-01-10");
+
+      // Even though it's disabled, the active state supersedes it
+      expect(january.weeksList[1][3].state).toBe("active");
+      expect(january.weeksList[1][3].isStartOfRange).toBeTrue();
+      expect(january.weeksList[1][3].isEndOfRange).toBeTrue();
+
+      // Just to make sure the idle state is correct
+      expect(january.weeksList[1][4].state).toBe("idle");
+    });
+
+    it("disabled: supersedes idle", () => {
+      const january = buildCalendar({
+        calendarMonthId: "2024-01-01",
+        calendarDisabledDateIds: ["2024-01-10"],
+      });
+
+      expect(january.weeksList[1][3].id).toBe("2024-01-10");
+      expect(january.weeksList[1][3].isDisabled).toBeTrue();
+
+      expect(january.weeksList[1][3].state).toBe("disabled");
+      // Just to make sure the idle state is correct
+      expect(january.weeksList[1][4].state).toBe("idle");
+    });
+
+    it("today: supersedes idle", () => {
+      setSystemTime(new Date("2024-01-10"));
+      const january = buildCalendar({
+        calendarMonthId: "2024-01-01",
+      });
+
+      expect(january.weeksList[1][3].id).toBe("2024-01-10");
+      expect(january.weeksList[1][3].isToday).toBeTrue();
+      expect(january.weeksList[1][3].state).toBe("today");
+
+      // Just to make sure the idle state is correct
+      expect(january.weeksList[1][2].state).toBe("idle");
+      expect(january.weeksList[1][4].state).toBe("idle");
+      setSystemTime();
+    });
+
+    it("idle: serves as the base state", () => {
+      const january = buildCalendar({
+        calendarMonthId: "2024-01-01",
+      });
+      expect(
+        january.weeksList
+          .flatMap((week) => week.map((day) => day.state))
+          .every((state) => state === "idle")
+      ).toBeTrue();
     });
   });
 });

@@ -39,7 +39,6 @@ const BackgroundStory = memo(({ children }: PropsWithChildren) => {
     [colors]
   );
 
-  console.log(containerStyles);
   return <View style={containerStyles}>{children}</View>;
 });
 

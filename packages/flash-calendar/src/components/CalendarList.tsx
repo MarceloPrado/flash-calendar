@@ -19,11 +19,19 @@ import {
   useCalendarList,
 } from "@/hooks/useCalendarList";
 
+/**
+ * Represents each `CalendarList` item. It's enhanced with the required
+ * `Calendar` props to simplify building custom `Calendar` components.
+ */
+export type CalendarMonthEnhanced = CalendarMonth & {
+  calendarProps: Omit<CalendarProps, "calendarMonthId">;
+};
+
 const keyExtractor = (month: CalendarMonth) => month.id;
 
 export interface CalendarListProps
   extends Omit<CalendarProps, "calendarMonthId">,
-    Omit<FlashListProps<CalendarMonth>, "renderItem" | "data"> {
+    Omit<FlashListProps<CalendarMonthEnhanced>, "renderItem" | "data"> {
   /**
    * How many months to show before the current month
    * @default 12
@@ -59,7 +67,7 @@ export interface CalendarListProps
   /**
    * Allows overriding the default `Calendar` component.
    */
-  renderItem?: FlashListProps<CalendarMonth>["renderItem"];
+  renderItem?: FlashListProps<CalendarMonthEnhanced>["renderItem"];
 }
 
 export type CalendarListRef = {
@@ -96,30 +104,30 @@ export const CalendarList = memo(
       const {
         onDayPress,
         calendarActiveDateRanges: activeDateRanges,
-        disabledDates,
-        calendarItemDayFormat,
-        calendarItemWeekNameFormat,
-        calendarRowMonthFormat,
+        calendarDisabledDateIds,
+        calendarDayFormat,
+        calendarWeekDayFormat,
+        calendarMonthFormat,
         calendarMaxDateId,
         calendarMinDateId,
         ...flatListProps
       } = props;
 
       const calendarProps = useMemo(
-        (): Omit<CalendarProps, "calendarMonthId"> => ({
+        (): CalendarMonthEnhanced["calendarProps"] => ({
           calendarActiveDateRanges: activeDateRanges,
           calendarDayHeight,
           calendarFirstDayOfWeek,
-          calendarItemDayFormat,
-          calendarItemWeekNameFormat,
+          calendarDayFormat,
+          calendarWeekDayFormat,
           calendarMaxDateId,
           calendarMinDateId,
           calendarMonthHeaderHeight,
           calendarRowHorizontalSpacing,
-          calendarRowMonthFormat,
+          calendarMonthFormat,
           calendarRowVerticalSpacing,
           calendarWeekHeaderHeight,
-          disabledDates,
+          calendarDisabledDateIds,
           onDayPress,
           theme,
         }),
@@ -127,16 +135,16 @@ export const CalendarList = memo(
           activeDateRanges,
           calendarDayHeight,
           calendarFirstDayOfWeek,
-          calendarItemDayFormat,
-          calendarItemWeekNameFormat,
+          calendarDayFormat,
+          calendarWeekDayFormat,
           calendarMaxDateId,
           calendarMinDateId,
           calendarMonthHeaderHeight,
           calendarRowHorizontalSpacing,
-          calendarRowMonthFormat,
+          calendarMonthFormat,
           calendarRowVerticalSpacing,
           calendarWeekHeaderHeight,
-          disabledDates,
+          calendarDisabledDateIds,
           onDayPress,
           theme,
         ]
@@ -151,6 +159,13 @@ export const CalendarList = memo(
           calendarMaxDateId,
           calendarMinDateId,
         });
+
+      const monthListWithCalendarProps = useMemo(() => {
+        return monthList.map((month) => ({
+          ...month,
+          calendarProps,
+        }));
+      }, [calendarProps, monthList]);
 
       const handleOnEndReached = useCallback(() => {
         appendMonths(calendarFutureScrollRangeInMonths);
@@ -180,7 +195,7 @@ export const CalendarList = memo(
         ]
       );
 
-      const flashListRef = useRef<FlashList<CalendarMonth>>(null);
+      const flashListRef = useRef<FlashList<CalendarMonthEnhanced>>(null);
 
       useImperativeHandle(ref, () => ({
         scrollToDate(date, animated) {
@@ -226,7 +241,7 @@ export const CalendarList = memo(
 
       return (
         <CalendarScrollComponent
-          data={monthList}
+          data={monthListWithCalendarProps}
           estimatedItemSize={273}
           initialScrollIndex={initialMonthIndex}
           keyExtractor={keyExtractor}
@@ -236,7 +251,7 @@ export const CalendarList = memo(
           ref={flashListRef}
           renderItem={({ item }) => (
             <View style={calendarContainerStyle}>
-              <Calendar calendarMonthId={item.id} {...calendarProps} />
+              <Calendar calendarMonthId={item.id} {...item.calendarProps} />
             </View>
           )}
           showsVerticalScrollIndicator={false}
