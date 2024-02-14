@@ -6,8 +6,13 @@ const flashCalendarStories = path.resolve(
   "../../../packages/flash-calendar/src/components/**/*.stories.?(ts|tsx|js|jsx)"
 );
 
+const exampleStories = path.resolve(
+  __dirname,
+  "../src/components/**/*.stories.?(ts|tsx|js|jsx)"
+);
+
 const main: StorybookConfig = {
-  stories: [flashCalendarStories],
+  stories: [flashCalendarStories, exampleStories],
   addons: [
     "@storybook/addon-ondevice-controls",
     "@storybook/addon-ondevice-actions",

@@ -67,6 +67,11 @@ export type CalendarDay = {
   id: string;
 } & CalendarDayStateFields;
 
+/**
+ * An active date range to highlight in the calendar.
+ */
+export type CalendarActiveDateRange = { startId?: string; endId?: string };
+
 export type UseCalendarParams = {
   /**
    * The calendar's month. It can be any date within the month, since it gets
@@ -113,7 +118,7 @@ export type UseCalendarParams = {
   /**
    * The active date ranges to highlight in the calendar.
    */
-  calendarActiveDateRanges?: { startId?: string; endId?: string }[];
+  calendarActiveDateRanges?: CalendarActiveDateRange[];
   /**
    * The disabled date IDs. Dates in this list will be in the `disabled` state
    * unless they are part of an active range.

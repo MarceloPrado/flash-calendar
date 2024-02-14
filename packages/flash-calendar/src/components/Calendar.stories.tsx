@@ -1,23 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { add, endOfMonth, startOfMonth, sub } from "date-fns";
-import { StyleSheet, View } from "react-native";
 
 import { Calendar } from "./Calendar";
 
 import { paddingDecorator } from "@/developer/decorators";
-import { loggingHandler } from "@/developer/loggginHandler";
 import { toDateId } from "@/helpers/dates";
 
 const today = new Date();
 
 const startOfThisMonth = startOfMonth(today);
 const endOfThisMonth = endOfMonth(today);
-
-console.log(`
-End of this month ISO: ${endOfThisMonth.toISOString()}
-End of this month: ${toDateId(endOfThisMonth)}
-
-`);
 
 const CalendarMeta: Meta<typeof Calendar> = {
   title: "Calendar",
@@ -35,13 +27,26 @@ const CalendarMeta: Meta<typeof Calendar> = {
     calendarWeekDayFormat: { type: "string" },
   },
 
-  /**
-   * This serves as a kitchen-sink test. It shows most day states working together:
-   * - Today
-   * - Active ranges (single + multiple days)
-   * - Disabled (min/max + specific dates)
-   * - Idle
-   */
+  args: {
+    calendarFirstDayOfWeek: "sunday",
+    calendarMonthId: toDateId(startOfThisMonth),
+    calendarDayFormat: "d",
+    calendarWeekDayFormat: "EEEEE",
+    calendarMonthFormat: "MMMM yyyy",
+  },
+  decorators: [paddingDecorator],
+};
+
+export default CalendarMeta;
+
+/**
+ * This serves as a kitchen-sink test. It shows most day states working together:
+ * - Today
+ * - Active ranges (single + multiple days)
+ * - Disabled (min/max + specific dates)
+ * - Idle
+ */
+export const KichenSink: StoryObj<typeof Calendar> = {
   args: {
     calendarFirstDayOfWeek: "sunday",
     calendarMonthId: toDateId(startOfThisMonth),
@@ -65,12 +70,7 @@ const CalendarMeta: Meta<typeof Calendar> = {
       },
     ],
   },
-  decorators: [paddingDecorator],
 };
-
-export default CalendarMeta;
-
-export const Default: StoryObj<typeof Calendar> = {};
 
 export const DisabledDates: StoryObj<typeof Calendar> = {
   args: {
@@ -104,95 +104,4 @@ export const ActiveDateRanges: StoryObj<typeof Calendar> = {
     ],
     calendarMonthId: "2024-01-01",
   },
-};
-
-const styles = StyleSheet.create({
-  linearContainer: {
-    flex: 1,
-    backgroundColor: "#252630",
-    // Remove padding decorator to fill bg color
-    margin: -12,
-    padding: 12,
-  },
-});
-
-const linearAccent = "#585ABF";
-export const LinearTheme = () => {
-  return (
-    <View style={styles.linearContainer}>
-      <Calendar
-        calendarWeekDayFormat="iiiiii"
-        calendarMonthId={toDateId(startOfThisMonth)}
-        calendarActiveDateRanges={[
-          {
-            startId: toDateId(add(startOfThisMonth, { days: 3 })),
-            endId: toDateId(add(startOfThisMonth, { days: 8 })),
-          },
-        ]}
-        calendarFirstDayOfWeek="sunday"
-        calendarDayHeight={30}
-        calendarRowVerticalSpacing={16}
-        calendarRowHorizontalSpacing={16}
-        onDayPress={loggingHandler("onDayPress")}
-        theme={{
-          rowMonth: {
-            content: {
-              textAlign: "left",
-              color: "rgba(255, 255, 255, 0.5)",
-              fontWeight: "700",
-            },
-          },
-          rowWeek: {
-            container: {
-              borderBottomWidth: 1,
-              borderBottomColor: "rgba(255, 255, 255, 0.1)",
-              borderStyle: "solid",
-            },
-          },
-          itemWeekName: { content: { color: "rgba(255, 255, 255, 0.5)" } },
-          itemDayContainer: {
-            activeDayFiller: {
-              backgroundColor: linearAccent,
-            },
-          },
-          itemDay: {
-            idle: ({ isPressed, isWeekend }) => ({
-              container: {
-                backgroundColor: isPressed ? linearAccent : "transparent",
-                borderRadius: 4,
-              },
-              content: {
-                color:
-                  isWeekend && !isPressed
-                    ? "rgba(255, 255, 255, 0.5)"
-                    : "#ffffff",
-              },
-            }),
-            today: ({ isPressed }) => ({
-              container: {
-                borderColor: "rgba(255, 255, 255, 0.5)",
-                borderRadius: isPressed ? 4 : 30,
-                backgroundColor: isPressed ? linearAccent : "transparent",
-              },
-              content: {
-                color: isPressed ? "#ffffff" : "rgba(255, 255, 255, 0.5)",
-              },
-            }),
-            active: ({ isEndOfRange, isStartOfRange }) => ({
-              container: {
-                backgroundColor: linearAccent,
-                borderTopLeftRadius: isStartOfRange ? 4 : 0,
-                borderBottomLeftRadius: isStartOfRange ? 4 : 0,
-                borderTopRightRadius: isEndOfRange ? 4 : 0,
-                borderBottomRightRadius: isEndOfRange ? 4 : 0,
-              },
-              content: {
-                color: "#ffffff",
-              },
-            }),
-          },
-        }}
-      />
-    </View>
-  );
 };
