@@ -1,85 +1,163 @@
+import { HStack } from "@/components/HStack";
+import { VStack } from "@/components/VStack";
+import { BaseTheme } from "@/helpers/tokens";
 import {
   Calendar,
   CalendarProps,
   CalendarTheme,
   useCalendar,
 } from "@marceloterreiro/flash-calendar";
-import { memo } from "react";
-import { View, StyleSheet } from "react-native";
-import { textStyles } from "src/components/ThemeableCalendar/WindowsXpCalendar/WindowsXpText";
+import { format } from "date-fns";
+import { memo, useMemo } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { WindowsXpChevronButton } from "src/components/ThemeableCalendar/WindowsXpCalendar/WindowXpButton";
 import { windowsXpTokens } from "src/components/ThemeableCalendar/WindowsXpCalendar/utils";
 
-const DAY_HEIGHT = 30;
+const DAY_HEIGHT = 25;
 const MONTH_HEADER_HEIGHT = 40;
+const WEEK_DAYS_HEIGHT = 25;
+const FOOTER_HEIGHT = 30;
 
-export const WINDOWS_XP_CALENDAR_HEIGHT = 6 * DAY_HEIGHT + MONTH_HEADER_HEIGHT;
+const BORDER_WIDTH = 1;
 
 const styles = StyleSheet.create({
   weekDivider: {
-    height: 2,
-    backgroundColor: windowsXpTokens.colors.content.inverse.primary,
+    height: 1,
+    backgroundColor: windowsXpTokens.colors.content.primary,
     position: "absolute",
-    left: 4,
-    right: 4,
+    left: 8,
+    right: 8,
     bottom: 0,
+  },
+  calendarContainer: {
+    backgroundColor: "white",
+    borderStyle: "solid",
+    borderWidth: BORDER_WIDTH,
+    borderColor: windowsXpTokens.colors.accent,
+  },
+  calendarFooter: {
+    height: FOOTER_HEIGHT,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    gap: 4,
+    paddingHorizontal: 8,
+  },
+  calendarFooterLegend: {
+    width: 20,
+    height: 20,
+    borderColor: windowsXpTokens.colors.secondary,
+    borderWidth: 2,
+  },
+  calendarFooterText: {
+    fontWeight: "bold",
+    fontStyle: "italic",
   },
 });
 
 const calendarTheme: CalendarTheme = {
   rowMonth: {
-    container: { backgroundColor: windowsXpTokens.colors.accent },
+    container: {
+      backgroundColor: windowsXpTokens.colors.accent,
+      height: MONTH_HEADER_HEIGHT,
+    },
     content: {
-      ...textStyles.windowsXpText,
+      color: windowsXpTokens.colors.content.inverse.primary,
+      fontSize: 17,
+      width: 200,
+      textAlign: "center",
     },
   },
   itemWeekName: { content: { color: windowsXpTokens.colors.accent } },
+  itemDay: {
+    base: () => ({
+      container: {
+        padding: 0,
+        borderRadius: 0,
+      },
+    }),
+    today: () => ({
+      container: {
+        borderWidth: 2,
+        borderColor: windowsXpTokens.colors.secondary,
+      },
+    }),
+    idle: ({ isDifferentMonth }) => ({
+      content: isDifferentMonth
+        ? {
+            color: windowsXpTokens.colors.content.disabled,
+          }
+        : undefined,
+    }),
+    active: () => ({
+      container: {
+        backgroundColor: windowsXpTokens.colors.accent,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0,
+      },
+      content: {
+        color: windowsXpTokens.colors.content.inverse.primary,
+      },
+    }),
+  },
 };
 
-export const WindowsXpCalendar = memo((props: CalendarProps) => {
+interface WindowsXpCalendarProps extends CalendarProps {
+  onPreviousMonthPress: () => void;
+  onNextMonthPress: () => void;
+}
+export const WindowsXpCalendar = memo((props: WindowsXpCalendarProps) => {
   const { calendarRowMonth, weekDaysList, weeksList } = useCalendar(props);
 
+  const today = useMemo(() => {
+    return weeksList.flatMap((week) => week).find((day) => day.isToday);
+  }, [weeksList]);
+
   return (
-    <View
-      style={{
-        backgroundColor: "white",
-        borderStyle: "solid",
-        borderWidth: 1,
-        borderColor: windowsXpTokens.colors.accent,
-      }}
-    >
-      <Calendar.Row.Month
-        height={MONTH_HEADER_HEIGHT}
-        theme={calendarTheme.rowMonth}
+    <View style={styles.calendarContainer}>
+      <VStack
+        spacing={props.calendarRowVerticalSpacing as keyof BaseTheme["spacing"]}
       >
-        {calendarRowMonth}
-      </Calendar.Row.Month>
+        {/* Replaces `Calendar.Row.Month` with a custom implementation */}
+        <HStack
+          alignItems="center"
+          justifyContent="space-around"
+          width={"100%"}
+          style={calendarTheme.rowMonth?.container}
+        >
+          <WindowsXpChevronButton
+            size={30}
+            type="left"
+            onPress={props.onPreviousMonthPress}
+          />
+          <Text style={calendarTheme.rowMonth?.content}>
+            {calendarRowMonth}
+          </Text>
+          <WindowsXpChevronButton
+            size={30}
+            type="right"
+            onPress={props.onNextMonthPress}
+          />
+        </HStack>
 
-      <Calendar.Row.Week spacing={4}>
-        {weekDaysList.map((day, i) => (
-          <Calendar.Item.WeekName
-            height={DAY_HEIGHT}
-            key={i}
-            theme={calendarTheme.itemWeekName}
-          >
-            {day}
-          </Calendar.Item.WeekName>
-        ))}
-        <View style={styles.weekDivider} />
-      </Calendar.Row.Week>
+        <Calendar.Row.Week spacing={4}>
+          {weekDaysList.map((day, i) => (
+            <Calendar.Item.WeekName
+              height={WEEK_DAYS_HEIGHT}
+              key={i}
+              theme={calendarTheme.itemWeekName}
+            >
+              {day}
+            </Calendar.Item.WeekName>
+          ))}
+          <View style={styles.weekDivider} />
+        </Calendar.Row.Week>
 
-      {weeksList.map((week, i) => (
-        <Calendar.Row.Week key={i}>
-          {week.map((day) => {
-            let state = day.state;
-            // FIXME: this is a terrible API. It should come correctly mapped from the hook.
-            // We only want to override idle states.
-            if (state === "idle") {
-              if (day.isToday) {
-                state = "today";
-              }
-            }
-
-            return (
+        {weeksList.map((week, i) => (
+          <Calendar.Row.Week key={i}>
+            {week.map((day) => (
               <Calendar.Item.Day.Container
                 dayHeight={DAY_HEIGHT}
                 daySpacing={4}
@@ -88,19 +166,24 @@ export const WindowsXpCalendar = memo((props: CalendarProps) => {
               >
                 <Calendar.Item.Day
                   height={DAY_HEIGHT}
-                  metadata={{
-                    ...day,
-                    state,
-                  }}
+                  metadata={day}
                   onPress={props.onDayPress}
+                  theme={calendarTheme.itemDay}
                 >
                   {day.displayLabel}
                 </Calendar.Item.Day>
               </Calendar.Item.Day.Container>
-            );
-          })}
-        </Calendar.Row.Week>
-      ))}
+            ))}
+          </Calendar.Row.Week>
+        ))}
+
+        <View style={styles.calendarFooter}>
+          <View style={styles.calendarFooterLegend} />
+          <Text style={styles.calendarFooterText}>
+            Today: {format(today?.date ?? new Date(), "dd/MM/yyyy")}
+          </Text>
+        </View>
+      </VStack>
     </View>
   );
 });

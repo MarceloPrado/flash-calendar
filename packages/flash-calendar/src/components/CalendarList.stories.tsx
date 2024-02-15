@@ -1,14 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { add, startOfMonth, sub } from "date-fns";
-import { useRef, useState } from "react";
+import { add, set, startOfMonth, sub } from "date-fns";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Button, Text, View } from "react-native";
 
-import { Calendar, CalendarListRef } from "@/components";
+import { Calendar, CalendarListRef, CalendarOnDayPress } from "@/components";
 import { HStack } from "@/components/HStack";
 import { VStack } from "@/components/VStack";
 import { paddingDecorator } from "@/developer/decorators";
 import { loggingHandler } from "@/developer/loggginHandler";
 import { toDateId } from "@/helpers/dates";
+import { CalendarActiveDateRange } from "@/hooks/useCalendar";
 
 const CalendarListMeta: Meta<typeof Calendar.List> = {
   title: "Calendar.List",
@@ -175,6 +176,73 @@ export const MinAndMaxDates = () => {
           calendarMaxDateId={"2024-12-31"}
         />
       </View>
+    </VStack>
+  );
+};
+
+export const DateRangePicker = () => {
+  const [dateRange, setDateRange] = useState<CalendarActiveDateRange>({
+    startId: undefined,
+    endId: undefined,
+  });
+  const handleDayPress = useCallback<CalendarOnDayPress>(
+    (dateId: string) => {
+      // Starting the first range
+      if (!dateRange.startId && !dateRange.endId) {
+        setDateRange({
+          startId: dateId,
+          endId: undefined,
+        });
+      } else if (dateRange.startId && dateRange.endId) {
+        // Starting a new range
+        setDateRange({
+          startId: dateId,
+          endId: undefined,
+        });
+      } else if (dateRange.startId && !dateRange.endId) {
+        if (dateId < dateRange.startId) {
+          setDateRange({
+            startId: dateId,
+            endId: dateRange.startId,
+          });
+        } else {
+          setDateRange({
+            ...dateRange,
+            endId: dateId,
+          });
+        }
+      }
+    },
+    [dateRange]
+  );
+
+  const handleClear = useCallback(() => {
+    setDateRange({ startId: undefined, endId: undefined });
+  }, []);
+
+  const calendarActiveDateRanges = useMemo<CalendarActiveDateRange[]>(() => {
+    return [dateRange];
+  }, [dateRange]);
+
+  return (
+    <VStack spacing={20} grow alignItems="center">
+      <Text>This shows how to build a date range picker</Text>
+      <View style={{ flex: 1, width: "100%" }}>
+        <Calendar.List
+          onDayPress={handleDayPress}
+          calendarInitialMonthId={"2024-02-13"}
+          calendarMinDateId={"2024-01-01"}
+          calendarMaxDateId={"2024-12-31"}
+          calendarActiveDateRanges={calendarActiveDateRanges}
+        />
+      </View>
+      <HStack justifyContent="space-between" width={"100%"}>
+        <Button title="Clear range" onPress={handleClear} />
+        <VStack spacing={4}>
+          <Text>Start: {dateRange.startId ?? "?"}</Text>
+          <Text>End: {dateRange.endId ?? "?"}</Text>
+        </VStack>
+      </HStack>
     </VStack>
   );
 };

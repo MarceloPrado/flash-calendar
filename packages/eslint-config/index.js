@@ -8,6 +8,7 @@ module.exports = {
     "eslint:recommended",
     "eslint-config-universe",
     "eslint-config-turbo",
+    "plugin:react-hooks/recommended",
     "prettier",
   ],
   parserOptions: {
@@ -44,5 +45,7 @@ module.exports = {
       "error",
       { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
     ],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
   },
 };

@@ -4,31 +4,86 @@ import { describe, it, expect } from "bun:test";
 import { getHeightForMonth, useCalendarList } from "@/hooks/useCalendarList";
 
 describe("getHeightForMonth", () => {
-  it("Measures months with 5 weeks", () => {
+  it("Measures months with 5 weeks (no calendar spacing)", () => {
     const calendarMonthHeaderHeight = 50;
     const calendarRowVerticalSpacing = 5;
     const calendarWeekHeaderHeight = 30;
     const calendarDayHeight = 20;
+    const calendarSpacing = 0;
+    const calendarAdditionalHeight = 0;
+
+    const expectedHeight = 50 + 5 + 30 + 5 + 5 * (20 + 5);
 
     expect(
       getHeightForMonth({
         calendarDayHeight,
+        calendarAdditionalHeight,
         calendarMonthHeaderHeight,
         calendarRowVerticalSpacing,
         calendarWeekHeaderHeight,
-        spacing: 0,
-        month: {
+        calendarSpacing,
+        calendarMonth: {
           id: "some",
           date: new Date(),
           numberOfWeeks: 5,
         },
       })
-    ).toBe(
-      calendarMonthHeaderHeight +
-        calendarRowVerticalSpacing +
-        calendarWeekHeaderHeight +
-        5 * (calendarDayHeight + calendarRowVerticalSpacing)
-    );
+    ).toBe(expectedHeight);
+  });
+
+  it("Measures months with 5 weeks (with calendar spacing)", () => {
+    const calendarMonthHeaderHeight = 50;
+    const calendarRowVerticalSpacing = 5;
+    const calendarWeekHeaderHeight = 30;
+    const calendarDayHeight = 20;
+    const calendarSpacing = 99;
+    const calendarAdditionalHeight = 0;
+
+    const expectedHeight = 50 + 5 + 30 + 5 + 5 * (20 + 5) + 99;
+
+    expect(
+      getHeightForMonth({
+        calendarDayHeight,
+        calendarAdditionalHeight,
+        calendarMonthHeaderHeight,
+        calendarRowVerticalSpacing,
+        calendarWeekHeaderHeight,
+        calendarSpacing,
+        calendarMonth: {
+          id: "some",
+          date: new Date(),
+          numberOfWeeks: 5,
+        },
+      })
+    ).toBe(expectedHeight);
+  });
+
+  it("Accounts for additional height", () => {
+    const calendarMonthHeaderHeight = 50;
+    const calendarRowVerticalSpacing = 5;
+    const calendarWeekHeaderHeight = 30;
+    const calendarDayHeight = 20;
+    const calendarSpacing = 0;
+    const calendarAdditionalHeight = 24;
+
+    const expectedHeight =
+      50 + 5 + (30 + 5) + 5 * (20 + 5) + calendarAdditionalHeight;
+
+    expect(
+      getHeightForMonth({
+        calendarDayHeight,
+        calendarAdditionalHeight,
+        calendarMonthHeaderHeight,
+        calendarRowVerticalSpacing,
+        calendarWeekHeaderHeight,
+        calendarSpacing,
+        calendarMonth: {
+          id: "some",
+          date: new Date(),
+          numberOfWeeks: 5,
+        },
+      })
+    ).toBe(expectedHeight);
   });
 
   it("Measures months with 6 weeks", () => {
@@ -36,26 +91,26 @@ describe("getHeightForMonth", () => {
     const calendarRowVerticalSpacing = 5;
     const calendarWeekHeaderHeight = 30;
     const calendarDayHeight = 20;
+    const calendarSpacing = 0;
+    const calendarAdditionalHeight = 0;
+
+    const expectedHeight = 50 + 5 + (30 + 5) + 6 * (20 + 5);
 
     expect(
       getHeightForMonth({
         calendarDayHeight,
+        calendarAdditionalHeight,
         calendarMonthHeaderHeight,
         calendarRowVerticalSpacing,
         calendarWeekHeaderHeight,
-        spacing: 0,
-        month: {
+        calendarSpacing,
+        calendarMonth: {
           id: "some",
           date: new Date(),
           numberOfWeeks: 6,
         },
       })
-    ).toBe(
-      calendarMonthHeaderHeight +
-        calendarRowVerticalSpacing +
-        calendarWeekHeaderHeight +
-        6 * (calendarDayHeight + calendarRowVerticalSpacing)
-    );
+    ).toBe(expectedHeight);
   });
 });
 

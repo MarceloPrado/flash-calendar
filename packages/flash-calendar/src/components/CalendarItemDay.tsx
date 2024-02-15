@@ -137,7 +137,7 @@ export interface CalendarItemDayProps {
   metadata: CalendarDay;
   theme?: Partial<
     Record<
-      DayState,
+      DayState | "base",
       (
         params: CalendarDay & {
           isPressed: boolean;
@@ -174,6 +174,7 @@ export const CalendarItemDay = memo(
           return {
             ...container,
             height,
+            ...theme?.["base"]?.({ ...metadata, isPressed }).container,
             ...theme?.[metadata.state]?.({ ...metadata, isPressed }).container,
           };
         }}
@@ -189,6 +190,7 @@ export const CalendarItemDay = memo(
             <Text
               style={{
                 ...content,
+                ...theme?.["base"]?.({ ...metadata, isPressed }).content,
                 ...theme?.[metadata.state]?.({ ...metadata, isPressed })
                   .content,
               }}

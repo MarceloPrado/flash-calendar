@@ -33,6 +33,10 @@ export type CalendarTheme = {
   itemWeekName?: CalendarItemWeekNameProps["theme"];
   itemEmpty?: CalendarItemEmptyProps["theme"];
   itemDayContainer?: CalendarItemDayContainerProps["theme"];
+  /**
+   * The theme for the day. `base` is applied before any state, allowing you to
+   * set a base value once and use it for all states.
+   */
   itemDay?: CalendarItemDayProps["theme"];
 };
 
@@ -81,7 +85,6 @@ export const Calendar = memo(
     calendarWeekHeaderHeight = calendarDayHeight,
     ...buildCalendarParams
   }: CalendarProps) => {
-    console.log(buildCalendarParams);
     const { calendarRowMonth, weeksList, weekDaysList } =
       useCalendar(buildCalendarParams);
 

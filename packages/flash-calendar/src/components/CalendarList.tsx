@@ -44,6 +44,13 @@ export interface CalendarListProps
   calendarFutureScrollRangeInMonths?: number;
 
   /**
+   * An additional height to use in the month's height calculation. Useful when
+   * providing a custom `Calendar` component with extra content such as a
+   * footer.
+   */
+  calendarAdditionalHeight?: number;
+
+  /**
    * The vertical spacing between each `<Calendar />` component.
    * @default 20
    */
@@ -65,7 +72,17 @@ export interface CalendarListProps
   CalendarScrollComponent?: typeof FlashList;
 
   /**
-   * Allows overriding the default `Calendar` component.
+   * Overwrites the default `Calendar` component.
+   *
+   * **Important**: when providing a custom implementation, make sure to
+   * manually set all the spacing and height props to ensure the list scrolls
+   * to the right offset:
+   * - calendarDayHeight
+   * - calendarMonthHeaderHeight
+   * - calendarWeekHeaderHeight
+   * - calendarAdditionalHeight
+   * - calendarRowVerticalSpacing
+   * - calendarSpacing
    */
   renderItem?: FlashListProps<CalendarMonthEnhanced>["renderItem"];
 }
@@ -94,6 +111,7 @@ export const CalendarList = memo(
         calendarMonthHeaderHeight = 20,
         calendarDayHeight = 32,
         calendarWeekHeaderHeight = calendarDayHeight,
+        calendarAdditionalHeight = 0,
 
         // Other props
         theme,
@@ -176,17 +194,19 @@ export const CalendarList = memo(
       >(
         (layout, item) => {
           const monthHeight = getHeightForMonth({
-            month: item,
-            spacing: calendarSpacing,
+            calendarMonth: item,
+            calendarSpacing,
             calendarDayHeight,
             calendarMonthHeaderHeight,
             calendarRowVerticalSpacing,
+            calendarAdditionalHeight,
             calendarWeekHeaderHeight,
           });
-
+          console.log(`Month ${item.id} has a height of ${monthHeight}.`);
           layout.size = monthHeight;
         },
         [
+          calendarAdditionalHeight,
           calendarDayHeight,
           calendarMonthHeaderHeight,
           calendarRowVerticalSpacing,
@@ -213,12 +233,13 @@ export const CalendarList = memo(
             .slice(0, index)
             .reduce((acc, month) => {
               const currentHeight = getHeightForMonth({
-                month,
-                spacing: calendarSpacing,
+                calendarMonth: month,
+                calendarSpacing,
                 calendarDayHeight,
                 calendarMonthHeaderHeight,
                 calendarRowVerticalSpacing,
                 calendarWeekHeaderHeight,
+                calendarAdditionalHeight,
               });
 
               return acc + currentHeight;
@@ -247,7 +268,6 @@ export const CalendarList = memo(
           keyExtractor={keyExtractor}
           onEndReached={handleOnEndReached}
           overrideItemLayout={handleOverrideItemLayout}
-          extraData={activeDateRanges}
           ref={flashListRef}
           renderItem={({ item }) => (
             <View style={calendarContainerStyle}>

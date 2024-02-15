@@ -11,6 +11,7 @@
     "eslint-config-turbo": "^1.12.3",
     "eslint-config-universe": "^11.2.0",
     "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "typescript": "^5.3.0"
   }
 }

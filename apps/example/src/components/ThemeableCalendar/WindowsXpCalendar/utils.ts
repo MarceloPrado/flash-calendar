@@ -2,8 +2,11 @@ export const windowsXpTokens = {
   colors: {
     background: "#ECE9DA",
     accent: "#2559DF",
+    secondary: "#EA3424",
+
     content: {
       primary: "#000000",
+      disabled: "rgba(0, 0, 0, .3)",
       inverse: {
         primary: "#ffffff",
       },

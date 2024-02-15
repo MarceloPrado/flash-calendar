@@ -214,26 +214,24 @@ export const useCalendarList = ({
  * headers.
  */
 export const getHeightForMonth = ({
-  calendarRowVerticalSpacing,
-  calendarDayHeight,
-  calendarWeekHeaderHeight,
-  calendarMonthHeaderHeight,
-  month,
-  spacing,
+  calendarRowVerticalSpacing: vSpacing,
+  calendarDayHeight: day,
+  calendarWeekHeaderHeight: weekName,
+  calendarMonthHeaderHeight: header,
+  calendarAdditionalHeight: extraHeight,
+  calendarMonth,
+  calendarSpacing,
 }: {
-  month: CalendarMonth;
-  spacing: number;
+  calendarAdditionalHeight: number;
+  calendarDayHeight: number;
   calendarMonthHeaderHeight: number;
   calendarRowVerticalSpacing: number;
-  calendarDayHeight: number;
   calendarWeekHeaderHeight: number;
+  calendarMonth: CalendarMonth;
+  calendarSpacing: number;
 }) => {
-  const headerHeight =
-    calendarMonthHeaderHeight +
-    calendarRowVerticalSpacing +
-    calendarWeekHeaderHeight;
+  const headerHeight = header + vSpacing + weekName + vSpacing;
+  const daysHeight = (day + vSpacing) * calendarMonth.numberOfWeeks;
 
-  const weekHeight = calendarDayHeight + calendarRowVerticalSpacing;
-
-  return headerHeight + month.numberOfWeeks * weekHeight + spacing;
+  return headerHeight + daysHeight + extraHeight + calendarSpacing;
 };

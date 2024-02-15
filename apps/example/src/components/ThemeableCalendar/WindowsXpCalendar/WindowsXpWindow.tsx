@@ -56,7 +56,7 @@ export const WindowsXpWindow = ({
   title: string;
 }) => {
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <WindowsXpWindowHeader>{title}</WindowsXpWindowHeader>
       <View style={styles.windowContent}>{children}</View>
     </View>
