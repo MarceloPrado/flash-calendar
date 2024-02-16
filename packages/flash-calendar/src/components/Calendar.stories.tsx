@@ -21,7 +21,7 @@ const CalendarMeta: Meta<typeof Calendar> = {
       },
       options: ["monday", "sunday"],
     },
-    onDayPress: { action: "onDayPress" },
+    onCalendarDayPress: { action: "onCalendarDayPress" },
     calendarDayFormat: { type: "string" },
     calendarMonthFormat: { type: "string" },
     calendarWeekDayFormat: { type: "string" },

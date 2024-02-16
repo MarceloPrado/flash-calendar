@@ -120,7 +120,7 @@ export const CalendarList = memo(
       ref: Ref<CalendarListRef>
     ) => {
       const {
-        onDayPress,
+        onCalendarDayPress,
         calendarActiveDateRanges: activeDateRanges,
         calendarDisabledDateIds,
         calendarDayFormat,
@@ -146,7 +146,7 @@ export const CalendarList = memo(
           calendarRowVerticalSpacing,
           calendarWeekHeaderHeight,
           calendarDisabledDateIds,
-          onDayPress,
+          onCalendarDayPress,
           theme,
         }),
         [
@@ -163,7 +163,7 @@ export const CalendarList = memo(
           calendarRowVerticalSpacing,
           calendarWeekHeaderHeight,
           calendarDisabledDateIds,
-          onDayPress,
+          onCalendarDayPress,
           theme,
         ]
       );

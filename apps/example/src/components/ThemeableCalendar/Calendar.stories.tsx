@@ -1,7 +1,7 @@
 import {
   Calendar,
   CalendarActiveDateRange,
-  CalendarOnDayPress,
+  CalendaronCalendarDayPress,
   fromDateId,
   toDateId,
 } from "@marceloterreiro/flash-calendar";
@@ -50,7 +50,7 @@ export const WindowsXP = () => {
     setIsPickerVisible((p) => !p);
   }, []);
 
-  const handleDayPress = useCallback<CalendarOnDayPress>((dateId) => {
+  const handleDayPress = useCallback<CalendaronCalendarDayPress>((dateId) => {
     setCurrentCalendarMonth(fromDateId(dateId));
     setSelectedDate(fromDateId(dateId));
     setIsPickerVisible(false);
@@ -92,7 +92,7 @@ export const WindowsXP = () => {
               calendarMonthId={toDateId(currentCalendarMonth)}
               onPreviousMonthPress={handlePreviousMonth}
               onNextMonthPress={handleNextMonth}
-              onDayPress={handleDayPress}
+              onCalendarDayPress={handleDayPress}
               calendarWeekDayFormat="E"
               calendarActiveDateRanges={calendarActiveDateRanges}
               calendarMinDateId="2024-01-01"

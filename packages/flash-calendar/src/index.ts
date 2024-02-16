@@ -15,3 +15,5 @@ export {
   getHeightForMonth,
   useCalendarList,
 } from "./hooks/useCalendarList";
+
+export { useDateRange } from "./hooks/useDateRange";

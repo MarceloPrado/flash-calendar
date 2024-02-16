@@ -1,27 +1,23 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { add, endOfYear, startOfMonth, startOfYear, sub } from "date-fns";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Button, Text, View } from "react-native";
 
-import {
-  Calendar,
-  CalendarListProps,
-  CalendarListRef,
-  CalendarOnDayPress,
-} from "@/components";
+import { Calendar, CalendarListProps, CalendarListRef } from "@/components";
 import { HStack } from "@/components/HStack";
 import { VStack } from "@/components/VStack";
 import { paddingDecorator } from "@/developer/decorators";
 import { loggingHandler } from "@/developer/loggginHandler";
 import { toDateId } from "@/helpers/dates";
-import { CalendarActiveDateRange } from "@/hooks/useCalendar";
+import { useDateRange } from "@/hooks/useDateRange";
+import { useTheme } from "@/hooks/useTheme";
 
 const CalendarListMeta: Meta<typeof Calendar.List> = {
   title: "Calendar.List",
   component: Calendar.List,
   argTypes: {},
   args: {
-    onDayPress: loggingHandler("onDayPress"),
+    onCalendarDayPress: loggingHandler("onCalendarDayPress"),
     calendarRowVerticalSpacing: 8,
     calendarRowHorizontalSpacing: 8,
   },
@@ -65,7 +61,7 @@ export const SparseCalendar = () => {
     undefined
   );
 
-  const onDayPress = (dateId: string) => {
+  const onCalendarDayPress = (dateId: string) => {
     setSelectedDate(dateId);
   };
 
@@ -81,7 +77,7 @@ export const SparseCalendar = () => {
           },
         ]}
         calendarInitialMonthId={selectedDate}
-        onDayPress={onDayPress}
+        onCalendarDayPress={onCalendarDayPress}
         calendarRowVerticalSpacing={16}
         calendarDayHeight={50}
         calendarMonthHeaderHeight={20}
@@ -148,7 +144,7 @@ export const ImperativeScrolling = () => {
         </HStack>
         <View style={{ flex: 1, width: "100%" }}>
           <Calendar.List
-            onDayPress={loggingHandler("onDayPress")}
+            onCalendarDayPress={loggingHandler("onCalendarDayPress")}
             calendarInitialMonthId={toDateId(currentMonth)}
             ref={ref}
             calendarPastScrollRangeInMonths={2}
@@ -166,7 +162,7 @@ export const MinAndMaxDates = () => {
       <Text>This calendar list is only available for the 2024 period</Text>
       <View style={{ flex: 1, width: "100%" }}>
         <Calendar.List
-          onDayPress={loggingHandler("onDayPress")}
+          onCalendarDayPress={loggingHandler("onCalendarDayPress")}
           calendarInitialMonthId={"2024-02-13"}
           calendarMinDateId={"2024-01-01"}
           calendarMaxDateId={"2024-12-31"}
@@ -177,10 +173,6 @@ export const MinAndMaxDates = () => {
 };
 
 export const DateRangePicker = () => {
-  const [dateRange, setDateRange] = useState<CalendarActiveDateRange>({
-    startId: undefined,
-    endId: undefined,
-  });
   const calendarListProps = useMemo<Partial<CalendarListProps>>(() => {
     const today = new Date();
     return {
@@ -190,62 +182,36 @@ export const DateRangePicker = () => {
     };
   }, []);
 
-  const handleDayPress = useCallback<CalendarOnDayPress>(
-    (dateId: string) => {
-      // Starting the first range
-      if (!dateRange.startId && !dateRange.endId) {
-        setDateRange({
-          startId: dateId,
-          endId: undefined,
-        });
-      } else if (dateRange.startId && dateRange.endId) {
-        // Starting a new range
-        setDateRange({
-          startId: dateId,
-          endId: undefined,
-        });
-      } else if (dateRange.startId && !dateRange.endId) {
-        if (dateId < dateRange.startId) {
-          setDateRange({
-            startId: dateId,
-            endId: dateRange.startId,
-          });
-        } else {
-          setDateRange({
-            ...dateRange,
-            endId: dateId,
-          });
-        }
-      }
-    },
-    [dateRange]
-  );
+  const {
+    isDateRangeValid,
+    onClearDateRange,
+    dateRange,
+    ...calendarDateRangeProps
+  } = useDateRange();
 
-  const handleClear = useCallback(() => {
-    setDateRange({ startId: undefined, endId: undefined });
-  }, []);
+  const { colors } = useTheme();
 
-  const calendarActiveDateRanges = useMemo<CalendarActiveDateRange[]>(() => {
-    return [dateRange];
-  }, [dateRange]);
+  const textProps = {
+    style: { color: colors.content.primary },
+  };
 
   return (
     <VStack spacing={20} grow alignItems="center">
-      <Text>
+      <Text style={{ ...textProps.style, fontWeight: "bold" }}>
         This shows how to build a date range picker bounded by the current year
       </Text>
       <View style={{ flex: 1, width: "100%" }}>
-        <Calendar.List
-          {...calendarListProps}
-          onDayPress={handleDayPress}
-          calendarActiveDateRanges={calendarActiveDateRanges}
-        />
+        <Calendar.List {...calendarListProps} {...calendarDateRangeProps} />
       </View>
       <HStack justifyContent="space-between" width={"100%"}>
-        <Button title="Clear range" onPress={handleClear} />
+        <Button title="Clear range" onPress={onClearDateRange} />
         <VStack spacing={4}>
-          <Text>Start: {dateRange.startId ?? "?"}</Text>
-          <Text>End: {dateRange.endId ?? "?"}</Text>
+          <Text {...textProps}>Start: {dateRange.startId ?? "?"}</Text>
+          <Text {...textProps}>End: {dateRange.endId ?? "?"}</Text>
+        </VStack>
+        <VStack spacing={4} alignItems="flex-end">
+          <Text {...textProps}>Is range valid?</Text>
+          <Text {...textProps}>{isDateRangeValid ? "✅" : "❌"}</Text>
         </VStack>
       </HStack>
     </VStack>

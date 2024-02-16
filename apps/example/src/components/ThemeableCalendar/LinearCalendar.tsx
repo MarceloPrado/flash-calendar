@@ -100,7 +100,7 @@ export const LinearCalendar = memo(() => {
         calendarDayHeight={30}
         calendarRowVerticalSpacing={16}
         calendarRowHorizontalSpacing={16}
-        onDayPress={loggingHandler("onDayPress")}
+        onCalendarDayPress={loggingHandler("onCalendarDayPress")}
         theme={linearTheme}
       />
     </View>

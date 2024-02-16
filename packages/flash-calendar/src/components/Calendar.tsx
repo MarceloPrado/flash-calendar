@@ -40,10 +40,10 @@ export type CalendarTheme = {
   itemDay?: CalendarItemDayProps["theme"];
 };
 
-export type CalendarOnDayPress = (dateId: string) => void;
+export type CalendaronCalendarDayPress = (dateId: string) => void;
 
 export interface CalendarProps extends UseCalendarParams {
-  onDayPress: CalendarOnDayPress;
+  onCalendarDayPress: CalendaronCalendarDayPress;
   /**
    * The spacing between each calendar row (the month header, the week days row,
    * and the weeks row)
@@ -76,7 +76,7 @@ export interface CalendarProps extends UseCalendarParams {
 
 export const Calendar = memo(
   ({
-    onDayPress,
+    onCalendarDayPress,
     calendarRowVerticalSpacing = 8,
     calendarRowHorizontalSpacing = 8,
     theme,
@@ -153,7 +153,7 @@ export const Calendar = memo(
                 >
                   <CalendarItemDay
                     metadata={dayProps}
-                    onPress={onDayPress}
+                    onPress={onCalendarDayPress}
                     height={calendarDayHeight}
                     theme={theme?.itemDay}
                   >

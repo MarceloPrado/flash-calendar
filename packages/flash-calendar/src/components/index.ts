@@ -55,7 +55,7 @@ type CalendarNamespace = {
   List: typeof CalendarList;
 } & typeof CalendarDefault;
 export {
-  CalendarOnDayPress,
+  CalendaronCalendarDayPress,
   CalendarProps,
   CalendarTheme,
 } from "@/components/Calendar";

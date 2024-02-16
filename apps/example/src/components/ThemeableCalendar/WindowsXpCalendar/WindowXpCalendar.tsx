@@ -167,7 +167,7 @@ export const WindowsXpCalendar = memo((props: WindowsXpCalendarProps) => {
                 <Calendar.Item.Day
                   height={DAY_HEIGHT}
                   metadata={day}
-                  onPress={props.onDayPress}
+                  onPress={props.onCalendarDayPress}
                   theme={calendarTheme.itemDay}
                 >
                   {day.displayLabel}
