@@ -1,9 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { add, set, startOfMonth, sub } from "date-fns";
+import { add, endOfYear, startOfMonth, startOfYear, sub } from "date-fns";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Button, Text, View } from "react-native";
 
-import { Calendar, CalendarListRef, CalendarOnDayPress } from "@/components";
+import {
+  Calendar,
+  CalendarListProps,
+  CalendarListRef,
+  CalendarOnDayPress,
+} from "@/components";
 import { HStack } from "@/components/HStack";
 import { VStack } from "@/components/VStack";
 import { paddingDecorator } from "@/developer/decorators";
@@ -176,6 +181,15 @@ export const DateRangePicker = () => {
     startId: undefined,
     endId: undefined,
   });
+  const calendarListProps = useMemo<Partial<CalendarListProps>>(() => {
+    const today = new Date();
+    return {
+      calendarInitialMonthId: toDateId(today),
+      calendarMinDateId: toDateId(startOfYear(today)),
+      calendarMaxDateId: toDateId(endOfYear(today)),
+    };
+  }, []);
+
   const handleDayPress = useCallback<CalendarOnDayPress>(
     (dateId: string) => {
       // Starting the first range
@@ -217,13 +231,13 @@ export const DateRangePicker = () => {
 
   return (
     <VStack spacing={20} grow alignItems="center">
-      <Text>This shows how to build a date range picker</Text>
+      <Text>
+        This shows how to build a date range picker bounded by the current year
+      </Text>
       <View style={{ flex: 1, width: "100%" }}>
         <Calendar.List
+          {...calendarListProps}
           onDayPress={handleDayPress}
-          calendarInitialMonthId={"2024-02-13"}
-          calendarMinDateId={"2024-01-01"}
-          calendarMaxDateId={"2024-12-31"}
           calendarActiveDateRanges={calendarActiveDateRanges}
         />
       </View>

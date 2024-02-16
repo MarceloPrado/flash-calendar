@@ -106,7 +106,6 @@ describe("getHeightForMonth", () => {
   });
 
   it("February 24 has the right height with base options", () => {
-    // {"calendarAdditionalHeight": 0, "calendarDayHeight": 32, "calendarMonthHeaderHeight": 20, "calendarRowVerticalSpacing": 8, "calendarSpacing": 20, "calendarWeekHeaderHeight": 32}
     const calendarMonthHeaderHeight = 20;
     const calendarRowVerticalSpacing = 8;
     const calendarWeekHeaderHeight = 32;
@@ -134,6 +133,118 @@ describe("getHeightForMonth", () => {
 
 describe("useCalendarList", () => {
   describe("Min/Max dates", () => {
+    it("Max: virtualization still works as expected", () => {
+      const { result } = renderHook(() =>
+        useCalendarList({
+          calendarFirstDayOfWeek: "sunday",
+          calendarFutureScrollRangeInMonths: 2,
+          calendarPastScrollRangeInMonths: 2,
+          calendarInitialMonthId: "2024-07-01",
+          calendarMinDateId: "2024-01-01",
+          calendarMaxDateId: "2024-12-31",
+        })
+      );
+
+      // Initially, we render 5 months: the initial month +- 2
+      expect(result.current.monthList).toHaveLength(5);
+      const initialIds = [
+        "2024-05-01",
+        "2024-06-01",
+        "2024-07-01",
+        "2024-08-01",
+        "2024-09-01",
+      ];
+      expect(result.current.monthList.map((m) => m.id)).toEqual(initialIds);
+
+      // After we scroll to the end, we append 2 more months since we're not at the max date yet.
+      act(() => {
+        result.current.appendMonths(2);
+      });
+      expect(result.current.monthList).toHaveLength(7);
+      expect(result.current.monthList.map((m) => m.id)).toEqual([
+        ...initialIds,
+        "2024-10-01",
+        "2024-11-01",
+      ]);
+
+      // After we scroll to the end again, we append just another month since we're at the max date.
+      act(() => {
+        result.current.appendMonths(2); // no change here
+      });
+
+      expect(result.current.monthList).toHaveLength(8);
+
+      const finalIds = [
+        ...initialIds,
+        "2024-10-01",
+        "2024-11-01",
+        "2024-12-01",
+      ];
+      expect(result.current.monthList.map((m) => m.id)).toEqual(finalIds);
+
+      // If we try scrolling once more, it's a no-op
+      act(() => {
+        result.current.appendMonths(2);
+      });
+      expect(result.current.monthList.map((m) => m.id)).toEqual(finalIds);
+    });
+
+    it("Min: virtualization still works as expected", () => {
+      const { result } = renderHook(() =>
+        useCalendarList({
+          calendarFirstDayOfWeek: "sunday",
+          calendarFutureScrollRangeInMonths: 2,
+          calendarPastScrollRangeInMonths: 2,
+          calendarInitialMonthId: "2024-07-01",
+          calendarMinDateId: "2024-01-01",
+          calendarMaxDateId: "2024-12-31",
+        })
+      );
+
+      // Initially, we render 5 months: the initial month +- 2
+      expect(result.current.monthList).toHaveLength(5);
+      const initialIds = [
+        "2024-05-01",
+        "2024-06-01",
+        "2024-07-01",
+        "2024-08-01",
+        "2024-09-01",
+      ];
+      expect(result.current.monthList.map((m) => m.id)).toEqual(initialIds);
+
+      // After we scroll to the beginning, we prepend 2 more months since we're not at the min date yet.
+      act(() => {
+        result.current.prependMonths(2);
+      });
+      expect(result.current.monthList).toHaveLength(7);
+      expect(result.current.monthList.map((m) => m.id)).toEqual([
+        "2024-03-01",
+        "2024-04-01",
+        ...initialIds,
+      ]);
+
+      // After we scroll to the beginning again, we prepend two months again, reaching the min date.
+      act(() => {
+        result.current.prependMonths(2); // no change here
+      });
+      expect(result.current.monthList).toHaveLength(9);
+
+      const finalIds = [
+        "2024-01-01",
+        "2024-02-01",
+        "2024-03-01",
+        "2024-04-01",
+        ...initialIds,
+      ];
+      expect(result.current.monthList.map((m) => m.id)).toEqual(finalIds);
+
+      // If we try scrolling once more, it's a no-op
+      act(() => {
+        result.current.prependMonths(2);
+      });
+      expect(result.current.monthList.map((m) => m.id)).toEqual(finalIds);
+    });
+
     it("Returns a single month when min and max are in the same month", () => {
       const { result } = renderHook(() =>
         useCalendarList({
