@@ -12,6 +12,10 @@ import { toDateId } from "@/helpers/dates";
 import { useDateRange } from "@/hooks/useDateRange";
 import { useTheme } from "@/hooks/useTheme";
 
+const today = new Date();
+
+const startOfThisMonth = startOfMonth(today);
+
 const CalendarListMeta: Meta<typeof Calendar.List> = {
   title: "Calendar.List",
   component: Calendar.List,
@@ -20,6 +24,14 @@ const CalendarListMeta: Meta<typeof Calendar.List> = {
     onCalendarDayPress: loggingHandler("onCalendarDayPress"),
     calendarRowVerticalSpacing: 8,
     calendarRowHorizontalSpacing: 8,
+    calendarFutureScrollRangeInMonths: 6,
+    calendarPastScrollRangeInMonths: 6,
+
+    calendarFirstDayOfWeek: "sunday",
+    calendarInitialMonthId: toDateId(startOfThisMonth),
+    calendarDayFormat: "d",
+    calendarWeekDayFormat: "EEEEE",
+    calendarMonthFormat: "MMMM yyyy",
   },
   decorators: [paddingDecorator],
 };
@@ -116,32 +128,14 @@ export const ImperativeScrolling = () => {
             }}
           />
         </HStack>
-        <HStack spacing={12}>
-          <Button
-            title="Past year"
-            onPress={() => {
-              const pastYear = sub(currentMonth, { years: 1 });
-              setCurrentMonth(pastYear);
-              ref.current?.scrollToDate(pastYear, true);
-            }}
-          />
-          <Button
-            title="Today"
-            onPress={() => {
-              const thisMonth = startOfMonth(new Date());
-              setCurrentMonth(thisMonth);
-              ref.current?.scrollToDate(thisMonth, true);
-            }}
-          />
-          <Button
-            title="Next year"
-            onPress={() => {
-              const nextYear = add(currentMonth, { years: 1 });
-              setCurrentMonth(nextYear);
-              ref.current?.scrollToDate(nextYear, true);
-            }}
-          />
-        </HStack>
+        <Button
+          title="Today"
+          onPress={() => {
+            const thisMonth = startOfMonth(new Date());
+            setCurrentMonth(thisMonth);
+            ref.current?.scrollToDate(thisMonth, true);
+          }}
+        />
         <View style={{ flex: 1, width: "100%" }}>
           <Calendar.List
             onCalendarDayPress={loggingHandler("onCalendarDayPress")}

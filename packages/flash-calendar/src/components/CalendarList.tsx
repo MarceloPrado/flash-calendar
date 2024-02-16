@@ -33,13 +33,17 @@ export interface CalendarListProps
   extends Omit<CalendarProps, "calendarMonthId">,
     Omit<FlashListProps<CalendarMonthEnhanced>, "renderItem" | "data"> {
   /**
-   * How many months to show before the current month
-   * @default 12
+   * How many months to show before the current month. Once the user scrolls
+   * past this range and if they haven't exceeded the `calendarMinDateId`, new
+   * months are prepended in this increment.
+   * @default 6
    */
   calendarPastScrollRangeInMonths?: number;
   /**
-   * How many months to show after the current month.
-   * @default 12
+   * How many months to show after the current month. Once the user scrolls
+   * past this range and if they haven't exceeded the `calendarMaxDateId`, new
+   * months are appended in this increment.
+   * @default 6
    */
   calendarFutureScrollRangeInMonths?: number;
 
@@ -97,8 +101,8 @@ export const CalendarList = memo(
       {
         // List-related props
         calendarInitialMonthId,
-        calendarPastScrollRangeInMonths = 12,
-        calendarFutureScrollRangeInMonths = 12,
+        calendarPastScrollRangeInMonths = 6,
+        calendarFutureScrollRangeInMonths = 6,
         calendarFirstDayOfWeek = "sunday",
         CalendarScrollComponent = FlashList,
 
