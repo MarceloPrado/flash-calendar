@@ -94,73 +94,64 @@ export const ImperativeScrolling = () => {
   const ref = useRef<CalendarListRef>(null);
 
   return (
-    <VStack spacing={20} grow alignItems="center">
-      <HStack spacing={12}>
-        <Button
-          title="Past month"
-          onPress={() => {
-            const pastMonth = sub(currentMonth, { months: 1 });
-            setCurrentMonth(pastMonth);
-            ref.current?.scrollToDate(pastMonth, true);
-          }}
-        />
-        <Text>Current: {toDateId(currentMonth)}</Text>
-        <Button
-          title="Next month"
-          onPress={() => {
-            const nextMonth = add(currentMonth, { months: 1 });
-            setCurrentMonth(nextMonth);
-            ref.current?.scrollToDate(nextMonth, true);
-          }}
-        />
-      </HStack>
-      <HStack spacing={12}>
-        <Button
-          title="Past year"
-          onPress={() => {
-            const pastYear = sub(currentMonth, { years: 1 });
-            setCurrentMonth(pastYear);
-            ref.current?.scrollToDate(pastYear, true);
-          }}
-        />
-        <Button
-          title="Today"
-          onPress={() => {
-            const thisMonth = startOfMonth(new Date());
-            setCurrentMonth(thisMonth);
-            ref.current?.scrollToDate(thisMonth, true);
-          }}
-        />
-        <Button
-          title="Next year"
-          onPress={() => {
-            const nextYear = add(currentMonth, { years: 1 });
-            setCurrentMonth(nextYear);
-            ref.current?.scrollToDate(nextYear, true);
-          }}
-        />
-      </HStack>
-      <View
-        // This hardcoded height is just to simplify testing the programmatic scrolling
-        style={{
-          height: 32 * 8,
-          width: "100%",
-          backgroundColor: "rgba(0,0,0,.05)",
-        }}
-      >
-        <Calendar.List
-          onDayPress={loggingHandler("onDayPress")}
-          calendarInitialMonthId={toDateId(currentMonth)}
-          calendarPastScrollRangeInMonths={0}
-          calendarFutureScrollRangeInMonths={0}
-          calendarSpacing={20}
-          calendarRowVerticalSpacing={0}
-          calendarMonthHeaderHeight={32}
-          calendarWeekHeaderHeight={32}
-          ref={ref}
-        />
-      </View>
-    </VStack>
+    <View style={{ paddingTop: 20, flex: 1 }}>
+      <VStack spacing={20} grow alignItems="center">
+        <HStack spacing={12}>
+          <Button
+            title="Past month"
+            onPress={() => {
+              const pastMonth = sub(currentMonth, { months: 1 });
+              setCurrentMonth(pastMonth);
+              ref.current?.scrollToDate(pastMonth, true);
+            }}
+          />
+          <Text>Current: {toDateId(currentMonth)}</Text>
+          <Button
+            title="Next month"
+            onPress={() => {
+              const nextMonth = add(currentMonth, { months: 1 });
+              setCurrentMonth(nextMonth);
+              ref.current?.scrollToDate(nextMonth, true);
+            }}
+          />
+        </HStack>
+        <HStack spacing={12}>
+          <Button
+            title="Past year"
+            onPress={() => {
+              const pastYear = sub(currentMonth, { years: 1 });
+              setCurrentMonth(pastYear);
+              ref.current?.scrollToDate(pastYear, true);
+            }}
+          />
+          <Button
+            title="Today"
+            onPress={() => {
+              const thisMonth = startOfMonth(new Date());
+              setCurrentMonth(thisMonth);
+              ref.current?.scrollToDate(thisMonth, true);
+            }}
+          />
+          <Button
+            title="Next year"
+            onPress={() => {
+              const nextYear = add(currentMonth, { years: 1 });
+              setCurrentMonth(nextYear);
+              ref.current?.scrollToDate(nextYear, true);
+            }}
+          />
+        </HStack>
+        <View style={{ flex: 1, width: "100%" }}>
+          <Calendar.List
+            onDayPress={loggingHandler("onDayPress")}
+            calendarInitialMonthId={toDateId(currentMonth)}
+            ref={ref}
+            calendarPastScrollRangeInMonths={2}
+            calendarFutureScrollRangeInMonths={2}
+          />
+        </View>
+      </VStack>
+    </View>
   );
 };
 

@@ -1,6 +1,7 @@
 import { act, renderHook } from "@testing-library/react-hooks";
 import { describe, it, expect } from "bun:test";
 
+import { fromDateId } from "@/helpers/dates";
 import { getHeightForMonth, useCalendarList } from "@/hooks/useCalendarList";
 
 describe("getHeightForMonth", () => {
@@ -12,8 +13,6 @@ describe("getHeightForMonth", () => {
     const calendarSpacing = 0;
     const calendarAdditionalHeight = 0;
 
-    const expectedHeight = 50 + 5 + 30 + 5 + 5 * (20 + 5);
-
     expect(
       getHeightForMonth({
         calendarDayHeight,
@@ -28,7 +27,7 @@ describe("getHeightForMonth", () => {
           numberOfWeeks: 5,
         },
       })
-    ).toBe(expectedHeight);
+    ).toBe(210);
   });
 
   it("Measures months with 5 weeks (with calendar spacing)", () => {
@@ -39,8 +38,6 @@ describe("getHeightForMonth", () => {
     const calendarSpacing = 99;
     const calendarAdditionalHeight = 0;
 
-    const expectedHeight = 50 + 5 + 30 + 5 + 5 * (20 + 5) + 99;
-
     expect(
       getHeightForMonth({
         calendarDayHeight,
@@ -55,7 +52,7 @@ describe("getHeightForMonth", () => {
           numberOfWeeks: 5,
         },
       })
-    ).toBe(expectedHeight);
+    ).toBe(309);
   });
 
   it("Accounts for additional height", () => {
@@ -66,9 +63,6 @@ describe("getHeightForMonth", () => {
     const calendarSpacing = 0;
     const calendarAdditionalHeight = 24;
 
-    const expectedHeight =
-      50 + 5 + (30 + 5) + 5 * (20 + 5) + calendarAdditionalHeight;
-
     expect(
       getHeightForMonth({
         calendarDayHeight,
@@ -83,7 +77,7 @@ describe("getHeightForMonth", () => {
           numberOfWeeks: 5,
         },
       })
-    ).toBe(expectedHeight);
+    ).toBe(234);
   });
 
   it("Measures months with 6 weeks", () => {
@@ -93,8 +87,6 @@ describe("getHeightForMonth", () => {
     const calendarDayHeight = 20;
     const calendarSpacing = 0;
     const calendarAdditionalHeight = 0;
-
-    const expectedHeight = 50 + 5 + (30 + 5) + 6 * (20 + 5);
 
     expect(
       getHeightForMonth({
@@ -110,7 +102,33 @@ describe("getHeightForMonth", () => {
           numberOfWeeks: 6,
         },
       })
-    ).toBe(expectedHeight);
+    ).toBe(235);
+  });
+
+  it("February 24 has the right height with base options", () => {
+    // {"calendarAdditionalHeight": 0, "calendarDayHeight": 32, "calendarMonthHeaderHeight": 20, "calendarRowVerticalSpacing": 8, "calendarSpacing": 20, "calendarWeekHeaderHeight": 32}
+    const calendarMonthHeaderHeight = 20;
+    const calendarRowVerticalSpacing = 8;
+    const calendarWeekHeaderHeight = 32;
+    const calendarDayHeight = 32;
+    const calendarSpacing = 20;
+    const calendarAdditionalHeight = 0;
+
+    expect(
+      getHeightForMonth({
+        calendarDayHeight,
+        calendarAdditionalHeight,
+        calendarMonthHeaderHeight,
+        calendarRowVerticalSpacing,
+        calendarWeekHeaderHeight,
+        calendarSpacing,
+        calendarMonth: {
+          id: "some",
+          date: fromDateId("2024-02-01"),
+          numberOfWeeks: 5,
+        },
+      })
+    ).toBe(280);
   });
 });
 

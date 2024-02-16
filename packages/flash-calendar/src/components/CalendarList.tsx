@@ -202,7 +202,6 @@ export const CalendarList = memo(
             calendarAdditionalHeight,
             calendarWeekHeaderHeight,
           });
-          console.log(`Month ${item.id} has a height of ${monthHeight}.`);
           layout.size = monthHeight;
         },
         [
