@@ -6,19 +6,15 @@ import {
   toDateId,
 } from "@marceloterreiro/flash-calendar";
 import type { Meta } from "@storybook/react";
+import { add, format, sub } from "date-fns";
 import { useCallback, useMemo, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-
-import { VStack } from "@/components/VStack";
-import { add, format, sub } from "date-fns";
-
 import {
   WindowsXpButton,
   WindowsXpCalendar,
   WindowsXpWindow,
   windowsXpTokens,
 } from "./WindowsXpCalendar";
-
 import { LinearCalendar } from "./LinearCalendar";
 
 const styles = StyleSheet.create({
@@ -77,7 +73,7 @@ export const WindowsXP = () => {
   return (
     <View style={styles.windowsXpBackground}>
       <WindowsXpWindow title="@marceloterreiro/flash-calendar">
-        <VStack spacing={12} justifyContent="flex-start">
+        <Calendar.VStack spacing={12} justifyContent="flex-start">
           <Text>
             This is a Windows's XP themed calendar, using the composable API
             pattern to fully customize the calendar's appearance.
@@ -99,7 +95,7 @@ export const WindowsXP = () => {
               calendarMaxDateId="2024-06-31"
             />
           )}
-        </VStack>
+        </Calendar.VStack>
       </WindowsXpWindow>
     </View>
   );

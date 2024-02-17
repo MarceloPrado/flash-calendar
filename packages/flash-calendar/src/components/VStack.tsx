@@ -8,8 +8,6 @@ import {
 } from "react";
 import { StyleSheet, View, type ViewStyle } from "react-native";
 
-import { BaseTheme } from "@/helpers/tokens";
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
@@ -22,7 +20,7 @@ export type VStackDividerProps = {
 
 export interface VStackProps {
   children: ReactNode;
-  spacing?: keyof BaseTheme["spacing"];
+  spacing?: number;
 
   alignItems?: ViewStyle["alignItems"];
   justifyContent?: ViewStyle["justifyContent"];
@@ -59,7 +57,7 @@ export const VStack = ({
         .map((c) => (isFragment(c) ? c.props.children : c))
         .flat()
         .filter((c) => c !== null && typeof c !== "undefined")
-        .map((child, i, arr) => (
+        .map((child, i) => (
           <Fragment key={i}>{child}</Fragment>
         ))}
     </View>

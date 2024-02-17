@@ -24,8 +24,8 @@ const CalendarListMeta: Meta<typeof Calendar.List> = {
     onCalendarDayPress: loggingHandler("onCalendarDayPress"),
     calendarRowVerticalSpacing: 8,
     calendarRowHorizontalSpacing: 8,
-    calendarFutureScrollRangeInMonths: 6,
-    calendarPastScrollRangeInMonths: 6,
+    calendarFutureScrollRangeInMonths: 12,
+    calendarPastScrollRangeInMonths: 12,
 
     calendarFirstDayOfWeek: "sunday",
     calendarInitialMonthId: toDateId(startOfThisMonth),
@@ -141,8 +141,6 @@ export const ImperativeScrolling = () => {
             onCalendarDayPress={loggingHandler("onCalendarDayPress")}
             calendarInitialMonthId={toDateId(currentMonth)}
             ref={ref}
-            calendarPastScrollRangeInMonths={2}
-            calendarFutureScrollRangeInMonths={2}
           />
         </View>
       </VStack>

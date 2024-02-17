@@ -1,6 +1,6 @@
 import { View, StyleSheet } from "react-native";
-import { WindowsXpText } from "src/components/ThemeableCalendar/WindowsXpCalendar/WindowsXpText";
-import { windowsXpTokens } from "src/components/ThemeableCalendar/WindowsXpCalendar/utils";
+import { WindowsXpText } from "./WindowsXpText";
+import { windowsXpTokens } from "./utils";
 
 const styles = StyleSheet.create({
   windowContent: {

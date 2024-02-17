@@ -1,8 +1,6 @@
 import { useMemo, type ReactNode } from "react";
 import { StyleSheet, View, type ViewStyle } from "react-native";
 
-import { BaseTheme } from "@/helpers/tokens";
-
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
@@ -20,7 +18,7 @@ export interface HStackProps {
   children: ReactNode;
   grow?: boolean;
   shrink?: boolean;
-  spacing?: keyof BaseTheme["spacing"];
+  spacing?: number;
   wrap?: ViewStyle["flexWrap"];
   backgroundColor?: string;
   style?: ViewStyle;

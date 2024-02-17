@@ -8,6 +8,12 @@ import { CalendarItemWeekName } from "@/components/CalendarItemWeekName";
 import { CalendarList } from "@/components/CalendarList";
 import { CalendarRowMonth } from "@/components/CalendarRowMonth";
 import { CalendarRowWeek } from "@/components/CalendarRowWeek";
+import { HStack } from "@/components/HStack";
+import { VStack } from "@/components/VStack";
+
+/**
+ * This file houses the public API for the flash-calendar package.
+ */
 
 type CalendarItemDayNamespace = {
   Container: typeof CalendarItemDayContainer;
@@ -53,6 +59,8 @@ type CalendarNamespace = {
   Item: typeof CalendarItemWithNamespace;
   Row: typeof CalendarRowWithNamespace;
   List: typeof CalendarList;
+  HStack: typeof HStack;
+  VStack: typeof VStack;
 } & typeof CalendarDefault;
 export {
   CalendaronCalendarDayPress,
@@ -70,5 +78,11 @@ export type {
   CalendarListRef,
   CalendarMonthEnhanced,
 } from "@/components/CalendarList";
+
+// Useful for customizing the layout of the calendar, re-exported for convenience
+CalendarWithNamespace.HStack = HStack;
+CalendarWithNamespace.VStack = VStack;
+export type { HStackProps } from "@/components/HStack";
+export type { VStackProps } from "@/components/VStack";
 
 export const Calendar = CalendarWithNamespace;

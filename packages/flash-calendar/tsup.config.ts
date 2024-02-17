@@ -8,5 +8,7 @@ export default defineConfig({
   dts: false,
   sourcemap: true,
   clean: true,
+  format: ["cjs", "esm"],
   external: ["react", "react-native", "react-native-web"],
+  noExternal: ["date-fns"],
 });

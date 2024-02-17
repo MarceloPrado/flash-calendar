@@ -1,6 +1,3 @@
-import { HStack } from "@/components/HStack";
-import { VStack } from "@/components/VStack";
-import { BaseTheme } from "@/helpers/tokens";
 import {
   Calendar,
   CalendarProps,
@@ -10,8 +7,8 @@ import {
 import { format } from "date-fns";
 import { memo, useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { WindowsXpChevronButton } from "src/components/ThemeableCalendar/WindowsXpCalendar/WindowXpButton";
-import { windowsXpTokens } from "src/components/ThemeableCalendar/WindowsXpCalendar/utils";
+import { WindowsXpChevronButton } from "./WindowXpButton";
+import { windowsXpTokens } from "./utils";
 
 const DAY_HEIGHT = 25;
 const MONTH_HEADER_HEIGHT = 40;
@@ -117,11 +114,9 @@ export const WindowsXpCalendar = memo((props: WindowsXpCalendarProps) => {
 
   return (
     <View style={styles.calendarContainer}>
-      <VStack
-        spacing={props.calendarRowVerticalSpacing as keyof BaseTheme["spacing"]}
-      >
+      <Calendar.VStack spacing={props.calendarRowVerticalSpacing}>
         {/* Replaces `Calendar.Row.Month` with a custom implementation */}
-        <HStack
+        <Calendar.HStack
           alignItems="center"
           justifyContent="space-around"
           width={"100%"}
@@ -140,7 +135,7 @@ export const WindowsXpCalendar = memo((props: WindowsXpCalendarProps) => {
             type="right"
             onPress={props.onNextMonthPress}
           />
-        </HStack>
+        </Calendar.HStack>
 
         <Calendar.Row.Week spacing={4}>
           {weekDaysList.map((day, i) => (
@@ -183,7 +178,7 @@ export const WindowsXpCalendar = memo((props: WindowsXpCalendarProps) => {
             Today: {format(today?.date ?? new Date(), "dd/MM/yyyy")}
           </Text>
         </View>
-      </VStack>
+      </Calendar.VStack>
     </View>
   );
 });
