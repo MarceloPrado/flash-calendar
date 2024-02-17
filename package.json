@@ -1,26 +1,27 @@
 {
   "name": "@marceloterreiro/monorepo",
-  "private": true,
   "version": "1.0.0",
+  "private": true,
   "workspaces": [
     "apps/*",
     "kitchen-sink/*",
     "packages/*"
   ],
   "scripts": {
+    "analyze:bundle": "scripts/analyze-bundle.sh",
     "build": "turbo build",
     "clean": "turbo clean && rm -rf node_modules",
     "dev": "turbo dev",
-    "kitchen-sink:expo": "cd kitchen-sink/expo && bun run ios",
-    "kitchen-sink:vanilla": "cd kitchen-sink/vanilla && bun run ios",
-    "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "kitchen-sink:expo": "cd kitchen-sink/expo && bun run ios",
+    "lint": "turbo lint",
     "test": "bun test"
   },
   "devDependencies": {
     "@marceloterreiro/eslint-config": "*",
     "@marceloterreiro/tsconfig": "*",
     "@typescript-eslint/typescript-estree": "^6.21.0",
+    "eslint-plugin-import": "^2.29.1",
     "prettier": "^2.8.8",
     "turbo": "^1.12.1",
     "typescript": "^5.3.0"

@@ -28,11 +28,11 @@ export type {
   CalendarItemDayProps,
 } from "@/components/CalendarItemDay";
 
-type CalendarItemNamespace = {
+interface CalendarItemNamespace {
   Day: typeof CalendarItemDayWithNamespace;
   WeekName: typeof CalendarItemWeekName;
   Empty: typeof CalendarItemEmpty;
-};
+}
 
 const CalendarItemWithNamespace = {} as CalendarItemNamespace;
 CalendarItemWithNamespace.Day = CalendarItemDayWithNamespace;
@@ -43,10 +43,10 @@ export type { CalendarItemWeekNameProps } from "@/components/CalendarItemWeekNam
 CalendarItemWithNamespace.Empty = CalendarItemEmpty;
 export type { CalendarItemEmptyProps } from "@/components/CalendarItemEmpty";
 
-type CalendarRowNamespace = {
+interface CalendarRowNamespace {
   Month: typeof CalendarRowMonth;
   Week: typeof CalendarRowWeek;
-};
+}
 
 const CalendarRowWithNamespace = {} as CalendarRowNamespace;
 CalendarRowWithNamespace.Month = CalendarRowMonth;
@@ -62,7 +62,7 @@ type CalendarNamespace = {
   HStack: typeof HStack;
   VStack: typeof VStack;
 } & typeof CalendarDefault;
-export {
+export type {
   CalendaronCalendarDayPress,
   CalendarProps,
   CalendarTheme,

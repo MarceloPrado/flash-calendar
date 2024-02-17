@@ -3,13 +3,13 @@ import {
   endOfMonth,
   format,
   isWeekend,
-  startOfMonth,
+  subDays,
   startOfWeek,
-  sub,
+  startOfMonth,
 } from "date-fns";
 import { useMemo } from "react";
 
-import { DayState } from "@/components/CalendarItemDay";
+import type { DayState } from "@/components/CalendarItemDay";
 import { fromDateId, toDateId } from "@/helpers/dates";
 import { range } from "@/helpers/numbers";
 
@@ -27,7 +27,7 @@ const getNumberOfEmptyCellsAtStart = (
 };
 
 /** All fields that affects the day's state. */
-type CalendarDayStateFields = {
+interface CalendarDayStateFields {
   /** Is this day disabled? */
   isDisabled: boolean;
   /** Is this the current day? */
@@ -40,7 +40,7 @@ type CalendarDayStateFields = {
   state: DayState;
   /** Is the range valid (has both start and end dates set)? */
   isRangeValid: boolean;
-};
+}
 
 /**
  * The type of each day in the calendar. Has a few pre-computed properties to
@@ -70,9 +70,12 @@ export type CalendarDay = {
 /**
  * An active date range to highlight in the calendar.
  */
-export type CalendarActiveDateRange = { startId?: string; endId?: string };
+export interface CalendarActiveDateRange {
+  startId?: string;
+  endId?: string;
+}
 
-export type UseCalendarParams = {
+export interface UseCalendarParams {
   /**
    * The calendar's month. It can be any date within the month, since it gets
    * normalized to the first day of the month.
@@ -97,22 +100,22 @@ export type UseCalendarParams = {
 
   /**
    * Which `date-fns` token to format the calendar header.
-   * @default "MMMM yyyy" e.g. "January 2022"
+   * @defaultValue "MMMM yyyy" e.g. "January 2022"
    */
   calendarMonthFormat?: string;
   /**
    * Which `date-fns` token to format the week name.
-   * @default "EEEEE" e.g. "S"
+   * @defaultValue "EEEEE" e.g. "S"
    */
   calendarWeekDayFormat?: string;
   /**
    * Which `date-fns` token to format the day.
-   * @default "d" e.g. "1"
+   * @defaultValue "d" e.g. "1"
    */
   calendarDayFormat?: string;
   /**
    * The day of the week to start the calendar with.
-   * @default "sunday"
+   * @defaultValue "sunday"
    */
   calendarFirstDayOfWeek?: "sunday" | "monday";
   /**
@@ -124,7 +127,7 @@ export type UseCalendarParams = {
    * unless they are part of an active range.
    */
   calendarDisabledDateIds?: string[];
-};
+}
 
 type GetStateFields = Pick<
   UseCalendarParams,
@@ -158,9 +161,7 @@ const getStateFields = ({
   });
 
   const isRangeValid =
-    activeRange &&
-    activeRange.startId !== undefined &&
-    activeRange.endId !== undefined;
+    activeRange?.startId !== undefined && activeRange.endId !== undefined;
 
   const isDisabled =
     (calendarDisabledDateIds?.includes(id) ||
@@ -180,7 +181,7 @@ const getStateFields = ({
   return {
     isStartOfRange: id === activeRange?.startId,
     isEndOfRange: id === activeRange?.endId,
-    isRangeValid: isRangeValid ?? false,
+    isRangeValid,
     state,
     isDisabled,
     isToday,
@@ -216,7 +217,7 @@ export const buildCalendar = (params: UseCalendarParams) => {
   const todayId = toDateId(new Date());
 
   // The first day to iterate is the first day of the month minus the empty days at the start
-  let dayToIterate = sub(monthStart, { days: emptyDaysAtStart });
+  let dayToIterate = subDays(monthStart, emptyDaysAtStart);
 
   const weeksList: CalendarDay[][] = [
     [
@@ -299,7 +300,7 @@ export const buildCalendar = (params: UseCalendarParams) => {
   );
 
   const startOfWeekDate = startOfWeek(month, {
-    weekStartsOn: calendarFirstDayOfWeek === "sunday" ? 0 : 1,
+    weekStartsOn: calendarFirstDayOfWeek === "monday" ? 1 : 0,
   });
   const weekDaysList = range(1, 7).map((i) =>
     format(addDays(startOfWeekDate, i - 1), calendarWeekDayFormat)

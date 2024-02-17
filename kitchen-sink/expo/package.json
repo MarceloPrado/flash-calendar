@@ -1,25 +1,30 @@
 {
   "name": "@marceloterreiro/kitchen-sink-expo",
   "version": "1.0.0",
+  "private": true,
   "main": "./index.js",
   "scripts": {
-    "start": "expo start",
+    "analyze:android": "source-map-explorer 'dist/_expo/static/js/android/*.js' 'dist/_expo/static/js/android/*.js.map'",
+    "analyze:ios": "source-map-explorer 'dist/_expo/static/js/ios/*.js' 'dist/_expo/static/js/ios/*.js.map'",
     "android": "expo start --android",
+    "build:android": "bunx expo export --source-maps --platform android",
+    "build:ios": "bunx expo export --source-maps --platform ios",
+    "clean": "rm -rf dist && rm -rf node_modules",
     "ios": "expo start --ios",
-    "web": "expo start --web",
-    "clean": "rm -rf dist && rm -rf node_modules"
+    "start": "expo start",
+    "web": "expo start --web"
   },
   "dependencies": {
+    "@marceloterreiro/flash-calendar": "link:@marceloterreiro/flash-calendar",
     "expo": "~50.0.7",
     "expo-status-bar": "~1.11.1",
     "react": "18.2.0",
-    "react-native": "0.73.4",
-    "@marceloterreiro/flash-calendar": "link:@marceloterreiro/flash-calendar"
+    "react-native": "0.73.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/react": "~18.2.45",
+    "source-map-explorer": "^2.5.3",
     "typescript": "^5.1.3"
-  },
-  "private": true
+  }
 }

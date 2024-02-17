@@ -14,9 +14,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export type VStackDividerProps = {
+export interface VStackDividerProps {
   marginBottom: number;
-};
+}
 
 export interface VStackProps {
   children: ReactNode;
@@ -33,13 +33,13 @@ function isFragment(child: ReactNode): child is ReactElement {
   return isValidElement(child) && child.type === Fragment;
 }
 
-export const VStack = ({
+export function VStack({
   children,
   spacing = 0,
   alignItems,
   justifyContent,
   grow,
-}: VStackProps) => {
+}: VStackProps) {
   const containerStyles = useMemo<ViewStyle>(
     () => ({
       ...styles.container,
@@ -62,4 +62,4 @@ export const VStack = ({
         ))}
     </View>
   );
-};
+}

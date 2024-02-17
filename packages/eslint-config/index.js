@@ -4,22 +4,14 @@ const project = resolve(process.cwd(), "tsconfig.json");
 
 /** @type {import('eslint').Linter.Config} */
 module.exports = {
+  root: true,
   extends: [
-    "eslint:recommended",
-    "eslint-config-universe",
+    "universe/native",
+    "universe/shared/typescript-analysis",
     "eslint-config-turbo",
-    "plugin:react-hooks/recommended",
-    "prettier",
   ],
   parserOptions: {
     project,
-  },
-  globals: {
-    React: true,
-    JSX: true,
-  },
-  env: {
-    node: true,
   },
   settings: {
     "import/resolver": {
@@ -28,25 +20,27 @@ module.exports = {
       },
     },
   },
-  ignorePatterns: [
-    // Ignore dotfiles
-    ".*.js",
-    "node_modules/",
-    "dist/",
-  ],
-  overrides: [
-    {
-      files: ["*.js?(x)", "*.ts?(x)"],
-    },
-  ],
   rules: {
-    "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
-    ],
-    "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "error",
-    "@typescript-eslint/consistent-type-exports": "error",
+    "turbo/no-undeclared-env-vars": "off",
+
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/consistent-type-imports": "error",
+    "@typescript-eslint/consistent-type-definitions": "error",
+
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always",
+        pathGroups: [
+          {
+            pattern: "@/**",
+            group: "external",
+            position: "after",
+          },
+        ],
+        distinctGroup: true,
+      },
+    ],
   },
 };

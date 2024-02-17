@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { memo, useMemo } from "react";
-import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
+import type { TextStyle, ViewStyle } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import { useTheme } from "@/hooks/useTheme";
 
@@ -16,10 +17,10 @@ const styles = StyleSheet.create({
   },
 });
 
-type CalendarRowMonthTheme = {
+interface CalendarRowMonthTheme {
   container?: ViewStyle;
   content?: TextStyle;
-};
+}
 
 export interface CalendarRowMonthProps {
   children: ReactNode;

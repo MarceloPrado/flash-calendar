@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { add, endOfMonth, startOfMonth, sub } from "date-fns";
-
-import { Calendar } from "./Calendar";
+import { addDays, endOfMonth, subDays, startOfMonth } from "date-fns";
 
 import { paddingDecorator } from "@/developer/decorators";
 import { toDateId } from "@/helpers/dates";
+
+import { Calendar } from "./Calendar";
 
 const today = new Date();
 
@@ -54,19 +54,19 @@ export const KichenSink: StoryObj<typeof Calendar> = {
     calendarWeekDayFormat: "EEEEE",
     calendarMonthFormat: "MMMM yyyy",
     calendarDisabledDateIds: [
-      toDateId(add(today, { days: 1 })),
-      toDateId(sub(today, { days: 1 })),
+      toDateId(addDays(today, 1)),
+      toDateId(subDays(today, 1)),
     ],
-    calendarMinDateId: toDateId(add(startOfThisMonth, { days: 2 })),
-    calendarMaxDateId: toDateId(sub(endOfThisMonth, { days: 2 })),
+    calendarMinDateId: toDateId(addDays(startOfThisMonth, 2)),
+    calendarMaxDateId: toDateId(subDays(endOfThisMonth, 2)),
     calendarActiveDateRanges: [
       {
-        startId: toDateId(add(startOfThisMonth, { days: 3 })),
-        endId: toDateId(add(startOfThisMonth, { days: 8 })),
+        startId: toDateId(addDays(startOfThisMonth, 3)),
+        endId: toDateId(addDays(startOfThisMonth, 8)),
       },
       {
-        startId: toDateId(add(startOfThisMonth, { days: 15 })),
-        endId: toDateId(add(startOfThisMonth, { days: 15 })),
+        startId: toDateId(addDays(startOfThisMonth, 15)),
+        endId: toDateId(addDays(startOfThisMonth, 15)),
       },
     ],
   },

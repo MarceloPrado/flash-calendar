@@ -1,4 +1,5 @@
 import { View, StyleSheet } from "react-native";
+
 import { WindowsXpText } from "./WindowsXpText";
 import { windowsXpTokens } from "./utils";
 

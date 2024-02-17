@@ -1,33 +1,28 @@
 import { memo } from "react";
 
-import {
-  CalendarItemDay,
-  CalendarItemDayContainer,
+import type {
   CalendarItemDayContainerProps,
   CalendarItemDayProps,
 } from "@/components/CalendarItemDay";
 import {
-  CalendarItemEmpty,
-  CalendarItemEmptyProps,
-} from "@/components/CalendarItemEmpty";
-import {
-  CalendarItemWeekName,
-  CalendarItemWeekNameProps,
-} from "@/components/CalendarItemWeekName";
-import {
-  CalendarRowMonth,
-  CalendarRowMonthProps,
-} from "@/components/CalendarRowMonth";
-import {
-  CalendarRowWeek,
-  CalendarRowWeekProps,
-} from "@/components/CalendarRowWeek";
+  CalendarItemDay,
+  CalendarItemDayContainer,
+} from "@/components/CalendarItemDay";
+import type { CalendarItemEmptyProps } from "@/components/CalendarItemEmpty";
+import { CalendarItemEmpty } from "@/components/CalendarItemEmpty";
+import type { CalendarItemWeekNameProps } from "@/components/CalendarItemWeekName";
+import { CalendarItemWeekName } from "@/components/CalendarItemWeekName";
+import type { CalendarRowMonthProps } from "@/components/CalendarRowMonth";
+import { CalendarRowMonth } from "@/components/CalendarRowMonth";
+import type { CalendarRowWeekProps } from "@/components/CalendarRowWeek";
+import { CalendarRowWeek } from "@/components/CalendarRowWeek";
 import { VStack } from "@/components/VStack";
 import { uppercaseFirstLetter } from "@/helpers/strings";
-import { BaseTheme } from "@/helpers/tokens";
-import { UseCalendarParams, useCalendar } from "@/hooks/useCalendar";
+import type { BaseTheme } from "@/helpers/tokens";
+import type { UseCalendarParams } from "@/hooks/useCalendar";
+import { useCalendar } from "@/hooks/useCalendar";
 
-export type CalendarTheme = {
+export interface CalendarTheme {
   rowMonth?: CalendarRowMonthProps["theme"];
   rowWeek?: CalendarRowWeekProps["theme"];
   itemWeekName?: CalendarItemWeekNameProps["theme"];
@@ -38,7 +33,7 @@ export type CalendarTheme = {
    * set a base value once and use it for all states.
    */
   itemDay?: CalendarItemDayProps["theme"];
-};
+}
 
 export type CalendaronCalendarDayPress = (dateId: string) => void;
 
@@ -47,27 +42,27 @@ export interface CalendarProps extends UseCalendarParams {
   /**
    * The spacing between each calendar row (the month header, the week days row,
    * and the weeks row)
-   * @default 8
+   * @defaultValue 8
    */
   calendarRowVerticalSpacing?: number;
   /**
    * The spacing between each day in the weeks row.
-   * @default 8
+   * @defaultValue 8
    */
   calendarRowHorizontalSpacing?: number;
   /**
    * The height of each day cell.
-   * @default 32
+   * @defaultValue 32
    */
   calendarDayHeight?: number;
   /**
    * The height of the week day's header.
-   * @default calendarDayHeight
+   * @defaultValue calendarDayHeight
    */
   calendarWeekHeaderHeight?: number;
   /**
    * The height of the month header.
-   * @default 20
+   * @defaultValue 20
    */
   calendarMonthHeaderHeight?: number;
   /** Theme to customize the calendar component. */
@@ -125,15 +120,15 @@ export const Calendar = memo(
               if (isDifferentMonth) {
                 return (
                   <CalendarItemDayContainer
-                    key={id}
-                    isStartOfWeek={isStartOfWeek}
-                    theme={theme?.itemDayContainer}
-                    daySpacing={calendarRowHorizontalSpacing}
                     dayHeight={calendarDayHeight}
+                    daySpacing={calendarRowHorizontalSpacing}
+                    isStartOfWeek={isStartOfWeek}
+                    key={id}
+                    theme={theme?.itemDayContainer}
                   >
                     <CalendarItemEmpty
-                      key={id}
                       height={calendarDayHeight}
+                      key={id}
                       theme={theme?.itemEmpty}
                     />
                   </CalendarItemDayContainer>
@@ -142,19 +137,19 @@ export const Calendar = memo(
 
               return (
                 <CalendarItemDayContainer
+                  dayHeight={calendarDayHeight}
+                  daySpacing={calendarRowHorizontalSpacing}
+                  isStartOfWeek={isStartOfWeek}
                   key={id}
                   shouldShowActiveDayFiller={
-                    isRangeValid && !isEndOfWeek && !isEndOfRange
+                    isRangeValid && !isEndOfWeek ? !isEndOfRange : false
                   }
-                  isStartOfWeek={isStartOfWeek}
                   theme={theme?.itemDayContainer}
-                  daySpacing={calendarRowHorizontalSpacing}
-                  dayHeight={calendarDayHeight}
                 >
                   <CalendarItemDay
+                    height={calendarDayHeight}
                     metadata={dayProps}
                     onPress={onCalendarDayPress}
-                    height={calendarDayHeight}
                     theme={theme?.itemDay}
                   >
                     {displayLabel}
@@ -168,3 +163,4 @@ export const Calendar = memo(
     );
   }
 );
+Calendar.displayName = "Calendar";

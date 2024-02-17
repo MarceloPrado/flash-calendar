@@ -1,5 +1,6 @@
 import { memo, useMemo } from "react";
-import { View, ViewStyle, StyleSheet } from "react-native";
+import type { ViewStyle } from "react-native";
+import { View, StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {

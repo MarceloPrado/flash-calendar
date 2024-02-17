@@ -1,7 +1,9 @@
-import {
-  Calendar,
+import type {
   CalendarActiveDateRange,
   CalendaronCalendarDayPress,
+} from "@marceloterreiro/flash-calendar";
+import {
+  Calendar,
   fromDateId,
   toDateId,
 } from "@marceloterreiro/flash-calendar";
@@ -9,6 +11,7 @@ import type { Meta } from "@storybook/react";
 import { add, format, sub } from "date-fns";
 import { useCallback, useMemo, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+
 import {
   WindowsXpButton,
   WindowsXpCalendar,

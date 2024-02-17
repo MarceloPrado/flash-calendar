@@ -1,12 +1,12 @@
-import {
-  Calendar,
+import type {
   CalendarProps,
   CalendarTheme,
-  useCalendar,
 } from "@marceloterreiro/flash-calendar";
+import { Calendar, useCalendar } from "@marceloterreiro/flash-calendar";
 import { format } from "date-fns";
 import { memo, useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
+
 import { WindowsXpChevronButton } from "./WindowXpButton";
 import { windowsXpTokens } from "./utils";
 
@@ -119,7 +119,7 @@ export const WindowsXpCalendar = memo((props: WindowsXpCalendarProps) => {
         <Calendar.HStack
           alignItems="center"
           justifyContent="space-around"
-          width={"100%"}
+          width="100%"
           style={calendarTheme.rowMonth?.container}
         >
           <WindowsXpChevronButton

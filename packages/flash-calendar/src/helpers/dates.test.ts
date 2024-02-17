@@ -1,4 +1,4 @@
-import { expect, it, describe, beforeEach, afterEach } from "bun:test";
+import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { endOfMonth } from "date-fns";
 
 import { fromDateId, toDateId } from "@/helpers/dates";
@@ -79,3 +79,62 @@ describe("fromDateId", () => {
     expect(toDateId(parsedDate)).toBe("2024-01-01");
   });
 });
+
+// describe("startOfMonth", () => {
+//   it("January", () => {
+//     expect(toDateId(startOfMonth(new Date("2024-01-02")))).toBe("2024-01-01");
+//     expect(toDateId(startOfMonth(new Date("2024-01-31")))).toBe("2024-01-01");
+//   });
+//   it("February", () => {
+//     expect(toDateId(startOfMonth(new Date("2024-02-01")))).toBe("2024-02-01");
+//     expect(toDateId(startOfMonth(new Date("2024-02-29")))).toBe("2024-02-01");
+//   });
+//   it("matches date-fns", () => {
+//     const baseDate = fromDateId("2020-01-01");
+//     range(1, 1000).forEach((i) => {
+//       const date = addDays(baseDate, i);
+//       expect(startOfMonthDateFns(date).toISOString()).toBe(
+//         startOfMonth(date).toISOString()
+//       );
+//       expect(startOfMonthDateFns(date).toISOString()).toBe(
+//         startOfMonth(date).toISOString()
+//       );
+//     });
+//   });
+// });
+
+// describe("startOfWeek", () => {
+//   it("sunday: week of February 17th", () => {
+//     expect(toDateId(startOfWeek(new Date("2024-02-17"), "sunday"))).toBe(
+//       "2024-02-11"
+//     );
+//   });
+//   it("sunday: week of February 11th", () => {
+//     expect(toDateId(startOfWeek(new Date("2024-02-11"), "sunday"))).toBe(
+//       "2024-02-11"
+//     );
+//   });
+//   it("monday: week of February 17th", () => {
+//     expect(toDateId(startOfWeek(new Date("2024-02-17"), "monday"))).toBe(
+//       "2024-02-12"
+//     );
+//   });
+//   it("monday: week of February 11th", () => {
+//     expect(toDateId(startOfWeek(new Date("2024-02-11"), "monday"))).toBe(
+//       "2024-02-05"
+//     );
+//   });
+
+//   it("matches date-fns", () => {
+//     const baseDate = fromDateId("2020-01-01");
+//     range(1, 1000).forEach((i) => {
+//       const date = addDays(baseDate, i);
+//       expect(startOfWeekDateFns(date, { weekStartsOn: 0 }).toISOString()).toBe(
+//         startOfWeek(date, "sunday").toISOString()
+//       );
+//       expect(startOfWeekDateFns(date, { weekStartsOn: 1 }).toISOString()).toBe(
+//         startOfWeek(date, "monday").toISOString()
+//       );
+//     });
+//   });
+// });

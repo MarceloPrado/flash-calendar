@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { memo, useMemo } from "react";
-import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
+import type { TextStyle, ViewStyle } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import { lightTheme } from "@/helpers/tokens";
 import { useTheme } from "@/hooks/useTheme";
@@ -15,10 +16,10 @@ const styles = StyleSheet.create({
   content: {},
 });
 
-type CalendarItemWeekNameTheme = {
+interface CalendarItemWeekNameTheme {
   container?: ViewStyle;
   content?: TextStyle;
-};
+}
 
 export interface CalendarItemWeekNameProps {
   children: ReactNode;

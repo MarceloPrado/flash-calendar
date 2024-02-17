@@ -1,6 +1,7 @@
 import { darken, size } from "polished";
 import { memo } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+
 import { windowsXpTokens } from "./utils";
 
 const styles = StyleSheet.create({

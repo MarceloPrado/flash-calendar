@@ -1,20 +1,16 @@
-import { add, startOfMonth, endOfMonth } from "date-fns";
-import { StyleSheet, View } from "react-native";
-
-import {
-  Calendar,
+import type {
   CalendarActiveDateRange,
   CalendarTheme,
-  toDateId,
 } from "@marceloterreiro/flash-calendar";
-
+import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
 import { loggingHandler } from "@marceloterreiro/flash-calendar/src/developer/loggginHandler";
+import { add, startOfMonth } from "date-fns";
 import { memo } from "react";
+import { StyleSheet, View } from "react-native";
 
 const today = new Date();
 
 const startOfThisMonth = startOfMonth(today);
-const endOfThisMonth = endOfMonth(today);
 
 const styles = StyleSheet.create({
   linearContainer: {

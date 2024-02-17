@@ -1,7 +1,7 @@
-import { FlashList, FlashListProps } from "@shopify/flash-list";
-import { startOfMonth } from "date-fns";
+import type { FlashListProps } from "@shopify/flash-list";
+import { FlashList } from "@shopify/flash-list";
+import type { Ref } from "react";
 import {
-  Ref,
   forwardRef,
   memo,
   useCallback,
@@ -10,14 +10,13 @@ import {
   useRef,
 } from "react";
 import { View } from "react-native";
+import { startOfMonth } from "date-fns";
 
-import { Calendar, CalendarProps } from "@/components/Calendar";
+import type { CalendarProps } from "@/components/Calendar";
+import { Calendar } from "@/components/Calendar";
 import { toDateId } from "@/helpers/dates";
-import {
-  CalendarMonth,
-  getHeightForMonth,
-  useCalendarList,
-} from "@/hooks/useCalendarList";
+import type { CalendarMonth } from "@/hooks/useCalendarList";
+import { getHeightForMonth, useCalendarList } from "@/hooks/useCalendarList";
 
 /**
  * Represents each `CalendarList` item. It's enhanced with the required
@@ -36,14 +35,14 @@ export interface CalendarListProps
    * How many months to show before the current month. Once the user scrolls
    * past this range and if they haven't exceeded the `calendarMinDateId`, new
    * months are prepended in this increment.
-   * @default 12
+   * @defaultValue 12
    */
   calendarPastScrollRangeInMonths?: number;
   /**
    * How many months to show after the current month. Once the user scrolls
    * past this range and if they haven't exceeded the `calendarMaxDateId`, new
    * months are appended in this increment.
-   * @default 12
+   * @defaultValue 12
    */
   calendarFutureScrollRangeInMonths?: number;
 
@@ -56,7 +55,7 @@ export interface CalendarListProps
 
   /**
    * The vertical spacing between each `<Calendar />` component.
-   * @default 20
+   * @defaultValue 20
    */
   calendarSpacing?: number;
 
@@ -71,7 +70,7 @@ export interface CalendarListProps
   /**
    * The scroll component to use. Useful if you need to replace the FlashList
    * with an alternative (e.g. a BottomSheet FlashList).
-   * @default FlashList
+   * @defaultValue FlashList
    */
   CalendarScrollComponent?: typeof FlashList;
 
@@ -91,9 +90,9 @@ export interface CalendarListProps
   renderItem?: FlashListProps<CalendarMonthEnhanced>["renderItem"];
 }
 
-export type CalendarListRef = {
+export interface CalendarListRef {
   scrollToDate: (date: Date, animated: boolean) => void;
-};
+}
 
 export const CalendarList = memo(
   forwardRef(

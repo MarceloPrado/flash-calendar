@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
 import { memo, useMemo } from "react";
-import { StyleSheet, ViewStyle } from "react-native";
+import type { ViewStyle } from "react-native";
+import { StyleSheet } from "react-native";
 
 import { HStack } from "@/components/HStack";
-import { BaseTheme } from "@/helpers/tokens";
+import type { BaseTheme } from "@/helpers/tokens";
 
 export interface CalendarRowWeekProps {
   children: ReactNode;
@@ -11,9 +12,9 @@ export interface CalendarRowWeekProps {
   theme?: CalendarRowWeekTheme;
 }
 
-type CalendarRowWeekTheme = {
+interface CalendarRowWeekTheme {
   container?: ViewStyle;
-};
+}
 
 const styles = StyleSheet.create({
   container: {

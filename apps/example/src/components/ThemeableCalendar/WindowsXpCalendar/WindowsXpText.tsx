@@ -1,5 +1,6 @@
 import { memo } from "react";
-import { Text, TextStyle, StyleSheet } from "react-native";
+import type { TextStyle } from "react-native";
+import { Text, StyleSheet } from "react-native";
 
 export const textStyles = StyleSheet.create({
   windowsXpText: {

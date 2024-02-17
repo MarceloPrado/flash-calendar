@@ -1,16 +1,10 @@
 import type { ReactNode } from "react";
 import { memo, useCallback, useMemo } from "react";
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TextStyle,
-  View,
-  type ViewStyle,
-} from "react-native";
+import type { TextStyle, ViewStyle } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import { BaseTheme } from "@/helpers/tokens";
-import { CalendarDay } from "@/hooks/useCalendar";
+import type { BaseTheme } from "@/helpers/tokens";
+import type { CalendarDay } from "@/hooks/useCalendar";
 import { useTheme } from "@/hooks/useTheme";
 
 const styles = StyleSheet.create({
@@ -28,10 +22,10 @@ const styles = StyleSheet.create({
 
 export type DayState = "idle" | "active" | "today" | "disabled";
 
-type DayTheme = {
+interface DayTheme {
   container: ViewStyle;
   content: TextStyle;
-};
+}
 type CalendarItemDayTheme = Record<
   DayState,
   (params: {
@@ -157,7 +151,7 @@ export const CalendarItemDay = memo(
     }, [baseTheme]);
 
     const handlePress = useCallback(() => {
-      onPress?.(metadata.id);
+      onPress(metadata.id);
     }, [metadata.id, onPress]);
 
     return (
@@ -174,7 +168,7 @@ export const CalendarItemDay = memo(
           return {
             ...container,
             height,
-            ...theme?.["base"]?.({ ...metadata, isPressed }).container,
+            ...theme?.base?.({ ...metadata, isPressed }).container,
             ...theme?.[metadata.state]?.({ ...metadata, isPressed }).container,
           };
         }}
@@ -190,7 +184,7 @@ export const CalendarItemDay = memo(
             <Text
               style={{
                 ...content,
-                ...theme?.["base"]?.({ ...metadata, isPressed }).content,
+                ...theme?.base?.({ ...metadata, isPressed }).content,
                 ...theme?.[metadata.state]?.({ ...metadata, isPressed })
                   .content,
               }}
@@ -204,14 +198,16 @@ export const CalendarItemDay = memo(
   }
 );
 
-type CalendarItemDayContainerTheme = {
+CalendarItemDay.displayName = "CalendarItemDay";
+
+interface CalendarItemDayContainerTheme {
   /** An empty view that acts as a spacer between each day. The spacing is
    * controlled by the `daySpacing` prop. */
   spacer?: ViewStyle;
   /** An absolute positioned filler to join the active days together in a single
    * complete range. */
   activeDayFiller?: ViewStyle;
-};
+}
 
 export interface CalendarItemDayContainerProps {
   children: ReactNode;
@@ -279,3 +275,4 @@ export const CalendarItemDayContainer = memo(
     );
   }
 );
+CalendarItemDayContainer.displayName = "CalendarItemDayContainer";

@@ -11,4 +11,5 @@ export default defineConfig({
   format: ["cjs", "esm"],
   external: ["react", "react-native", "react-native-web"],
   noExternal: ["date-fns"],
+  minify: true,
 });

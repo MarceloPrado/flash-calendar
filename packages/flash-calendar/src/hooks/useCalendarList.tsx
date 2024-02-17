@@ -1,21 +1,21 @@
 import {
-  add,
+  addMonths,
   differenceInMonths,
-  getWeeksInMonth,
   startOfMonth,
-  sub,
+  getWeeksInMonth,
+  subMonths,
 } from "date-fns";
 import { useCallback, useMemo, useState } from "react";
 
-import { CalendarProps } from "@/components/Calendar";
+import type { CalendarProps } from "@/components/Calendar";
 import { fromDateId, toDateId } from "@/helpers/dates";
-import { UseCalendarParams } from "@/hooks/useCalendar";
+import type { UseCalendarParams } from "@/hooks/useCalendar";
 
-export type CalendarMonth = {
+export interface CalendarMonth {
   id: string;
   date: Date;
   numberOfWeeks: number;
-};
+}
 
 const buildMonthList = (
   startingMonth: Date,
@@ -46,7 +46,7 @@ const buildMonthList = (
   const numberOfMonths = differenceInMonths(endingMonth, startingMonth);
 
   for (let i = 1; i <= numberOfMonths; i++) {
-    const month = add(startingMonth, { months: i });
+    const month = addMonths(startingMonth, i);
     const numberOfWeeks = getWeeksInMonth(month, {
       weekStartsOn: firstDayOfWeek === "sunday" ? 0 : 1,
     });
@@ -64,7 +64,7 @@ export interface UseCalendarListParams
   extends Pick<UseCalendarParams, "calendarMinDateId" | "calendarMaxDateId"> {
   /**
    * The initial month to open the calendar to, as a `YYYY-MM-DD` string.
-   * @default today
+   * @defaultValue today
    */
   calendarInitialMonthId?: string;
   /**
@@ -85,9 +85,7 @@ const getEndingMonth = (
   calendarMaxDateId: string | undefined,
   baseDate: Date
 ) => {
-  const endingMonthFromRange = add(baseDate, {
-    months: calendarFutureScrollRange,
-  });
+  const endingMonthFromRange = addMonths(baseDate, calendarFutureScrollRange);
   const newEndingMonthId = toDateId(endingMonthFromRange);
   const safeMaxDateId = calendarMaxDateId ?? newEndingMonthId;
 
@@ -102,9 +100,7 @@ const getStartingMonth = (
   calendarMinDateId: string | undefined,
   baseDate: Date
 ) => {
-  const startingMonthFromRange = sub(baseDate, {
-    months: calendarPastScrollRange,
-  });
+  const startingMonthFromRange = subMonths(baseDate, calendarPastScrollRange);
   const newStartingMonthId = toDateId(startingMonthFromRange);
   const safeMinDateId = calendarMinDateId ?? newStartingMonthId;
 
@@ -162,9 +158,7 @@ export const useCalendarList = ({
   const appendMonths = useCallback(
     (numberOfMonths: number) => {
       // Last month + 1
-      const startingMonth = add(monthList[monthList.length - 1].date, {
-        months: 1,
-      });
+      const startingMonth = addMonths(monthList[monthList.length - 1].date, 1);
 
       const endingMonth = getEndingMonth(
         Math.max(numberOfMonths - 1, 0),
@@ -187,7 +181,7 @@ export const useCalendarList = ({
 
   const prependMonths = useCallback(
     (numberOfMonths: number) => {
-      const endingMonth = sub(monthList[0].date, { months: 1 });
+      const endingMonth = subMonths(monthList[0].date, 1);
 
       const startingMonth = getStartingMonth(
         Math.max(numberOfMonths - 1, 0),
