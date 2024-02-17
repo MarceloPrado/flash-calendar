@@ -4,12 +4,14 @@
   "version": "1.0.0",
   "workspaces": [
     "apps/*",
+    "kitchen-sink/*",
     "packages/*"
   ],
   "scripts": {
     "build": "turbo build",
     "clean": "turbo clean && rm -rf node_modules",
     "dev": "turbo dev",
+    "kitchen-sink:expo": "cd kitchen-sink/expo-app && bun run ios",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "test": "bun test"

@@ -182,7 +182,6 @@ export const CalendarList = memo(
           calendarMinDateId,
         });
 
-      console.log(`Months size: ${monthList.length}`);
       const monthListWithCalendarProps = useMemo(() => {
         return monthList.map((month) => ({
           ...month,
