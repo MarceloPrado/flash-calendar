@@ -2,6 +2,8 @@
 
 This is a monorepo for the flash calendar project.
 
+## Contributing
+
 To install dependencies, run at the root:
 
 ```bash
@@ -25,7 +27,7 @@ To test changes against the kitchen sink repo:
 ```bash
 bun run kitchen-sink:expo
 # or
-bun run kitchen-sink:rn
+bun run kitchen-sink:vanilla
 ```
 
 #### Package structure

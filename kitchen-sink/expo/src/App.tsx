@@ -3,8 +3,8 @@ import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { Button, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
-import { CalendarDemo } from "./src/Calendar";
-import { CalendarListDemo } from "./src/CalendarList";
+import { CalendarDemo } from "./Calendar";
+import { CalendarListDemo } from "./CalendarList";
 
 export default function App() {
   const [demo, setDemo] = useState<"calendar" | "calendarList">("calendar");
