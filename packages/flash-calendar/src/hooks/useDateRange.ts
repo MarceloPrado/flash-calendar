@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 
-import type { CalendaronCalendarDayPress } from "@/components";
+import type { CalendarOnDayPress } from "@/components";
 import type { CalendarActiveDateRange } from "@/hooks/useCalendar";
 
 /**
@@ -15,7 +15,7 @@ export const useDateRange = (
   const [dateRange, setDateRange] =
     useState<CalendarActiveDateRange>(initialDateRange);
 
-  const onCalendarDayPress = useCallback<CalendaronCalendarDayPress>(
+  const onCalendarDayPress = useCallback<CalendarOnDayPress>(
     (dateId: string) => {
       // Starting the first range
       if (!dateRange.startId && !dateRange.endId) {

@@ -1,11 +1,12 @@
 import { describe, expect, it, setSystemTime } from "bun:test";
+import { format } from "date-fns/fp/format";
 
 import { buildCalendar } from "@/hooks/useCalendar";
 
 describe("buildCalendar", () => {
   it("builds the month row", () => {
     const january = buildCalendar({
-      calendarMonthId: "2024-01-01",
+      calendarMonthId: "2024-01-15",
       calendarFirstDayOfWeek: "sunday",
     });
     expect(january.calendarRowMonth).toBe("January 2024");
@@ -15,7 +16,7 @@ describe("buildCalendar", () => {
     const january = buildCalendar({
       calendarMonthId: "2024-01-01",
       calendarFirstDayOfWeek: "sunday",
-      calendarMonthFormat: "MMM yy",
+      getCalendarMonthFormat: format("MMM yy"),
     });
     expect(january.calendarRowMonth).toBe("Jan 24");
   });
@@ -25,6 +26,7 @@ describe("buildCalendar", () => {
       calendarMonthId: "2024-01-01",
       calendarFirstDayOfWeek: "sunday",
     });
+
     expect(january.weekDaysList).toEqual(["S", "M", "T", "W", "T", "F", "S"]);
   });
 
@@ -125,7 +127,7 @@ describe("buildCalendar", () => {
     const { weeksList } = buildCalendar({
       calendarMonthId: "2024-03-01",
       calendarFirstDayOfWeek: "sunday",
-      calendarDayFormat: "dd",
+      getCalendarDayFormat: format("dd"),
     });
     expect(weeksList[0][6].id).toBe("2024-03-02");
     expect(weeksList[0][6].displayLabel).toBe("02");

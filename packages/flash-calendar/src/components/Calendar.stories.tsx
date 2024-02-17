@@ -1,8 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { addDays, endOfMonth, subDays, startOfMonth } from "date-fns";
+import { addDays, subDays } from "date-fns";
+import { format } from "date-fns/fp/format";
 
 import { paddingDecorator } from "@/developer/decorators";
-import { toDateId } from "@/helpers/dates";
+import { toDateId, endOfMonth, startOfMonth } from "@/helpers/dates";
+import { loggingHandler } from "@/developer/loggginHandler";
 
 import { Calendar } from "./Calendar";
 
@@ -22,17 +24,11 @@ const CalendarMeta: Meta<typeof Calendar> = {
       options: ["monday", "sunday"],
     },
     onCalendarDayPress: { action: "onCalendarDayPress" },
-    calendarDayFormat: { type: "string" },
-    calendarMonthFormat: { type: "string" },
-    calendarWeekDayFormat: { type: "string" },
   },
 
   args: {
     calendarFirstDayOfWeek: "sunday",
     calendarMonthId: toDateId(startOfThisMonth),
-    calendarDayFormat: "d",
-    calendarWeekDayFormat: "EEEEE",
-    calendarMonthFormat: "MMMM yyyy",
   },
   decorators: [paddingDecorator],
 };
@@ -50,9 +46,6 @@ export const KichenSink: StoryObj<typeof Calendar> = {
   args: {
     calendarFirstDayOfWeek: "sunday",
     calendarMonthId: toDateId(startOfThisMonth),
-    calendarDayFormat: "d",
-    calendarWeekDayFormat: "EEEEE",
-    calendarMonthFormat: "MMMM yyyy",
     calendarDisabledDateIds: [
       toDateId(addDays(today, 1)),
       toDateId(subDays(today, 1)),
@@ -104,4 +97,17 @@ export const ActiveDateRanges: StoryObj<typeof Calendar> = {
     ],
     calendarMonthId: "2024-01-01",
   },
+};
+
+export const WithCustomFormatting = (args: typeof KichenSink.args) => {
+  return (
+    <Calendar
+      {...args}
+      calendarMonthId={toDateId(startOfThisMonth)}
+      getCalendarDayFormat={format("dd")}
+      getCalendarMonthFormat={format("MMMM yyyy (LL/yyyy)")}
+      getCalendarWeekDayFormat={format("E")}
+      onCalendarDayPress={loggingHandler("onCalendarDayPress")}
+    />
+  );
 };

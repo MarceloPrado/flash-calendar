@@ -36,9 +36,6 @@ const CalendarListMeta: Meta<typeof Calendar.List> = {
 
     calendarFirstDayOfWeek: "sunday",
     calendarInitialMonthId: toDateId(startOfThisMonth),
-    calendarDayFormat: "d",
-    calendarWeekDayFormat: "EEEEE",
-    calendarMonthFormat: "MMMM yyyy",
   },
   decorators: [paddingDecorator],
 };

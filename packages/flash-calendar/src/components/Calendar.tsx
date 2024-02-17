@@ -35,10 +35,10 @@ export interface CalendarTheme {
   itemDay?: CalendarItemDayProps["theme"];
 }
 
-export type CalendaronCalendarDayPress = (dateId: string) => void;
+export type CalendarOnDayPress = (dateId: string) => void;
 
 export interface CalendarProps extends UseCalendarParams {
-  onCalendarDayPress: CalendaronCalendarDayPress;
+  onCalendarDayPress: CalendarOnDayPress;
   /**
    * The spacing between each calendar row (the month header, the week days row,
    * and the weeks row)

@@ -1,14 +1,15 @@
-import {
-  addMonths,
-  differenceInMonths,
-  startOfMonth,
-  getWeeksInMonth,
-  subMonths,
-} from "date-fns";
 import { useCallback, useMemo, useState } from "react";
 
 import type { CalendarProps } from "@/components/Calendar";
-import { fromDateId, toDateId } from "@/helpers/dates";
+import {
+  fromDateId,
+  toDateId,
+  startOfMonth,
+  addMonths,
+  subMonths,
+  differenceInMonths,
+  getWeeksInMonth,
+} from "@/helpers/dates";
 import type { UseCalendarParams } from "@/hooks/useCalendar";
 
 export interface CalendarMonth {
@@ -33,9 +34,7 @@ const buildMonthList = (
     {
       id: toDateId(startingMonth),
       date: startingMonth,
-      numberOfWeeks: getWeeksInMonth(startingMonth, {
-        weekStartsOn: firstDayOfWeek === "sunday" ? 0 : 1,
-      }),
+      numberOfWeeks: getWeeksInMonth(startingMonth, firstDayOfWeek),
     },
   ];
 
@@ -47,9 +46,7 @@ const buildMonthList = (
 
   for (let i = 1; i <= numberOfMonths; i++) {
     const month = addMonths(startingMonth, i);
-    const numberOfWeeks = getWeeksInMonth(month, {
-      weekStartsOn: firstDayOfWeek === "sunday" ? 0 : 1,
-    });
+    const numberOfWeeks = getWeeksInMonth(month, firstDayOfWeek);
 
     months.push({
       id: toDateId(month),
@@ -208,9 +205,13 @@ export const useCalendarList = ({
       const lastMonth = monthList[monthList.length - 1];
 
       if (targetMonthId > lastMonth.id) {
-        return appendMonths(differenceInMonths(targetMonthId, lastMonth.id));
+        return appendMonths(
+          differenceInMonths(fromDateId(targetMonthId), lastMonth.date)
+        );
       } else {
-        return prependMonths(differenceInMonths(firstMonth.id, targetMonthId));
+        return prependMonths(
+          differenceInMonths(firstMonth.date, fromDateId(targetMonthId))
+        );
       }
     },
     [appendMonths, monthList, prependMonths]

@@ -1,6 +1,6 @@
+import type { CalendarListProps } from "@marceloterreiro/flash-calendar";
 import {
   Calendar,
-  CalendarListProps,
   toDateId,
   useDateRange,
 } from "@marceloterreiro/flash-calendar";
@@ -33,7 +33,7 @@ export function CalendarListDemo() {
       <Calendar.HStack
         alignItems="center"
         justifyContent="space-between"
-        width={"100%"}
+        width="100%"
       >
         <Button title="Clear range" onPress={onClearDateRange} />
         <View style={styles.vStack}>

@@ -10,11 +10,10 @@ import {
   useRef,
 } from "react";
 import { View } from "react-native";
-import { startOfMonth } from "date-fns";
 
 import type { CalendarProps } from "@/components/Calendar";
 import { Calendar } from "@/components/Calendar";
-import { toDateId } from "@/helpers/dates";
+import { toDateId, startOfMonth } from "@/helpers/dates";
 import type { CalendarMonth } from "@/hooks/useCalendarList";
 import { getHeightForMonth, useCalendarList } from "@/hooks/useCalendarList";
 
@@ -126,9 +125,9 @@ export const CalendarList = memo(
         onCalendarDayPress,
         calendarActiveDateRanges: activeDateRanges,
         calendarDisabledDateIds,
-        calendarDayFormat,
-        calendarWeekDayFormat,
-        calendarMonthFormat,
+        getCalendarDayFormat,
+        getCalendarWeekDayFormat,
+        getCalendarMonthFormat,
         calendarMaxDateId,
         calendarMinDateId,
         ...flatListProps
@@ -139,13 +138,13 @@ export const CalendarList = memo(
           calendarActiveDateRanges: activeDateRanges,
           calendarDayHeight,
           calendarFirstDayOfWeek,
-          calendarDayFormat,
-          calendarWeekDayFormat,
+          getCalendarDayFormat,
+          getCalendarWeekDayFormat,
           calendarMaxDateId,
           calendarMinDateId,
           calendarMonthHeaderHeight,
           calendarRowHorizontalSpacing,
-          calendarMonthFormat,
+          getCalendarMonthFormat,
           calendarRowVerticalSpacing,
           calendarWeekHeaderHeight,
           calendarDisabledDateIds,
@@ -156,13 +155,13 @@ export const CalendarList = memo(
           activeDateRanges,
           calendarDayHeight,
           calendarFirstDayOfWeek,
-          calendarDayFormat,
-          calendarWeekDayFormat,
+          getCalendarDayFormat,
+          getCalendarWeekDayFormat,
           calendarMaxDateId,
           calendarMinDateId,
           calendarMonthHeaderHeight,
           calendarRowHorizontalSpacing,
-          calendarMonthFormat,
+          getCalendarMonthFormat,
           calendarRowVerticalSpacing,
           calendarWeekHeaderHeight,
           calendarDisabledDateIds,

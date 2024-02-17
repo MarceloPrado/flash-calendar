@@ -1,16 +1,16 @@
-import {
-  addDays,
-  endOfMonth,
-  format,
-  isWeekend,
-  subDays,
-  startOfWeek,
-  startOfMonth,
-} from "date-fns";
 import { useMemo } from "react";
 
 import type { DayState } from "@/components/CalendarItemDay";
-import { fromDateId, toDateId } from "@/helpers/dates";
+import {
+  addDays,
+  endOfMonth,
+  fromDateId,
+  isWeekend,
+  startOfMonth,
+  startOfWeek,
+  subDays,
+  toDateId,
+} from "@/helpers/dates";
 import { range } from "@/helpers/numbers";
 
 const getNumberOfEmptyCellsAtStart = (
@@ -99,20 +99,18 @@ export interface UseCalendarParams {
   calendarMaxDateId?: string;
 
   /**
-   * Which `date-fns` token to format the calendar header.
-   * @defaultValue "MMMM yyyy" e.g. "January 2022"
+   * A custom function to override the default month format ("January 2022").
    */
-  calendarMonthFormat?: string;
+  getCalendarMonthFormat?: (date: Date) => string;
+
   /**
-   * Which `date-fns` token to format the week name.
-   * @defaultValue "EEEEE" e.g. "S"
+   * A custom function to override the default month format ("S", "M", "T").
    */
-  calendarWeekDayFormat?: string;
+  getCalendarWeekDayFormat?: (date: Date) => string;
   /**
-   * Which `date-fns` token to format the day.
-   * @defaultValue "d" e.g. "1"
+   * A custom function to override the default day format ("1", "9", "17").
    */
-  calendarDayFormat?: string;
+  getCalendarDayFormat?: (date: Date) => string;
   /**
    * The day of the week to start the calendar with.
    * @defaultValue "sunday"
@@ -188,6 +186,47 @@ const getStateFields = ({
   };
 };
 
+const monthIdToLabel = {
+  0: "January",
+  1: "February",
+  2: "March",
+  3: "April",
+  4: "May",
+  5: "June",
+  6: "July",
+  7: "August",
+  8: "September",
+  9: "October",
+  10: "November",
+  11: "December",
+};
+
+const weekDayIdToLabel = {
+  0: "S",
+  1: "M",
+  2: "T",
+  3: "W",
+  4: "T",
+  5: "F",
+  6: "S",
+};
+
+const getBaseCalendarMonthFormat = (date: Date) => {
+  const year = date.getFullYear();
+  const month =
+    monthIdToLabel[date.getMonth() as unknown as keyof typeof monthIdToLabel];
+  return `${month} ${year}`;
+};
+const getBaseCalendarWeekDayFormat = (date: Date) => {
+  return weekDayIdToLabel[
+    date.getDay() as unknown as keyof typeof weekDayIdToLabel
+  ];
+};
+
+const getBaseCalendarDayFormat = (date: Date) => {
+  return `${date.getDate()}`;
+};
+
 /**
  * Builds a calendar based on the given parameters.
  */
@@ -195,9 +234,9 @@ export const buildCalendar = (params: UseCalendarParams) => {
   const {
     calendarMonthId: monthId,
     calendarFirstDayOfWeek = "sunday",
-    calendarMonthFormat = "MMMM yyyy",
-    calendarWeekDayFormat = "EEEEE",
-    calendarDayFormat = "d",
+    getCalendarMonthFormat = getBaseCalendarMonthFormat,
+    getCalendarWeekDayFormat = getBaseCalendarWeekDayFormat,
+    getCalendarDayFormat = getBaseCalendarDayFormat,
   } = params;
 
   const month = fromDateId(monthId);
@@ -226,7 +265,7 @@ export const buildCalendar = (params: UseCalendarParams) => {
 
         const dayShape: CalendarDay = {
           date: dayToIterate,
-          displayLabel: format(dayToIterate, calendarDayFormat),
+          displayLabel: getCalendarDayFormat(dayToIterate),
           id,
           isDifferentMonth: true,
           isEndOfMonth: false,
@@ -255,7 +294,7 @@ export const buildCalendar = (params: UseCalendarParams) => {
     const id = toDateId(dayToIterate);
     weeksList[weeksList.length - 1].push({
       date: dayToIterate,
-      displayLabel: format(dayToIterate, calendarDayFormat),
+      displayLabel: getCalendarDayFormat(dayToIterate),
       id,
       isDifferentMonth: false,
       isEndOfMonth: id === monthEndId,
@@ -280,7 +319,7 @@ export const buildCalendar = (params: UseCalendarParams) => {
       const id = toDateId(dayToIterate);
       const dayShape: CalendarDay = {
         date: dayToIterate,
-        displayLabel: format(dayToIterate, calendarDayFormat),
+        displayLabel: getCalendarDayFormat(dayToIterate),
         id,
         isDifferentMonth: true,
         isEndOfMonth: false,
@@ -299,16 +338,14 @@ export const buildCalendar = (params: UseCalendarParams) => {
     })
   );
 
-  const startOfWeekDate = startOfWeek(month, {
-    weekStartsOn: calendarFirstDayOfWeek === "monday" ? 1 : 0,
-  });
+  const startOfWeekDate = startOfWeek(month, calendarFirstDayOfWeek);
   const weekDaysList = range(1, 7).map((i) =>
-    format(addDays(startOfWeekDate, i - 1), calendarWeekDayFormat)
+    getCalendarWeekDayFormat(addDays(startOfWeekDate, i - 1))
   );
 
   return {
     weeksList,
-    calendarRowMonth: format(month, calendarMonthFormat),
+    calendarRowMonth: getCalendarMonthFormat(month),
     weekDaysList,
   };
 };

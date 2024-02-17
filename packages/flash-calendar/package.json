@@ -1,40 +1,39 @@
 {
   "name": "@marceloterreiro/flash-calendar",
   "version": "0.0.1",
+  "private": false,
   "description": "A better calendar for React Native.",
+  "repository": "github.com/marceloprado/flash-calendar",
+  "license": "MIT",
+  "author": "Marcelo Prado",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "repository": "github.com/marceloprado/flash-calendar",
-  "author": "Marcelo Prado",
-  "license": "MIT",
   "scripts": {
-    "dev": "tsup --watch --silent",
-    "lint": "eslint src",
     "build": "tsup --dts",
-    "clean": "rm -rf dist && rm -rf node_modules"
+    "clean": "rm -rf dist && rm -rf node_modules",
+    "dev": "tsup --watch --silent",
+    "lint": "eslint src"
   },
-  "dependencies": {
-    "date-fns": "^3.3.1"
-  },
-  "peerDependencies": {
-    "react": "*",
-    "react-native": "*",
-    "@shopify/flash-list": "*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@marceloterreiro/eslint-config": "*",
     "@marceloterreiro/tsconfig": "*",
     "@shopify/flash-list": "1.6.3",
-    "eslint-plugin-react-hooks": "^4.6.0",
     "@testing-library/react-hooks": "^8.0.1",
-    "react-test-renderer": "^18.2.0",
-    "eslint": "^8.56.0",
     "@types/bun": "^1.0.5",
+    "date-fns": "^3.3.1",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "react": "18.2.0",
     "react-native": "0.73.4",
+    "react-test-renderer": "^18.2.0",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3"
   },
-  "private": false
+  "peerDependencies": {
+    "@shopify/flash-list": "*",
+    "react": "*",
+    "react-native": "*"
+  }
 }

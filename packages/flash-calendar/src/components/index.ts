@@ -63,7 +63,7 @@ type CalendarNamespace = {
   VStack: typeof VStack;
 } & typeof CalendarDefault;
 export type {
-  CalendaronCalendarDayPress,
+  CalendarOnDayPress,
   CalendarProps,
   CalendarTheme,
 } from "@/components/Calendar";

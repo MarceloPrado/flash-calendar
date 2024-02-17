@@ -7,20 +7,23 @@ module.exports = {
       "error",
       {
         patterns: [
-          // {
-          //   group: ["date-fns"],
-          //   importNames: ["startOfMonth", "startOfWeek"],
-          //   message:
-          //     "Please use the respective function from @/helpers/dates instead.",
-          // },
           {
             group: ["date-fns"],
-            importNames: ["add", "sub"],
             message:
-              "Please use `addDays`, `addWeeks`, `subDays`, `subWeeks` instead for smaller bundles.",
+              "Please use the custom date functions from @/helpers/dates instead. This decreases the bundle size significantly.",
           },
         ],
       },
     ],
   },
+
+  // Allow date-fns imports in test files since we use them to test our custom date functions
+  overrides: [
+    {
+      files: ["**/*.test.ts", "**/*.test.tsx", "**/*.stories.tsx"],
+      rules: {
+        "no-restricted-imports": ["error", { patterns: [] }],
+      },
+    },
+  ],
 };
