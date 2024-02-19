@@ -243,7 +243,7 @@ describe("buildCalendar", () => {
   describe("state", () => {
     it("active: supersedes today", () => {
       // Mock clock
-      setSystemTime(new Date("2024-01-10"));
+      setSystemTime(new Date(2024, 0 /*January*/, 10));
 
       const january = buildCalendar({
         calendarMonthId: "2024-01-01",
@@ -352,7 +352,7 @@ describe("buildCalendar", () => {
     });
 
     it("today: supersedes idle", () => {
-      setSystemTime(new Date("2024-01-10"));
+      setSystemTime(new Date(2024, 0 /*January*/, 10));
       const january = buildCalendar({
         calendarMonthId: "2024-01-01",
       });
