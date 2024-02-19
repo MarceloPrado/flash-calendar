@@ -17,7 +17,7 @@ export function CalendarDemo() {
           },
         ]}
         calendarMonthId={today}
-        onCalendarDayPress={(dayId) => setSelectedDate(dayId)}
+        onCalendarDayPress={setSelectedDate}
       />
     </Calendar.VStack>
   );

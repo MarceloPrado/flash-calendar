@@ -18,8 +18,9 @@ export function CalendarListDemo() {
   const {
     isDateRangeValid,
     onClearDateRange,
+    calendarActiveDateRanges,
     dateRange,
-    ...calendarDateRangeProps
+    onCalendarDayPress,
   } = useDateRange();
 
   return (
@@ -28,7 +29,11 @@ export function CalendarListDemo() {
         This shows how to build a date range picker bounded by the current year
       </Text>
       <View style={{ flex: 1, width: "100%" }}>
-        <Calendar.List {...calendarListProps} {...calendarDateRangeProps} />
+        <Calendar.List
+          {...calendarListProps}
+          calendarActiveDateRanges={calendarActiveDateRanges}
+          onCalendarDayPress={onCalendarDayPress}
+        />
       </View>
       <Calendar.HStack
         alignItems="center"
