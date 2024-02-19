@@ -23,12 +23,11 @@
   "devDependencies": {
     "@marceloterreiro/eslint-config": "*",
     "@marceloterreiro/tsconfig": "*",
-    "@shopify/flash-list": "1.6.3",
+    "@shopify/flash-list": "^1.6.3",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/bun": "^1.0.5",
     "date-fns": "^3.3.1",
     "eslint": "^8.56.0",
-    "eslint-import-resolver-typescript": "^3.6.1",
     "react": "18.2.0",
     "react-native": "0.73.4",
     "react-test-renderer": "^18.2.0",

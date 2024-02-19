@@ -17,19 +17,19 @@
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "publish-packages": "turbo build lint test typecheck && changeset version && changeset publish",
-    "test": "turbo test"
+    "test": "turbo test",
+    "postinstall": "manypkg check"
   },
   "dependencies": {
-    "@changesets/cli": "^2.27.1"
-  },
-  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "@manypkg/cli": "^0.21.2",
     "@marceloterreiro/eslint-config": "*",
     "@marceloterreiro/tsconfig": "*",
     "@typescript-eslint/typescript-estree": "^6.21.0",
     "eslint-plugin-import": "^2.29.1",
     "prettier": "^2.8.8",
     "turbo": "^1.12.1",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.3"
   },
   "packageManager": "bun@1.0.25"
 }

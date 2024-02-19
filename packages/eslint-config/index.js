@@ -15,6 +15,7 @@ module.exports = {
     project,
   },
   ignorePatterns: ["node_modules/", "dist/", ".eslintrc.js"],
+  plugins: ["import"],
   settings: {
     "import/parsers": {
       "@typescript-eslint/parser": [".ts", ".tsx"],
