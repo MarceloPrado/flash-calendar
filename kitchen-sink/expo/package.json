@@ -1,6 +1,5 @@
 {
   "name": "@marceloterreiro/kitchen-sink-expo",
-  "version": "1.0.0",
   "private": true,
   "main": "./index.js",
   "scripts": {
@@ -16,7 +15,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@marceloterreiro/flash-calendar": "link:@marceloterreiro/flash-calendar",
+    "@marceloterreiro/flash-calendar": "^0.0.2",
     "expo": "~50.0.7",
     "expo-status-bar": "~1.11.1",
     "react": "18.2.0",

@@ -1,6 +1,5 @@
 {
   "name": "@marceloterreiro/monorepo",
-  "version": "1.0.0",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -15,7 +14,11 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "kitchen-sink:expo": "cd kitchen-sink/expo && bun run ios",
     "lint": "turbo lint",
-    "test": "bun test"
+    "publish-packages": "turbo run build lint test && changeset version && changeset publish",
+    "test": "turbo test"
+  },
+  "dependencies": {
+    "@changesets/cli": "^2.27.1"
   },
   "devDependencies": {
     "@marceloterreiro/eslint-config": "*",

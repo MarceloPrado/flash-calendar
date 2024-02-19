@@ -1,6 +1,6 @@
 {
-  "name": "example",
-  "version": "1.0.0",
+  "name": "@marceloterreiro/example",
+  "version": "0.0.1",
   "private": true,
   "main": "./index.js",
   "scripts": {

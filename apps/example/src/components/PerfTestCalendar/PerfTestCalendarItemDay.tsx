@@ -3,7 +3,6 @@ import {
   useOptimizedDayMetadata,
 } from "@marceloterreiro/flash-calendar";
 import { Text } from "react-native";
-
 import type { CalendarItemDayWithContainerProps } from "@/components/CalendarItemDay";
 
 import { useRenderCount } from "./useRenderCount";

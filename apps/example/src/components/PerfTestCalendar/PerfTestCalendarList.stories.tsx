@@ -7,7 +7,6 @@ import type { Meta } from "@storybook/react";
 import { addDays, startOfMonth } from "date-fns";
 import { useState } from "react";
 import { View } from "react-native";
-
 import { paddingDecorator } from "@/developer/decorators";
 
 import { PerfTestCalendar } from "./PerfTestCalendar";

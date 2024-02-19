@@ -1,10 +1,10 @@
 {
-  "private": true,
   "name": "@marceloterreiro/tsconfig",
   "version": "0.0.1",
+  "private": true,
   "description": "A shared eslint configuration for Marcelo's projects",
-  "author": "Marcelo Prado <lelo@hey.com>",
   "license": "MIT",
+  "author": "Marcelo Prado <lelo@hey.com>",
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.3"
   }

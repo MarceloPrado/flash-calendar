@@ -6,7 +6,6 @@ import {
 } from "@marceloterreiro/flash-calendar";
 import { memo, useEffect } from "react";
 import { Text } from "react-native";
-
 import { uppercaseFirstLetter } from "@/helpers/strings";
 
 import { useRenderCount } from "./useRenderCount";
