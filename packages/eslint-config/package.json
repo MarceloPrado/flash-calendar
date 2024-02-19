@@ -6,6 +6,7 @@
   "main": "./index.js",
   "devDependencies": {
     "eslint-config-turbo": "^1.12.3",
-    "eslint-config-universe": "^11.2.0"
+    "eslint-config-universe": "^11.2.0",
+    "eslint-import-resolver-typescript": "^3.6.1"
   }
 }
