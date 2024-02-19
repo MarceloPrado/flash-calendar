@@ -2,6 +2,7 @@ import { Calendar as CalendarDefault } from "@/components/Calendar";
 import {
   CalendarItemDay,
   CalendarItemDayContainer,
+  CalendarItemDayWithContainer,
 } from "@/components/CalendarItemDay";
 import { CalendarItemEmpty } from "@/components/CalendarItemEmpty";
 import { CalendarItemWeekName } from "@/components/CalendarItemWeekName";
@@ -17,15 +18,18 @@ import { VStack } from "@/components/VStack";
 
 type CalendarItemDayNamespace = {
   Container: typeof CalendarItemDayContainer;
+  WithContainer: typeof CalendarItemDayWithContainer;
 } & typeof CalendarItemDay;
 
 const CalendarItemDayWithNamespace =
   CalendarItemDay as CalendarItemDayNamespace;
 
 CalendarItemDayWithNamespace.Container = CalendarItemDayContainer;
+CalendarItemDayWithNamespace.WithContainer = CalendarItemDayWithContainer;
 export type {
   CalendarItemDayContainerProps,
   CalendarItemDayProps,
+  CalendarItemDayWithContainerProps,
 } from "@/components/CalendarItemDay";
 
 interface CalendarItemNamespace {

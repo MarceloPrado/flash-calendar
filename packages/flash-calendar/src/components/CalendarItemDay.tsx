@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
-import { memo, useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import type { TextStyle, ViewStyle } from "react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import type { BaseTheme } from "@/helpers/tokens";
-import type { CalendarDay } from "@/hooks/useCalendar";
+import type { CalendarDayMetadata } from "@/hooks/useCalendar";
+import { useOptimizedDayMetadata } from "@/hooks/useOptimizedDayMetadata";
 import { useTheme } from "@/hooks/useTheme";
 
 const styles = StyleSheet.create({
@@ -128,12 +129,12 @@ const buildBaseStyles = (theme: BaseTheme): CalendarItemDayTheme => {
 export interface CalendarItemDayProps {
   children: ReactNode;
   onPress: (id: string) => void;
-  metadata: CalendarDay;
+  metadata: CalendarDayMetadata;
   theme?: Partial<
     Record<
       DayState | "base",
       (
-        params: CalendarDay & {
+        params: CalendarDayMetadata & {
           isPressed: boolean;
         }
       ) => Partial<DayTheme>
@@ -143,62 +144,71 @@ export interface CalendarItemDayProps {
   height: number;
 }
 
-export const CalendarItemDay = memo(
-  ({ onPress, children, theme, height, metadata }: CalendarItemDayProps) => {
-    const baseTheme = useTheme();
-    const baseStyles = useMemo(() => {
-      return buildBaseStyles(baseTheme);
-    }, [baseTheme]);
+/**
+ * The base calendar item day component. This component is responsible for
+ * rendering each day cell, along with its event handlers.
+ *
+ * This is not meant to be used directly. Instead, use the
+ * `CalendarItemDayWithContainer`, since it also includes the spacing between
+ * each day.
+ */
+export const CalendarItemDay = ({
+  onPress,
+  children,
+  theme,
+  height,
+  metadata,
+}: CalendarItemDayProps) => {
+  const baseTheme = useTheme();
+  const baseStyles = useMemo(() => {
+    return buildBaseStyles(baseTheme);
+  }, [baseTheme]);
 
-    const handlePress = useCallback(() => {
-      onPress(metadata.id);
-    }, [metadata.id, onPress]);
+  const handlePress = useCallback(() => {
+    onPress(metadata.id);
+  }, [metadata.id, onPress]);
 
-    return (
-      <Pressable
-        disabled={metadata.state === "disabled"}
-        onPress={handlePress}
-        style={({ pressed: isPressed }) => {
-          const params = {
-            isPressed,
-            isEndOfRange: metadata.isEndOfRange ?? false,
-            isStartOfRange: metadata.isStartOfRange ?? false,
-          };
-          const { container } = baseStyles[metadata.state](params);
-          return {
-            ...container,
-            height,
-            ...theme?.base?.({ ...metadata, isPressed }).container,
-            ...theme?.[metadata.state]?.({ ...metadata, isPressed }).container,
-          };
-        }}
-      >
-        {({ pressed: isPressed }) => {
-          const params = {
-            isPressed,
-            isEndOfRange: metadata.isEndOfRange ?? false,
-            isStartOfRange: metadata.isStartOfRange ?? false,
-          };
-          const { content } = baseStyles[metadata.state](params);
-          return (
-            <Text
-              style={{
-                ...content,
-                ...theme?.base?.({ ...metadata, isPressed }).content,
-                ...theme?.[metadata.state]?.({ ...metadata, isPressed })
-                  .content,
-              }}
-            >
-              {children}
-            </Text>
-          );
-        }}
-      </Pressable>
-    );
-  }
-);
-
-CalendarItemDay.displayName = "CalendarItemDay";
+  return (
+    <Pressable
+      disabled={metadata.state === "disabled"}
+      onPress={handlePress}
+      style={({ pressed: isPressed }) => {
+        const params = {
+          isPressed,
+          isEndOfRange: metadata.isEndOfRange ?? false,
+          isStartOfRange: metadata.isStartOfRange ?? false,
+        };
+        const { container } = baseStyles[metadata.state](params);
+        return {
+          ...container,
+          height,
+          ...theme?.base?.({ ...metadata, isPressed }).container,
+          ...theme?.[metadata.state]?.({ ...metadata, isPressed }).container,
+        };
+      }}
+    >
+      {({ pressed: isPressed }) => {
+        const params = {
+          isPressed,
+          isEndOfRange: metadata.isEndOfRange ?? false,
+          isStartOfRange: metadata.isStartOfRange ?? false,
+        };
+        const { content } = baseStyles[metadata.state](params);
+        return (
+          <Text
+            style={{
+              ...content,
+              ...theme?.base?.({ ...metadata, isPressed }).content,
+              ...theme?.[metadata.state]?.({ ...metadata, isPressed }).content,
+            }}
+          >
+            {children}
+          </Text>
+        );
+      }}
+    </Pressable>
+  );
+};
 
 interface CalendarItemDayContainerTheme {
   /** An empty view that acts as a spacer between each day. The spacing is
@@ -226,53 +236,91 @@ export interface CalendarItemDayContainerProps {
   dayHeight: number;
 }
 
-export const CalendarItemDayContainer = memo(
-  ({
-    children,
-    isStartOfWeek,
-    shouldShowActiveDayFiller,
-    theme,
+export const CalendarItemDayContainer = ({
+  children,
+  isStartOfWeek,
+  shouldShowActiveDayFiller,
+  theme,
+  daySpacing,
+  dayHeight,
+}: CalendarItemDayContainerProps) => {
+  const baseTheme = useTheme();
+  const spacerStyles = useMemo<ViewStyle>(() => {
+    return {
+      position: "relative",
+      marginLeft: isStartOfWeek ? 0 : daySpacing,
+      flex: 1,
+      height: dayHeight,
+      ...theme?.spacer,
+    };
+  }, [dayHeight, daySpacing, isStartOfWeek, theme?.spacer]);
+
+  const activeDayFiller = useMemo<ViewStyle | null>(() => {
+    if (!shouldShowActiveDayFiller) {
+      return null;
+    }
+
+    return {
+      position: "absolute",
+      top: 0,
+      bottom: 0,
+      right: -(daySpacing + 1), // +1 to cover the 1px gap
+      width: daySpacing + 2, // +2 to cover the 1px gap (distributes evenly on both sides)
+      backgroundColor: baseTheme.colors.background.inverse.primary,
+      ...theme?.activeDayFiller,
+    };
+  }, [
+    baseTheme.colors.background.inverse.primary,
     daySpacing,
-    dayHeight,
-  }: CalendarItemDayContainerProps) => {
-    const baseTheme = useTheme();
-    const spacerStyles = useMemo<ViewStyle>(() => {
-      return {
-        position: "relative",
-        marginLeft: isStartOfWeek ? 0 : daySpacing,
-        flex: 1,
-        height: dayHeight,
-        ...theme?.spacer,
-      };
-    }, [dayHeight, daySpacing, isStartOfWeek, theme?.spacer]);
+    shouldShowActiveDayFiller,
+    theme?.activeDayFiller,
+  ]);
 
-    const activeDayFiller = useMemo<ViewStyle | null>(() => {
-      if (!shouldShowActiveDayFiller) {
-        return null;
+  return (
+    <View style={spacerStyles}>
+      {children}
+      {activeDayFiller ? <View style={activeDayFiller} /> : null}
+    </View>
+  );
+};
+
+export interface CalendarItemDayWithContainerProps
+  extends Omit<CalendarItemDayProps, "height">,
+    Pick<CalendarItemDayContainerProps, "daySpacing" | "dayHeight"> {
+  containerTheme?: CalendarItemDayContainerTheme;
+}
+
+export const CalendarItemDayWithContainer = ({
+  children,
+  metadata: baseMetadata,
+  onPress,
+  theme,
+  dayHeight,
+  daySpacing,
+  containerTheme,
+}: CalendarItemDayWithContainerProps) => {
+  const metadata = useOptimizedDayMetadata(baseMetadata);
+
+  return (
+    <CalendarItemDayContainer
+      dayHeight={dayHeight}
+      daySpacing={daySpacing}
+      isStartOfWeek={metadata.isStartOfWeek}
+      shouldShowActiveDayFiller={
+        metadata.isRangeValid && !metadata.isEndOfWeek
+          ? !metadata.isEndOfRange
+          : false
       }
-
-      return {
-        position: "absolute",
-        top: 0,
-        bottom: 0,
-        right: -(daySpacing + 1), // +1 to cover the 1px gap
-        width: daySpacing + 2, // +2 to cover the 1px gap (distributes evenly on both sides)
-        backgroundColor: baseTheme.colors.background.inverse.primary,
-        ...theme?.activeDayFiller,
-      };
-    }, [
-      baseTheme.colors.background.inverse.primary,
-      daySpacing,
-      shouldShowActiveDayFiller,
-      theme?.activeDayFiller,
-    ]);
-
-    return (
-      <View style={spacerStyles}>
+      theme={containerTheme}
+    >
+      <CalendarItemDay
+        height={dayHeight}
+        metadata={metadata}
+        onPress={onPress}
+        theme={theme}
+      >
         {children}
-        {activeDayFiller ? <View style={activeDayFiller} /> : null}
-      </View>
-    );
-  }
-);
-CalendarItemDayContainer.displayName = "CalendarItemDayContainer";
+      </CalendarItemDay>
+    </CalendarItemDayContainer>
+  );
+};

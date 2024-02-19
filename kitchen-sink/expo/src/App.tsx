@@ -12,15 +12,15 @@ export default function App() {
   return (
     <SafeAreaView style={styles.pageContainer}>
       <View style={styles.paddedContainer}>
-        <Calendar.HStack justifyContent="space-between" alignItems="center">
+        <Calendar.HStack alignItems="center" justifyContent="space-between">
           <Text>
             Demo: {demo === "calendar" ? "Calendar" : "Calendar List"}
           </Text>
           <Button
-            title="Toggle"
             onPress={() =>
               setDemo(demo === "calendar" ? "calendarList" : "calendar")
             }
+            title="Toggle"
           />
         </Calendar.HStack>
 

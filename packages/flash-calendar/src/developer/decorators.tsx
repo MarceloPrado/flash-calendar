@@ -41,6 +41,7 @@ const BackgroundStory = memo(({ children }: PropsWithChildren) => {
 
   return <View style={containerStyles}>{children}</View>;
 });
+BackgroundStory.displayName = "BackgroundStory";
 
 export const backgroundDecorator = (storyFn: () => ReactNode) => (
   <BackgroundStory>{storyFn()}</BackgroundStory>

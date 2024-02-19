@@ -1,12 +1,12 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 
 import type {
   CalendarItemDayContainerProps,
   CalendarItemDayProps,
 } from "@/components/CalendarItemDay";
 import {
-  CalendarItemDay,
   CalendarItemDayContainer,
+  CalendarItemDayWithContainer,
 } from "@/components/CalendarItemDay";
 import type { CalendarItemEmptyProps } from "@/components/CalendarItemEmpty";
 import { CalendarItemEmpty } from "@/components/CalendarItemEmpty";
@@ -21,6 +21,7 @@ import { uppercaseFirstLetter } from "@/helpers/strings";
 import type { BaseTheme } from "@/helpers/tokens";
 import type { UseCalendarParams } from "@/hooks/useCalendar";
 import { useCalendar } from "@/hooks/useCalendar";
+import { activeDateRangesEmitter } from "@/hooks/useOptimizedDayMetadata";
 
 export interface CalendarTheme {
   rowMonth?: CalendarRowMonthProps["theme"];
@@ -69,7 +70,7 @@ export interface CalendarProps extends UseCalendarParams {
   theme?: CalendarTheme;
 }
 
-export const Calendar = memo(
+const BaseCalendar = memo(
   ({
     onCalendarDayPress,
     calendarRowVerticalSpacing = 8,
@@ -78,6 +79,7 @@ export const Calendar = memo(
     calendarDayHeight = 32,
     calendarMonthHeaderHeight = 20,
     calendarWeekHeaderHeight = calendarDayHeight,
+
     ...buildCalendarParams
   }: CalendarProps) => {
     const { calendarRowMonth, weeksList, weekDaysList } =
@@ -108,27 +110,17 @@ export const Calendar = memo(
         {weeksList.map((week, index) => (
           <CalendarRowWeek key={index}>
             {week.map((dayProps) => {
-              const {
-                isDifferentMonth,
-                isStartOfWeek,
-                id,
-                isRangeValid,
-                isEndOfWeek,
-                isEndOfRange,
-                displayLabel,
-              } = dayProps;
-              if (isDifferentMonth) {
+              if (dayProps.isDifferentMonth) {
                 return (
                   <CalendarItemDayContainer
                     dayHeight={calendarDayHeight}
                     daySpacing={calendarRowHorizontalSpacing}
-                    isStartOfWeek={isStartOfWeek}
-                    key={id}
+                    isStartOfWeek={dayProps.isStartOfWeek}
+                    key={dayProps.id}
                     theme={theme?.itemDayContainer}
                   >
                     <CalendarItemEmpty
                       height={calendarDayHeight}
-                      key={id}
                       theme={theme?.itemEmpty}
                     />
                   </CalendarItemDayContainer>
@@ -136,25 +128,17 @@ export const Calendar = memo(
               }
 
               return (
-                <CalendarItemDayContainer
+                <CalendarItemDayWithContainer
+                  containerTheme={theme?.itemDayContainer}
                   dayHeight={calendarDayHeight}
                   daySpacing={calendarRowHorizontalSpacing}
-                  isStartOfWeek={isStartOfWeek}
-                  key={id}
-                  shouldShowActiveDayFiller={
-                    isRangeValid && !isEndOfWeek ? !isEndOfRange : false
-                  }
-                  theme={theme?.itemDayContainer}
+                  key={dayProps.id}
+                  metadata={dayProps}
+                  onPress={onCalendarDayPress}
+                  theme={theme?.itemDay}
                 >
-                  <CalendarItemDay
-                    height={calendarDayHeight}
-                    metadata={dayProps}
-                    onPress={onCalendarDayPress}
-                    theme={theme?.itemDay}
-                  >
-                    {displayLabel}
-                  </CalendarItemDay>
-                </CalendarItemDayContainer>
+                  {dayProps.displayLabel}
+                </CalendarItemDayWithContainer>
               );
             })}
           </CalendarRowWeek>
@@ -163,4 +147,19 @@ export const Calendar = memo(
     );
   }
 );
+BaseCalendar.displayName = "BaseCalendar";
+
+export const Calendar = memo(
+  ({ calendarActiveDateRanges, ...props }: CalendarProps) => {
+    useEffect(() => {
+      activeDateRangesEmitter.emit(
+        "onSetActiveDateRanges",
+        calendarActiveDateRanges ?? []
+      );
+    }, [calendarActiveDateRanges]);
+
+    return <BaseCalendar {...props} />;
+  }
+);
+
 Calendar.displayName = "Calendar";

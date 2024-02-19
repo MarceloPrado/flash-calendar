@@ -46,7 +46,7 @@ interface CalendarDayStateFields {
  * The type of each day in the calendar. Has a few pre-computed properties to
  * help increase re-rendering performance.
  */
-export type CalendarDay = {
+export type CalendarDayMetadata = {
   date: Date;
   /** The day displayed in the desired format from `calendarDayFormat` */
   displayLabel: string;
@@ -134,11 +134,14 @@ type GetStateFields = Pick<
   | "calendarMaxDateId"
   | "calendarDisabledDateIds"
 > & {
-  todayId: string;
+  todayId?: string;
   id: string;
 };
 
-const getStateFields = ({
+/**
+ * Computes the state fields for a given date.
+ */
+export const getStateFields = ({
   todayId,
   id,
   calendarActiveDateRanges,
@@ -258,12 +261,12 @@ export const buildCalendar = (params: UseCalendarParams) => {
   // The first day to iterate is the first day of the month minus the empty days at the start
   let dayToIterate = subDays(monthStart, emptyDaysAtStart);
 
-  const weeksList: CalendarDay[][] = [
+  const weeksList: CalendarDayMetadata[][] = [
     [
-      ...range(1, emptyDaysAtStart).map((): CalendarDay => {
+      ...range(1, emptyDaysAtStart).map((): CalendarDayMetadata => {
         const id = toDateId(dayToIterate);
 
-        const dayShape: CalendarDay = {
+        const dayShape: CalendarDayMetadata = {
           date: dayToIterate,
           displayLabel: getCalendarDayFormat(dayToIterate),
           id,
@@ -317,7 +320,7 @@ export const buildCalendar = (params: UseCalendarParams) => {
   lastWeek.push(
     ...range(1, emptyDaysAtEnd).map(() => {
       const id = toDateId(dayToIterate);
-      const dayShape: CalendarDay = {
+      const dayShape: CalendarDayMetadata = {
         date: dayToIterate,
         displayLabel: getCalendarDayFormat(dayToIterate),
         id,

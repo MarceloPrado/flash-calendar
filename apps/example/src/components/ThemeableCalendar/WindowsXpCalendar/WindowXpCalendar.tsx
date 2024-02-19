@@ -119,21 +119,21 @@ export const WindowsXpCalendar = memo((props: WindowsXpCalendarProps) => {
         <Calendar.HStack
           alignItems="center"
           justifyContent="space-around"
-          width="100%"
           style={calendarTheme.rowMonth?.container}
+          width="100%"
         >
           <WindowsXpChevronButton
+            onPress={props.onPreviousMonthPress}
             size={30}
             type="left"
-            onPress={props.onPreviousMonthPress}
           />
           <Text style={calendarTheme.rowMonth?.content}>
             {calendarRowMonth}
           </Text>
           <WindowsXpChevronButton
+            onPress={props.onNextMonthPress}
             size={30}
             type="right"
-            onPress={props.onNextMonthPress}
           />
         </Calendar.HStack>
 

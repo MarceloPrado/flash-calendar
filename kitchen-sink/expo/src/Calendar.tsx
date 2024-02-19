@@ -10,14 +10,14 @@ export function CalendarDemo() {
     <Calendar.VStack spacing={12}>
       <Text>Selected date: {selectedDate ?? "?"}</Text>
       <Calendar
-        calendarMonthId={today}
-        onCalendarDayPress={(dayId) => setSelectedDate(dayId)}
         calendarActiveDateRanges={[
           {
             startId: selectedDate ?? undefined,
             endId: selectedDate ?? undefined,
           },
         ]}
+        calendarMonthId={today}
+        onCalendarDayPress={(dayId) => setSelectedDate(dayId)}
       />
     </Calendar.VStack>
   );

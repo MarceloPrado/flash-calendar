@@ -5,6 +5,7 @@ import type {
 import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
 import { loggingHandler } from "@marceloterreiro/flash-calendar/src/developer/loggginHandler";
 import { add, startOfMonth } from "date-fns";
+import { format } from "date-fns/fp";
 import { memo } from "react";
 import { StyleSheet, View } from "react-native";
 
@@ -89,13 +90,13 @@ export const LinearCalendar = memo(() => {
   return (
     <View style={styles.linearContainer}>
       <Calendar
-        calendarWeekDayFormat="iiiiii"
-        calendarMonthId={toDateId(startOfThisMonth)}
         calendarActiveDateRanges={calendarActiveDateRanges}
-        calendarFirstDayOfWeek="sunday"
         calendarDayHeight={30}
-        calendarRowVerticalSpacing={16}
+        calendarFirstDayOfWeek="sunday"
+        calendarMonthId={toDateId(startOfThisMonth)}
         calendarRowHorizontalSpacing={16}
+        calendarRowVerticalSpacing={16}
+        getCalendarWeekDayFormat={format("iiiiii")}
         onCalendarDayPress={loggingHandler("onCalendarDayPress")}
         theme={linearTheme}
       />

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import {
+  addDays,
   addMonths,
   endOfYear,
   startOfMonth,
@@ -16,6 +17,7 @@ import { VStack } from "@/components/VStack";
 import { paddingDecorator } from "@/developer/decorators";
 import { loggingHandler } from "@/developer/loggginHandler";
 import { toDateId } from "@/helpers/dates";
+import type { CalendarActiveDateRange } from "@/hooks/useCalendar";
 import { useDateRange } from "@/hooks/useDateRange";
 import { useTheme } from "@/hooks/useTheme";
 
@@ -44,7 +46,7 @@ export default CalendarListMeta;
 
 export const Default: StoryObj<typeof Calendar.List> = {};
 
-export const WithCustomSpacing: StoryObj<typeof Calendar.List> = {
+export const SpacingDense: StoryObj<typeof Calendar.List> = {
   args: {
     calendarRowVerticalSpacing: 0,
     calendarRowHorizontalSpacing: 4,
@@ -64,7 +66,7 @@ export const WithDateRangeAndDisabledDates: StoryObj<typeof Calendar.List> = {
   },
 };
 
-export const WithShortRanges: StoryObj<typeof Calendar.List> = {
+export const WithShortFutureScrollRange: StoryObj<typeof Calendar.List> = {
   args: {
     calendarPastScrollRangeInMonths: 1,
     calendarFutureScrollRangeInMonths: 1,
@@ -72,7 +74,7 @@ export const WithShortRanges: StoryObj<typeof Calendar.List> = {
   },
 };
 
-export function SparseCalendar() {
+export function SpacingSparse() {
   const [selectedDate, setSelectedDate] = useState<undefined | string>(
     undefined
   );
@@ -178,12 +180,9 @@ export function DateRangePicker() {
     };
   }, []);
 
-  const {
-    isDateRangeValid,
-    onClearDateRange,
-    dateRange,
-    ...calendarDateRangeProps
-  } = useDateRange();
+  const calendarDateRangeProps = useDateRange();
+  const { onClearDateRange, dateRange, isDateRangeValid } =
+    calendarDateRangeProps;
 
   const { colors } = useTheme();
 
@@ -213,3 +212,23 @@ export function DateRangePicker() {
     </VStack>
   );
 }
+
+export const DatePicker = () => {
+  const [activeDateId, setActiveDateId] = useState<string | undefined>(
+    toDateId(addDays(startOfThisMonth, 3))
+  );
+
+  const calendarActiveDateRanges = useMemo<CalendarActiveDateRange[]>(() => {
+    if (!activeDateId) return [];
+
+    return [{ startId: activeDateId, endId: activeDateId }];
+  }, [activeDateId]);
+
+  return (
+    <Calendar.List
+      calendarActiveDateRanges={calendarActiveDateRanges}
+      calendarInitialMonthId={toDateId(startOfThisMonth)}
+      onCalendarDayPress={setActiveDateId}
+    />
+  );
+};

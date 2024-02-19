@@ -13,7 +13,7 @@ import { View } from "react-native";
 
 import type { CalendarProps } from "@/components/Calendar";
 import { Calendar } from "@/components/Calendar";
-import { toDateId, startOfMonth } from "@/helpers/dates";
+import { startOfMonth, toDateId } from "@/helpers/dates";
 import type { CalendarMonth } from "@/hooks/useCalendarList";
 import { getHeightForMonth, useCalendarList } from "@/hooks/useCalendarList";
 
@@ -123,7 +123,7 @@ export const CalendarList = memo(
     ) => {
       const {
         onCalendarDayPress,
-        calendarActiveDateRanges: activeDateRanges,
+        calendarActiveDateRanges,
         calendarDisabledDateIds,
         getCalendarDayFormat,
         getCalendarWeekDayFormat,
@@ -135,7 +135,7 @@ export const CalendarList = memo(
 
       const calendarProps = useMemo(
         (): CalendarMonthEnhanced["calendarProps"] => ({
-          calendarActiveDateRanges: activeDateRanges,
+          calendarActiveDateRanges,
           calendarDayHeight,
           calendarFirstDayOfWeek,
           getCalendarDayFormat,
@@ -152,7 +152,7 @@ export const CalendarList = memo(
           theme,
         }),
         [
-          activeDateRanges,
+          calendarActiveDateRanges,
           calendarDayHeight,
           calendarFirstDayOfWeek,
           getCalendarDayFormat,
@@ -282,3 +282,5 @@ export const CalendarList = memo(
     }
   )
 );
+
+CalendarList.displayName = "CalendarList";

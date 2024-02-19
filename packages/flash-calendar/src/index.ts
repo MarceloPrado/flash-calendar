@@ -3,7 +3,7 @@ export { toDateId, fromDateId } from "./helpers/dates";
 
 export {
   type UseCalendarParams,
-  type CalendarDay,
+  type CalendarDayMetadata,
   type CalendarActiveDateRange,
   useCalendar,
   buildCalendar,
@@ -15,5 +15,10 @@ export {
   getHeightForMonth,
   useCalendarList,
 } from "./hooks/useCalendarList";
+
+export {
+  useOptimizedDayMetadata,
+  activeDateRangesEmitter,
+} from "./hooks/useOptimizedDayMetadata";
 
 export { useDateRange } from "./hooks/useDateRange";

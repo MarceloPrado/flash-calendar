@@ -15,7 +15,9 @@
     "dev": "tsup --watch --silent",
     "lint": "eslint src"
   },
-  "dependencies": {},
+  "dependencies": {
+    "mitt": "^3.0.1"
+  },
   "devDependencies": {
     "@marceloterreiro/eslint-config": "*",
     "@marceloterreiro/tsconfig": "*",

@@ -6,9 +6,10 @@ const project = resolve(process.cwd(), "tsconfig.json");
 module.exports = {
   root: true,
   extends: [
+    "eslint:recommended",
+    "eslint-config-turbo",
     "universe/native",
     "universe/shared/typescript-analysis",
-    "eslint-config-turbo",
   ],
   parserOptions: {
     project,
@@ -27,6 +28,9 @@ module.exports = {
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/consistent-type-imports": "error",
     "@typescript-eslint/consistent-type-definitions": "error",
+
+    // Alphabetical order for props and params
+    "react/jsx-sort-props": "error",
 
     "import/order": [
       "error",

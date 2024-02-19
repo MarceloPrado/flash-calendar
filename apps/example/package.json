@@ -1,32 +1,32 @@
 {
   "name": "example",
   "version": "1.0.0",
+  "private": true,
   "main": "./index.js",
   "scripts": {
-    "start": "expo start",
     "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "dev": "expo start --ios",
     "clean": "rm -rf dist && rm -rf node_modules",
+    "dev": "expo start --ios",
+    "ios": "expo start --ios",
+    "lint": "eslint src",
+    "start": "expo start",
     "storybook-generate": "sb-rn-get-stories",
-    "lint": "eslint ."
+    "web": "expo start --web"
   },
   "dependencies": {
     "@marceloterreiro/flash-calendar": "*",
     "@shopify/flash-list": "^1.6.3",
+    "date-fns": "^3.3.1",
     "expo": "~50.0.6",
     "expo-status-bar": "~1.11.1",
+    "polished": "^4.2.2",
     "react": "18.2.0",
-    "react-native": "0.73.4",
-    "date-fns": "^3.3.1",
-    "polished": "^4.2.2"
+    "react-native": "0.73.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "@marceloterreiro/tsconfig": "*",
     "@marceloterreiro/eslint-config": "*",
-    "eslint": "^8.56.0",
+    "@marceloterreiro/tsconfig": "*",
     "@react-native-async-storage/async-storage": "^1.21.0",
     "@react-native-community/datetimepicker": "^7.6.2",
     "@react-native-community/slider": "^4.5.0",
@@ -35,9 +35,9 @@
     "@storybook/react-native": "^7.6.15",
     "@types/react": "~18.2.45",
     "babel-loader": "^8.3.0",
+    "eslint": "^8.56.0",
     "react-dom": "^18.2.0",
     "react-native-safe-area-context": "^4.9.0",
     "typescript": "^5.3.3"
-  },
-  "private": true
+  }
 }

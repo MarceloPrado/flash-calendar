@@ -8,7 +8,8 @@ import {
   toDateId,
 } from "@marceloterreiro/flash-calendar";
 import type { Meta } from "@storybook/react";
-import { add, format, sub } from "date-fns";
+import { add, sub } from "date-fns";
+import { format } from "date-fns/fp";
 import { useCallback, useMemo, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -76,26 +77,26 @@ export const WindowsXP = () => {
   return (
     <View style={styles.windowsXpBackground}>
       <WindowsXpWindow title="@marceloterreiro/flash-calendar">
-        <Calendar.VStack spacing={12} justifyContent="flex-start">
+        <Calendar.VStack justifyContent="flex-start" spacing={12}>
           <Text>
             This is a Windows's XP themed calendar, using the composable API
             pattern to fully customize the calendar's appearance.
           </Text>
 
           <WindowsXpButton onPress={handleOpenPicker}>
-            {format(selectedDate, "dd/MM/yyyy")}
+            {format("dd/MM/yyyy")(selectedDate)}
           </WindowsXpButton>
 
           {isPickerVisible && (
             <WindowsXpCalendar
-              calendarMonthId={toDateId(currentCalendarMonth)}
-              onPreviousMonthPress={handlePreviousMonth}
-              onNextMonthPress={handleNextMonth}
-              onCalendarDayPress={handleDayPress}
-              calendarWeekDayFormat="E"
               calendarActiveDateRanges={calendarActiveDateRanges}
-              calendarMinDateId="2024-01-01"
               calendarMaxDateId="2024-06-31"
+              calendarMinDateId="2024-01-01"
+              calendarMonthId={toDateId(currentCalendarMonth)}
+              getCalendarWeekDayFormat={format("E")}
+              onCalendarDayPress={handleDayPress}
+              onNextMonthPress={handleNextMonth}
+              onPreviousMonthPress={handlePreviousMonth}
             />
           )}
         </Calendar.VStack>

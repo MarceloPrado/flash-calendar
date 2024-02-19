@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { addDays, subDays } from "date-fns";
 import { format } from "date-fns/fp/format";
+import { useState } from "react";
 
 import { paddingDecorator } from "@/developer/decorators";
-import { toDateId, endOfMonth, startOfMonth } from "@/helpers/dates";
 import { loggingHandler } from "@/developer/loggginHandler";
+import { endOfMonth, startOfMonth, toDateId } from "@/helpers/dates";
+import { useDateRange } from "@/hooks/useDateRange";
 
 import { Calendar } from "./Calendar";
 
@@ -108,6 +110,39 @@ export const WithCustomFormatting = (args: typeof KichenSink.args) => {
       getCalendarMonthFormat={format("MMMM yyyy (LL/yyyy)")}
       getCalendarWeekDayFormat={format("E")}
       onCalendarDayPress={loggingHandler("onCalendarDayPress")}
+    />
+  );
+};
+
+export const DatePicker = (args: typeof KichenSink.args) => {
+  const [activeDateId, setActiveDateId] = useState<string | undefined>(
+    toDateId(addDays(startOfThisMonth, 3))
+  );
+
+  return (
+    <Calendar
+      {...args}
+      calendarActiveDateRanges={[
+        { startId: activeDateId, endId: activeDateId },
+      ]}
+      calendarMonthId={toDateId(startOfThisMonth)}
+      onCalendarDayPress={setActiveDateId}
+    />
+  );
+};
+
+export const DateRangePicker = (args: typeof KichenSink.args) => {
+  const { calendarActiveDateRanges, onCalendarDayPress } = useDateRange({
+    startId: "2024-02-04",
+    endId: "2024-02-09",
+  });
+
+  return (
+    <Calendar
+      {...args}
+      calendarActiveDateRanges={calendarActiveDateRanges}
+      calendarMonthId={toDateId(startOfThisMonth)}
+      onCalendarDayPress={onCalendarDayPress}
     />
   );
 };

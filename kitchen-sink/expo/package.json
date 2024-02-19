@@ -11,8 +11,8 @@
     "build:ios": "bunx expo export --source-maps --platform ios",
     "clean": "rm -rf dist && rm -rf node_modules",
     "ios": "expo start --ios",
+    "lint": "eslint src",
     "start": "expo start",
-    "lint": "eslint .",
     "web": "expo start --web"
   },
   "dependencies": {
@@ -24,11 +24,11 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@marceloterreiro/eslint-config": "*",
+    "@marceloterreiro/tsconfig": "*",
     "@types/react": "~18.2.45",
     "eslint": "^8.56.0",
     "source-map-explorer": "^2.5.3",
-    "typescript": "^5.3.3",
-    "@marceloterreiro/tsconfig": "*",
-    "@marceloterreiro/eslint-config": "*"
+    "typescript": "^5.3.3"
   }
 }

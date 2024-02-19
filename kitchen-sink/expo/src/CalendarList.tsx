@@ -35,7 +35,7 @@ export function CalendarListDemo() {
         justifyContent="space-between"
         width="100%"
       >
-        <Button title="Clear range" onPress={onClearDateRange} />
+        <Button onPress={onClearDateRange} title="Clear range" />
         <View style={styles.vStack}>
           <Text>Start: {dateRange.startId ?? "?"}</Text>
           <Text>End: {dateRange.endId ?? "?"}</Text>

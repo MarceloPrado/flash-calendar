@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { memo, useMemo } from "react";
+import { useMemo } from "react";
 import type { ViewStyle } from "react-native";
 import { StyleSheet } from "react-native";
 
@@ -22,23 +22,25 @@ const styles = StyleSheet.create({
   },
 });
 
-export const CalendarRowWeek = memo(
-  ({ children, spacing = 0, theme }: CalendarRowWeekProps) => {
-    const { containerStyles } = useMemo(() => {
-      return {
-        containerStyles: { ...styles.container, ...(theme?.container ?? {}) },
-      };
-    }, [theme?.container]);
-    return (
-      <HStack
-        alignItems="center"
-        grow
-        justifyContent="space-between"
-        spacing={spacing}
-        style={containerStyles}
-      >
-        {children}
-      </HStack>
-    );
-  }
-);
+export const CalendarRowWeek = ({
+  children,
+  spacing = 0,
+  theme,
+}: CalendarRowWeekProps) => {
+  const { containerStyles } = useMemo(() => {
+    return {
+      containerStyles: { ...styles.container, ...(theme?.container ?? {}) },
+    };
+  }, [theme?.container]);
+  return (
+    <HStack
+      alignItems="center"
+      grow
+      justifyContent="space-between"
+      spacing={spacing}
+      style={containerStyles}
+    >
+      {children}
+    </HStack>
+  );
+};

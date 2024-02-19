@@ -27,3 +27,4 @@ export const CalendarItemEmpty = memo(
     return <View style={containerStyles} />;
   }
 );
+CalendarItemEmpty.displayName = "CalendarItemEmpty";
