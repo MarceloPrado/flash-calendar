@@ -10,11 +10,13 @@
     "analyze:bundle": "scripts/analyze-bundle.sh",
     "build": "turbo build",
     "clean": "turbo clean && rm -rf node_modules",
+    "docs": "turbo docs --filter=docs",
     "dev": "turbo dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "kitchen-sink:expo": "cd kitchen-sink/expo && bun run ios",
     "lint": "turbo lint",
-    "publish-packages": "turbo run build lint test && changeset version && changeset publish",
+    "typecheck": "turbo typecheck",
+    "publish-packages": "turbo build lint test typecheck && changeset version && changeset publish",
     "test": "turbo test"
   },
   "dependencies": {

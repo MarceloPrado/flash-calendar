@@ -12,6 +12,7 @@
     "ios": "expo start --ios",
     "lint": "eslint src",
     "start": "expo start",
+    "typecheck": "tsc --noEmit",
     "web": "expo start --web"
   },
   "dependencies": {

@@ -11,6 +11,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsup --dts",
+    "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist && rm -rf node_modules",
     "dev": "tsup --watch --silent",
     "lint": "eslint src",

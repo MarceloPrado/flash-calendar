@@ -14,4 +14,4 @@ jobs:
           bun-version: "1.0.27"
       - run: bun install
       - run: bun run build
-      - run: bun turbo run build lint test
+      - run: bun turbo build lint test typecheck

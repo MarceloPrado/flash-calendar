@@ -10,6 +10,7 @@
     "ios": "expo start --ios",
     "lint": "eslint src",
     "start": "expo start",
+    "typecheck": "tsc --noEmit",
     "storybook-generate": "sb-rn-get-stories",
     "web": "expo start --web"
   },
