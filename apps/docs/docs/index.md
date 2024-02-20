@@ -11,6 +11,7 @@ sidebar_position: 1
 - Infinite scroll support
 - Expo compatible, no binary updates required
 - Customizable and composable UI
+  - - dark-mode compatible out of the box
 - Incredibly fast and performant
 - Tiny bundle size _(18kb minified, 6kb gzip)_
   - Just a [single](https://github.com/developit/mitt) third-party dependency _(200 bytes)_
@@ -29,9 +30,9 @@ To use this package, **you also need to install its peer dependencies**. Check o
 
 - [`@shopify/flash-list`](https://shopify.github.io/flash-list)
 
-## Usage
+## Getting started
 
-Read more about the usage of this package [here](/docs/fundamentals/usage).
+To learn more about Flash Calendar, start [here](/docs/fundamentals/principles).
 
 ## Playground & Examples
 
