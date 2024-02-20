@@ -4,6 +4,8 @@ This is the monorepo for Flash Calendar, an incredibly fast and flexible way of 
 
 ## Contributing
 
+This project uses [Bun](https://bun.sh/) as its package manager. The first thing you'll need is to [install Bun](https://bun.sh/).
+
 To install dependencies, run at the root:
 
 ```bash
