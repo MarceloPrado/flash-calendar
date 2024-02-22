@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
       - uses: oven-sh/setup-bun@v1
         with:
-          bun-version: "1.0.27"
+          bun-version: "1.0.28"
       - run: bun install
 
       - name: Build website
