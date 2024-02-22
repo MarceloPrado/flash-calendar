@@ -7,6 +7,7 @@ import { CalendarDemo } from "./Calendar";
 import { CalendarListDemo } from "./CalendarList";
 import { CalendarListDateRange } from "./CalendarListDateRange";
 import { CalendarCustomFormatting } from "./CalendarCustomFormatting";
+import { ImperativeScrolling } from "./ImperativeScroll";
 
 export default function App() {
   const [demo, setDemo] = useState<"calendar" | "calendarList">("calendar");
@@ -30,7 +31,8 @@ export default function App() {
 
         <StatusBar style="auto" />
       </View> */}
-      <CalendarCustomFormatting />
+      {/* <CalendarCustomFormatting /> */}
+      <ImperativeScrolling />
     </SafeAreaView>
   );
 }
@@ -42,6 +44,6 @@ const styles = StyleSheet.create({
   },
   pageContainer: {
     flex: 1,
-    backgroundColor: "#000",
+    backgroundColor: "#fff",
   },
 });

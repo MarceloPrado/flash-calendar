@@ -1,0 +1,101 @@
+---
+sidebar_position: 4
+---
+
+import { HStack } from "@site/src/components/HStack";
+
+# Tips and Tricks
+
+## Date IDs vs Dates
+
+Date and timezones are a confusing topic. This is why Flash Calendar is careful to name things consistently. All props and callbacks used by the library follows the same convention of using a date ID instead of a `Date`.
+
+Date ID is a simple `YYYY-MM-DD` representation of a given date. Flash Calendar exposes two functions to convert between Date and Date ID.
+
+```tsx
+import { toDateId, fromDateId } from "@marceloterreiro/flash-calendar";
+
+const januaryFirstAsDate = fromDateId("2024-01-01"); // Date object
+const januaryFirstAsId = toDateId(januaryFirstAsDate); // "2024-01-01"
+```
+
+It's **highly recommended to use `toDateId` and `fromDateId` when interacting with the library**. These functions were purposefully created to avoid timezones and other date-related issues.
+
+For instance, consider this code:
+
+```tsx
+const endOfJanuary = new Date("2024-01-31");
+
+// ❌ Don't do this, for some dates and timezones, this will return unexpected results
+const endOfJanuaryId = endOfJanuary.toISOString().slice(0, 10); // 2024-02-01 or 2024-01-31, depending on the timezone
+```
+
+The code above is not completely safe. It can return `2024-02-01` for some timezones. Instead, use `toDateId`:
+
+```tsx
+const februaryFirstId = toDateId("2024-02-01");
+const februaryFirst = fromDateId(februaryFirstId); // Date object
+```
+
+These two convertions functions were [battle-tested](https://github.com/MarceloPrado/flash-calendar/blob/ee87cb1a695a42840f00f17bbaeb1a795a1e3ba0/packages/flash-calendar/src/helpers/dates.test.ts#L30-L130) to return the expected results, regardless of the timezone.
+
+## Programmatically scrolling to a specific date
+
+Flash Calendar exposes a `ref` that allows imperative scrolling to a desired date.
+
+<HStack spacing={24} alignItems="flex-start">
+
+<div>
+
+```tsx
+import { addMonths, subMonths, startOfMonth } from "date-fns";
+import type { CalendarListRef } from "@marceloterreiro/flash-calendar";
+import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+import { useRef, useState } from "react";
+import { Button, Text, View } from "react-native";
+
+export function ImperativeScrolling() {
+  const [currentMonth, setCurrentMonth] = useState(startOfMonth(new Date()));
+
+  const ref = useRef<CalendarListRef>(null);
+
+  return (
+    <View style={{ paddingTop: 20, flex: 1 }}>
+      <View style={{ flexDirection: "row", gap: 12 }}>
+        <Button
+          onPress={() => {
+            const pastMonth = subMonths(currentMonth, 1);
+            setCurrentMonth(pastMonth);
+            ref.current?.scrollToDate(pastMonth, true);
+          }}
+          title="Past month"
+        />
+        <Text>Current: {toDateId(currentMonth)}</Text>
+        <Button
+          onPress={() => {
+            const nextMonth = addMonths(currentMonth, 1);
+            setCurrentMonth(nextMonth);
+            ref.current?.scrollToDate(nextMonth, true);
+          }}
+          title="Next month"
+        />
+      </View>
+      <View style={{ flex: 1, width: "100%" }}>
+        <Calendar.List
+          calendarInitialMonthId={toDateId(currentMonth)}
+          onCalendarDayPress={(dateId) => console.log(`Pressed ${dateId}`)}
+          ref={ref}
+        />
+      </View>
+    </View>
+  );
+}
+```
+
+</div>
+
+<video controls width={300}>
+  <source src="/videos/imperative-scroll.mp4" type="video/mp4" />
+</video>
+
+</HStack>
