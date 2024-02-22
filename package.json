@@ -28,9 +28,9 @@
     "@typescript-eslint/typescript-estree": "^6.21.0",
     "eslint-plugin-import": "^2.29.1",
     "prettier": "^2.8.8",
+    "react-loadable": "npm:@docusaurus/react-loadable@5.5.2",
     "turbo": "^1.12.1",
-    "typescript": "^5.3.3",
-    "react-loadable": "npm:@docusaurus/react-loadable@5.5.2"
+    "typescript": "^5.3.3"
   },
   "packageManager": "bun@1.0.25"
 }
