@@ -1,4 +1,5 @@
 import type { PropsWithChildren, ReactNode } from "react";
+import { StatusBar } from "expo-status-bar";
 import { memo, useMemo } from "react";
 import { StyleSheet, View, type ViewStyle } from "react-native";
 
@@ -39,7 +40,12 @@ const BackgroundStory = memo(({ children }: PropsWithChildren) => {
     [colors]
   );
 
-  return <View style={containerStyles}>{children}</View>;
+  return (
+    <View style={containerStyles}>
+      <StatusBar />
+      {children}
+    </View>
+  );
 });
 BackgroundStory.displayName = "BackgroundStory";
 

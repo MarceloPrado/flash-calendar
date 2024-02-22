@@ -14,8 +14,8 @@ const npm2Yarn = [
 ];
 
 const config: Config = {
-  title: "My Site",
-  tagline: "Dinosaurs are cool",
+  title: "Flash Calendar",
+  tagline: "The fastest calendar component for React Native",
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
@@ -65,6 +65,8 @@ const config: Config = {
       } satisfies Preset.Options,
     ],
   ],
+
+  plugins: ["@docusaurus/plugin-ideal-image"],
 
   themeConfig: {
     // Replace with your project's social card

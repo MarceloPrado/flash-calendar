@@ -2,17 +2,22 @@
 sidebar_position: 1
 ---
 
+import Image from "@theme/IdealImage";
+
 # Introduction
 
 **An incredibly fast and flexible way of building calendars in React Native.**
 
+<Image img={require("/img/shots.png")} width={800} />
+
 ## Features
 
-- Infinite scroll support
 - Expo compatible, no binary updates required
-- Customizable and composable UI
-  - - dark-mode compatible out of the box
-- Incredibly fast and performant
+- iOS and Android support
+- Customizable and composable UI + dark-mode built-in
+- Localization support
+- Infinite scroll
+- Date ranges
 - Tiny bundle size _(18kb minified, 6kb gzip)_
   - Just a [single](https://github.com/developit/mitt) third-party dependency _(200 bytes)_
 

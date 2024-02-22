@@ -99,18 +99,25 @@ export interface UseCalendarParams {
   calendarMaxDateId?: string;
 
   /**
+   * The locale to use for the date formatting. If you're using custom
+   * formatting functions, this value will be forwarded as the second argument.
+   * @defaultValue "en-US"
+   */
+  calendarFormatLocale?: string;
+
+  /**
    * A custom function to override the default month format ("January 2022").
    */
-  getCalendarMonthFormat?: (date: Date) => string;
+  getCalendarMonthFormat?: (date: Date, locale: string) => string;
 
   /**
    * A custom function to override the default month format ("S", "M", "T").
    */
-  getCalendarWeekDayFormat?: (date: Date) => string;
+  getCalendarWeekDayFormat?: (date: Date, locale: string) => string;
   /**
    * A custom function to override the default day format ("1", "9", "17").
    */
-  getCalendarDayFormat?: (date: Date) => string;
+  getCalendarDayFormat?: (date: Date, locale: string) => string;
   /**
    * The day of the week to start the calendar with.
    * @defaultValue "sunday"
@@ -189,21 +196,6 @@ export const getStateFields = ({
   };
 };
 
-const monthIdToLabel = {
-  0: "January",
-  1: "February",
-  2: "March",
-  3: "April",
-  4: "May",
-  5: "June",
-  6: "July",
-  7: "August",
-  8: "September",
-  9: "October",
-  10: "November",
-  11: "December",
-};
-
 const weekDayIdToLabel = {
   0: "S",
   1: "M",
@@ -214,20 +206,22 @@ const weekDayIdToLabel = {
   6: "S",
 };
 
-const getBaseCalendarMonthFormat = (date: Date) => {
-  const year = date.getFullYear();
-  const month =
-    monthIdToLabel[date.getMonth() as unknown as keyof typeof monthIdToLabel];
-  return `${month} ${year}`;
+const getBaseCalendarMonthFormat = (date: Date, locale: string) => {
+  return new Intl.DateTimeFormat(locale, {
+    month: "long",
+    year: "numeric",
+  }).format(date);
 };
-const getBaseCalendarWeekDayFormat = (date: Date) => {
-  return weekDayIdToLabel[
-    date.getDay() as unknown as keyof typeof weekDayIdToLabel
-  ];
+const getBaseCalendarWeekDayFormat = (date: Date, locale: string) => {
+  return new Intl.DateTimeFormat(locale, {
+    weekday: "narrow",
+  }).format(date);
 };
 
-const getBaseCalendarDayFormat = (date: Date) => {
-  return `${date.getDate()}`;
+const getBaseCalendarDayFormat = (date: Date, locale: string) => {
+  return new Intl.DateTimeFormat(locale, {
+    day: "numeric",
+  }).format(date);
 };
 
 /**
@@ -237,6 +231,7 @@ export const buildCalendar = (params: UseCalendarParams) => {
   const {
     calendarMonthId: monthId,
     calendarFirstDayOfWeek = "sunday",
+    calendarFormatLocale = "en-US",
     getCalendarMonthFormat = getBaseCalendarMonthFormat,
     getCalendarWeekDayFormat = getBaseCalendarWeekDayFormat,
     getCalendarDayFormat = getBaseCalendarDayFormat,
@@ -268,7 +263,10 @@ export const buildCalendar = (params: UseCalendarParams) => {
 
         const dayShape: CalendarDayMetadata = {
           date: dayToIterate,
-          displayLabel: getCalendarDayFormat(dayToIterate),
+          displayLabel: getCalendarDayFormat(
+            dayToIterate,
+            calendarFormatLocale
+          ),
           id,
           isDifferentMonth: true,
           isEndOfMonth: false,
@@ -297,7 +295,7 @@ export const buildCalendar = (params: UseCalendarParams) => {
     const id = toDateId(dayToIterate);
     weeksList[weeksList.length - 1].push({
       date: dayToIterate,
-      displayLabel: getCalendarDayFormat(dayToIterate),
+      displayLabel: getCalendarDayFormat(dayToIterate, calendarFormatLocale),
       id,
       isDifferentMonth: false,
       isEndOfMonth: id === monthEndId,
@@ -322,7 +320,7 @@ export const buildCalendar = (params: UseCalendarParams) => {
       const id = toDateId(dayToIterate);
       const dayShape: CalendarDayMetadata = {
         date: dayToIterate,
-        displayLabel: getCalendarDayFormat(dayToIterate),
+        displayLabel: getCalendarDayFormat(dayToIterate, calendarFormatLocale),
         id,
         isDifferentMonth: true,
         isEndOfMonth: false,
@@ -343,12 +341,15 @@ export const buildCalendar = (params: UseCalendarParams) => {
 
   const startOfWeekDate = startOfWeek(month, calendarFirstDayOfWeek);
   const weekDaysList = range(1, 7).map((i) =>
-    getCalendarWeekDayFormat(addDays(startOfWeekDate, i - 1))
+    getCalendarWeekDayFormat(
+      addDays(startOfWeekDate, i - 1),
+      calendarFormatLocale
+    )
   );
 
   return {
     weeksList,
-    calendarRowMonth: getCalendarMonthFormat(month),
+    calendarRowMonth: getCalendarMonthFormat(month, calendarFormatLocale),
     weekDaysList,
   };
 };

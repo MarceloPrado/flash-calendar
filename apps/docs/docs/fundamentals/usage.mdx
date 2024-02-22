@@ -1,0 +1,211 @@
+---
+sidebar_position: 2
+---
+
+import Image from "@theme/IdealImage";
+import { HStack } from "@site/src/components/HStack";
+import basicCalendar from "./assets/basic-calendar.png";
+import basicCalendarList from "./assets/basic-calendar-list.png";
+import dateRangeCalendarList from "./assets/date-range-calendar-list.png";
+import customFormatting from "./assets/custom-formatting.png";
+import customLocale from "./assets/custom-locale.png";
+
+# Usage
+
+:::tip
+
+All Flash Calendar props contain the word `calendar` to improve IDE autocompletion (e.g. `calendarMinDateId`, `calendarActiveDateRanges`, `getCalendarDayFormat`).
+
+:::
+
+## Basic usage
+
+Here's the minimal example to render a `Calendar` and a `Calendar.List`:
+
+**`Calendar`**
+
+<HStack spacing={24} alignItems="flex-start">
+
+<div>
+```tsx
+import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+import { useState } from "react";
+import { Text, View } from "react-native";
+
+const today = toDateId(new Date());
+
+export function BasicCalendar() {
+  const [selectedDate, setSelectedDate] = useState(today);
+  return (
+    <View>
+      <Text>Selected date: {selectedDate}</Text>
+      <Calendar
+        calendarActiveDateRanges={[
+          {
+            startId: selectedDate ?? undefined,
+            endId: selectedDate ?? undefined,
+          },
+        ]}
+        calendarMonthId={today}
+        onCalendarDayPress={setSelectedDate}
+      />
+    </View>
+  );
+}
+```
+</div>
+<Image img={basicCalendar} width={250}/>
+</HStack>
+
+**`Calendar.List`**
+
+<HStack spacing={24} alignItems="flex-start">
+
+<div>
+
+```tsx
+import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+import { useState } from "react";
+import { Text, View } from "react-native";
+
+const today = toDateId(new Date());
+
+export function BasicCalendarList() {
+  const [selectedDate, setSelectedDate] = useState(today);
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Text>Selected date: {selectedDate}</Text>
+      <Calendar.List
+        calendarActiveDateRanges={[
+          {
+            startId: selectedDate ?? undefined,
+            endId: selectedDate ?? undefined,
+          },
+        ]}
+        calendarInitialMonthId={today}
+        onCalendarDayPress={setSelectedDate}
+      />
+    </View>
+  );
+}
+```
+
+</div>
+
+<Image img={basicCalendarList} width={250} />
+
+</HStack>
+
+## Date ranges
+
+Building a date range picker with Flash Calendar is easy thanks to the [`useDateRange`](https://github.com/MarceloPrado/flash-calendar/blob/cd59ccfb60ccc3eb75a8e7ec2e347c6888be7091/packages/flash-calendar/src/hooks/useDateRange.ts#L68-L92) hook.
+
+<HStack spacing={24} alignItems="flex-start">
+
+<div>
+
+```tsx
+import { Calendar, useDateRange } from "@marceloterreiro/flash-calendar";
+
+export const CalendarListDateRange = () => {
+  const {
+    calendarActiveDateRanges,
+    onCalendarDayPress,
+    // Also available:
+    // dateRange, // { startId?: string, endId?: string }
+    // isDateRangeValid, // boolean
+    // onClearDateRange, // () => void
+  } = useDateRange();
+  return (
+    <Calendar.List
+      calendarActiveDateRanges={calendarActiveDateRanges}
+      onCalendarDayPress={onCalendarDayPress}
+    />
+  );
+};
+```
+
+</div>
+
+<Image img={dateRangeCalendarList} width={250} />
+
+</HStack>
+
+## Localization and date formatting
+
+Flash Calendar was built with a "bring your own date library" approach. This means you can use your preferred date library to format how the dates, weeks and months are displayed.
+
+### Different locale
+
+If you just need a different locale, use the `calendarFormatLocale` prop:
+
+<HStack spacing={24} alignItems="flex-start">
+
+<div>
+
+```tsx
+import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+import { useState } from "react";
+
+const today = toDateId(new Date());
+
+export function BrazilianCalendar() {
+  const [selectedDate, setSelectedDate] = useState(today);
+  return (
+    <Calendar
+      calendarActiveDateRanges={[
+        {
+          startId: selectedDate ?? undefined,
+          endId: selectedDate ?? undefined,
+        },
+      ]}
+      calendarMonthId={today}
+      calendarFormatLocale="pt-BR"
+      onCalendarDayPress={setSelectedDate}
+    />
+  );
+}
+```
+
+</div>
+
+<Image img={customLocale} width={250} />
+
+</HStack>
+
+### Custom date formatting
+
+If you need full control over how the dates are displayed, use the `getCalendarDayFormat`, `getCalendarMonthFormat` and `getCalendarWeekDayFormat` props. They share the [same signature](https://github.com/MarceloPrado/flash-calendar/blob/cd59ccfb60ccc3eb75a8e7ec2e347c6888be7091/packages/flash-calendar/src/hooks/useCalendar.ts#L108-L120) and allow you to use your preferred date library.
+
+<HStack spacing={24} alignItems="flex-start">
+
+<div>
+
+```tsx
+import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+import { subMonths } from "date-fns";
+import { format } from "date-fns/fp";
+
+const threeMonthsAgo = subMonths(new Date(), 3);
+
+export const CalendarCustomFormatting = () => {
+  return (
+    <Calendar
+      calendarMonthId={toDateId(threeMonthsAgo)}
+      getCalendarDayFormat={format("dd")}
+      getCalendarMonthFormat={format("MMMM yyyy (LL/yyyy)")}
+      getCalendarWeekDayFormat={format("E")}
+      onCalendarDayPress={(dateId) => {
+        console.log(`Clicked on ${dateId}`);
+      }}
+    />
+  );
+};
+```
+
+</div>
+
+<Image img={customFormatting} width={250} />
+
+</HStack>

@@ -26,11 +26,13 @@ const CalendarMeta: Meta<typeof Calendar> = {
       options: ["monday", "sunday"],
     },
     onCalendarDayPress: { action: "onCalendarDayPress" },
+    calendarFormatLocale: { type: "string" },
   },
 
   args: {
     calendarFirstDayOfWeek: "sunday",
     calendarMonthId: toDateId(startOfThisMonth),
+    calendarFormatLocale: "en-US",
   },
   decorators: [paddingDecorator],
 };
@@ -99,6 +101,17 @@ export const ActiveDateRanges: StoryObj<typeof Calendar> = {
     ],
     calendarMonthId: "2024-01-01",
   },
+};
+
+export const WithCustomLocale = (args: typeof KichenSink.args) => {
+  return (
+    <Calendar
+      {...args}
+      calendarFormatLocale="pt-BR"
+      calendarMonthId={toDateId(startOfThisMonth)}
+      onCalendarDayPress={loggingHandler("onCalendarDayPress")}
+    />
+  );
 };
 
 export const WithCustomFormatting = (args: typeof KichenSink.args) => {
