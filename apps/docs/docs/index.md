@@ -37,7 +37,7 @@ To use this package, **you also need to install its peer dependencies**. Check o
 
 ## Getting started
 
-To learn more about Flash Calendar, start [here](/docs/fundamentals/principles).
+**To learn more about Flash Calendar, start [here](/fundamentals/principles).**
 
 ## Playground & Examples
 

@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 
-export interface HStackProps {
+export interface VStackProps {
   alignItems?: HTMLDivElement["style"]["alignItems"];
   justifyContent?: HTMLDivElement["style"]["justifyContent"];
   children: ReactNode;
@@ -13,17 +13,17 @@ export interface HStackProps {
   width?: HTMLDivElement["style"]["width"];
 }
 
-export const HStack = ({
+export const VStack = ({
   alignItems,
   children,
   justifyContent = "flex-start",
   spacing = 0,
-}: HStackProps) => {
+}: VStackProps) => {
   return (
     <div
       style={{
         gap: spacing,
-        flexDirection: "row",
+        flexDirection: "column",
         justifyContent,
         alignItems,
         display: "flex",

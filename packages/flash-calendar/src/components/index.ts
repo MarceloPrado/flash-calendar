@@ -33,8 +33,18 @@ export type {
 } from "@/components/CalendarItemDay";
 
 interface CalendarItemNamespace {
+  /**
+   * Renders the day item of the calendar (e.g. `1`, `2`, `3`, etc.)
+   */
   Day: typeof CalendarItemDayWithNamespace;
+  /**
+   * Renders the week day name item of the calendar (e.g. `Sun`, `Mon`, `Tue`, etc.)
+   */
   WeekName: typeof CalendarItemWeekName;
+  /**
+   * Renders an empty item to fill the calendar's grid in the start or end of
+   * the month.
+   */
   Empty: typeof CalendarItemEmpty;
 }
 
@@ -48,7 +58,13 @@ CalendarItemWithNamespace.Empty = CalendarItemEmpty;
 export type { CalendarItemEmptyProps } from "@/components/CalendarItemEmpty";
 
 interface CalendarRowNamespace {
+  /**
+   * Renders the month row of the calendar (e.g. `January`, `February`, `March`, etc.)
+   */
   Month: typeof CalendarRowMonth;
+  /**
+   * Renders each week row of the calendar, including the week day names.
+   */
   Week: typeof CalendarRowWeek;
 }
 

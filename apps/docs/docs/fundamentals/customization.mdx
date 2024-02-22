@@ -2,4 +2,159 @@
 sidebar_position: 3
 ---
 
+import Image from "@theme/IdealImage";
+import { HStack } from "@site/src/components/HStack";
+import { VStack } from "@site/src/components/VStack";
+import anatomy from "./assets/anatomy.png";
+import linearTheme from "./assets/linear-theme.png";
+import perfCalendar from "./assets/perf-calendar.png";
+import windowsXpCalendar from "./assets/windows-xp-calendar.png";
+
 # Customization
+
+Before diving into all the things you can customize, let's first understand the calendar's components and how they relate to each other.
+
+## Anatomy
+
+<Image img={anatomy} width={500} />
+
+| Component                | Description                                                                         | Related props                                                                            |
+| ------------------------ | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `Calendar.Row.Month`     | Renders the month row of the calendar                                               | `calendarMonthHeaderHeight`, `getCalendarMonthFormat`                                    |
+| `Calendar.Row.Week`      | Renders each week row of the calendar, including the week day names.                | `calendarWeekHeaderHeight`, `calendarRowHorizontalSpacing`, `calendarRowVerticalSpacing` |
+| `Calendar.Item.Day`      | Renders the day item of the calendar (e.g. `1`, `2`, `3`, etc.)                     | `calendarDayHeight`, `getCalendarDayFormat`                                              |
+| `Calendar.Item.WeekName` | Renders the week day name item of the calendar (e.g. `Sun`, `Mon`, `Tue`, etc.)     | `getCalendarWeekDayFormat`, `calendarFirstDayOfWeek`                                     |
+| `Calendar.Item.Empty`    | Renders an empty item to fill the calendar's grid in the start or end of the month. |                                                                                          |
+
+## Customization strategies
+
+There are two main strategies to customize the calendar:
+
+1. **Using the `theme` prop**: the easiest way.
+2. **Composing your own calendar**: the most flexible way.
+
+### Theme prop
+
+The `theme` prop enables you to change every single style of the base calendar. For most cases, this should be enough to achieve the desired look and feel. Here's an example mimicking [Linear's](https://linear.app/) calendar:
+
+<HStack spacing={24} alignItems="flex-start">
+
+<div>
+
+```tsx
+import { CalendarTheme } from "@marceloterreiro/flash-calendar";
+
+const linearAccent = "#585ABF";
+
+const linearTheme: CalendarTheme = {
+  rowMonth: {
+    content: {
+      textAlign: "left",
+      color: "rgba(255, 255, 255, 0.5)",
+      fontWeight: "700",
+    },
+  },
+  rowWeek: {
+    container: {
+      borderBottomWidth: 1,
+      borderBottomColor: "rgba(255, 255, 255, 0.1)",
+      borderStyle: "solid",
+    },
+  },
+  itemWeekName: { content: { color: "rgba(255, 255, 255, 0.5)" } },
+  itemDayContainer: {
+    activeDayFiller: {
+      backgroundColor: linearAccent,
+    },
+  },
+  itemDay: {
+    idle: ({ isPressed, isWeekend }) => ({
+      container: {
+        backgroundColor: isPressed ? linearAccent : "transparent",
+        borderRadius: 4,
+      },
+      content: {
+        color: isWeekend && !isPressed ? "rgba(255, 255, 255, 0.5)" : "#ffffff",
+      },
+    }),
+    today: ({ isPressed }) => ({
+      container: {
+        borderColor: "rgba(255, 255, 255, 0.5)",
+        borderRadius: isPressed ? 4 : 30,
+        backgroundColor: isPressed ? linearAccent : "transparent",
+      },
+      content: {
+        color: isPressed ? "#ffffff" : "rgba(255, 255, 255, 0.5)",
+      },
+    }),
+    active: ({ isEndOfRange, isStartOfRange }) => ({
+      container: {
+        backgroundColor: linearAccent,
+        borderTopLeftRadius: isStartOfRange ? 4 : 0,
+        borderBottomLeftRadius: isStartOfRange ? 4 : 0,
+        borderTopRightRadius: isEndOfRange ? 4 : 0,
+        borderBottomRightRadius: isEndOfRange ? 4 : 0,
+      },
+      content: {
+        color: "#ffffff",
+      },
+    }),
+  },
+};
+
+export const LinearCalendar = memo(() => {
+  return (
+    <Calendar
+      calendarDayHeight={30}
+      calendarFirstDayOfWeek="sunday"
+      calendarMonthId={toDateId(new Date())}
+      calendarRowHorizontalSpacing={16}
+      calendarRowVerticalSpacing={16}
+      onCalendarDayPress={(dateId) => console.log(`Pressed date ${dateId}`)}
+      theme={linearTheme}
+    />
+  );
+});
+```
+
+</div>
+
+<Image img={linearTheme} width={250} />
+
+</HStack>
+
+Check out the full source code [here](https://github.com/MarceloPrado/flash-calendar/blob/468c7153257489a3a527bd400d532223bf35dd0c/apps/example/src/components/ThemeableCalendar/LinearCalendar.tsx#L89).
+
+## Composing your own calendar
+
+Sometimes, you need more than just changing styles. You might want to change the layout, add new components, or even remove some of them. In this case, you can easily build your own calendar using the base Calendar components from [above](#anatomy).
+
+The sky is the limit here. Here are two demos from the example app:
+
+<HStack spacing={24} alignItems="flex-start">
+
+<VStack spacing={12} alignItems="center">
+  <VStack spacing={4} alignItems="center">
+
+    <span style={{ fontWeight: "bold" }}>Windows XP calendar • [source code](https://github.com/MarceloPrado/flash-calendar/blob/468c7153257489a3a527bd400d532223bf35dd0c/apps/example/src/components/ThemeableCalendar/Calendar.stories.tsx#L41-L106)</span>
+    <span style={{ opacity: 0.8 }}>A nostalgic rebuild to showcase what's possible with Flash Calendar.</span>
+
+  </VStack>
+  <video controls width={300}>
+    <source src="/videos/windows-xp-calendar.mp4" type="video/mp4" />
+  </video>
+</VStack>
+
+<VStack spacing={12} alignItems="center">
+  <VStack spacing={4} alignItems="center">
+
+    <span style={{ fontWeight: "bold", margin: 0 }}>Perf calendar • [source code](https://github.com/MarceloPrado/flash-calendar/blob/468c7153257489a3a527bd400d532223bf35dd0c/apps/example/src/components/PerfTestCalendar/PerfTestCalendarList.stories.tsx#L47-L67)</span>
+    <span style={{ opacity: 0.8, margin: 0 }}>A calendar built to measure re-renders.</span>
+
+  </VStack>
+  <video controls width={300}>
+    <source src="/videos/perf-calendar.mp4" type="video/mp4" />
+  </video>
+</VStack>
+
+</HStack>
