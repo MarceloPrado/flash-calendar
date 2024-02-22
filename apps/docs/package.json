@@ -11,6 +11,7 @@
     "clear": "docusaurus clear",
     "docs": "docusaurus start",
     "serve": "docusaurus serve",
+    "clean": "rm -rf .docusaurus && rm -rf node_modules && rm -rf build",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc --noEmit"
