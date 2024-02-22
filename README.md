@@ -1,6 +1,6 @@
 # @marceloterreiro/flash-calendar
 
-This is the monorepo for Flash Calendar, an incredibly fast and flexible way of building calendars in React Native.
+This is the monorepo for Flash Calendar, an incredibly fast and flexible library to build calendars in React Native.
 
 ## Contributing
 
