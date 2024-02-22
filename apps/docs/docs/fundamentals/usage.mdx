@@ -42,8 +42,8 @@ export function BasicCalendar() {
       <Calendar
         calendarActiveDateRanges={[
           {
-            startId: selectedDate ?? undefined,
-            endId: selectedDate ?? undefined,
+            startId: selectedDate,
+            endId: selectedDate,
           },
         ]}
         calendarMonthId={today}
@@ -79,8 +79,8 @@ export function BasicCalendarList() {
       <Calendar.List
         calendarActiveDateRanges={[
           {
-            startId: selectedDate ?? undefined,
-            endId: selectedDate ?? undefined,
+            startId: selectedDate,
+            endId: selectedDate,
           },
         ]}
         calendarInitialMonthId={today}
@@ -112,7 +112,7 @@ export const CalendarListDateRange = () => {
   const {
     calendarActiveDateRanges,
     onCalendarDayPress,
-    // Also available:
+    // Also available for your convenience:
     // dateRange, // { startId?: string, endId?: string }
     // isDateRangeValid, // boolean
     // onClearDateRange, // () => void
