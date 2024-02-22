@@ -2,12 +2,6 @@
 module.exports = {
   root: true,
   extends: ["@marceloterreiro/eslint-config"],
-  plugins: ["import"],
-  settings: {
-    "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"],
-    },
-  },
   rules: {
     "no-restricted-imports": [
       "error",

@@ -8,8 +8,14 @@
     "lint": {
       "dependsOn": ["^lint"]
     },
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
+    },
     "clean": {
       "outputs": []
+    },
+    "docs": {
+      "outputs": ["build/**"]
     },
     "dev": {
       "cache": false,

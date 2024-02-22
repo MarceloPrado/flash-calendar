@@ -1,5 +1,5 @@
 import type { Preview } from "@storybook/react";
-import { backgroundDecorator } from "@marceloterreiro/flash-calendar/src/developer/decorators";
+import { backgroundDecorator } from "@/developer/decorators";
 
 const preview: Preview = {
   parameters: {

@@ -5,13 +5,16 @@ import { Button, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 import { CalendarDemo } from "./Calendar";
 import { CalendarListDemo } from "./CalendarList";
+import { CalendarListDateRange } from "./CalendarListDateRange";
+import { CalendarCustomFormatting } from "./CalendarCustomFormatting";
+import { ImperativeScrolling } from "./ImperativeScroll";
 
 export default function App() {
   const [demo, setDemo] = useState<"calendar" | "calendarList">("calendar");
 
   return (
     <SafeAreaView style={styles.pageContainer}>
-      <View style={styles.paddedContainer}>
+      {/* <View style={styles.paddedContainer}>
         <Calendar.HStack alignItems="center" justifyContent="space-between">
           <Text>
             Demo: {demo === "calendar" ? "Calendar" : "Calendar List"}
@@ -27,7 +30,9 @@ export default function App() {
         {demo === "calendar" ? <CalendarDemo /> : <CalendarListDemo />}
 
         <StatusBar style="auto" />
-      </View>
+      </View> */}
+      {/* <CalendarCustomFormatting /> */}
+      <ImperativeScrolling />
     </SafeAreaView>
   );
 }
