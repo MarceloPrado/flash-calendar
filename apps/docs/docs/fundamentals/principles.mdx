@@ -4,6 +4,8 @@ sidebar_position: 1
 
 import Image from "@theme/IdealImage";
 import bundleSize from "./assets/bundle-size.png";
+import rerenderVideo from "@site/static/videos/rerender-demo.mp4";
+import scrollPerfVideo from "@site/static/videos/scroll-performance-demo.mp4";
 
 # Principles
 
@@ -28,7 +30,7 @@ Flash Calendar, as the name implies, works at lightening speeds for the use case
 As such, it's heavily optimized to avoid unnecessary re-renders:
 
 <video controls width={500}>
-  <source src="/videos/rerender-demo.mp4" type="video/mp4" />
+  <source src={rerenderVideo} type="video/mp4" />
 </video>
 
 From the video above, notice how **only the affected dates re-render**. This means your component stays responsive no matter how lengthy the calendar list is.
@@ -36,7 +38,7 @@ From the video above, notice how **only the affected dates re-render**. This mea
 Besides re-render performance, it's also heavily optimized for scroll performance, all thanks to the excellent [FlashList](https://shopify.github.io/flash-list) foundation (kudos to [Shopify](https://www.shopify.com/) for their incredible OSS work 🙏):
 
 <video controls width={500}>
-  <source src="/videos/scroll-performance-demo.mp4" type="video/mp4" />
+  <source src={scrollPerfVideo} type="video/mp4" />
 </video>
 
 Given the `<Calendar.List />` component is [just a wrapper](https://github.com/marceloprado/flash-calendar/blob/06c813b26b2f4527b3eaacaddfa424df26d42e61/packages/flash-calendar/src/components/CalendarList.tsx#L266-L281) around `FlashList`, it inherits all of its performance characteristics. Additionally, all of FlashList's performance tuning guides apply to Flash Calendar as well. You'll fell right at home.
