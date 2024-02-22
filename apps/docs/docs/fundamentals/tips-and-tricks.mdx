@@ -33,8 +33,8 @@ const endOfJanuaryId = endOfJanuary.toISOString().slice(0, 10); // 2024-02-01 or
 The code above is not completely safe. It can return `2024-02-01` for some timezones. Instead, use `toDateId`:
 
 ```tsx
-const februaryFirstId = toDateId("2024-02-01");
-const februaryFirst = fromDateId(februaryFirstId); // Date object
+const endOfJanuaryId = toDateId("2024-01-31");
+const endOfJanuary = fromDateId(endOfJanuaryId); // Date object
 ```
 
 These two convertions functions were [battle-tested](https://github.com/MarceloPrado/flash-calendar/blob/ee87cb1a695a42840f00f17bbaeb1a795a1e3ba0/packages/flash-calendar/src/helpers/dates.test.ts#L30-L130) to return the expected results, regardless of the timezone.
