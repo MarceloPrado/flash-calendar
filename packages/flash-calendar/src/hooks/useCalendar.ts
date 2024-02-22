@@ -196,16 +196,6 @@ export const getStateFields = ({
   };
 };
 
-const weekDayIdToLabel = {
-  0: "S",
-  1: "M",
-  2: "T",
-  3: "W",
-  4: "T",
-  5: "F",
-  6: "S",
-};
-
 const getBaseCalendarMonthFormat = (date: Date, locale: string) => {
   return new Intl.DateTimeFormat(locale, {
     month: "long",

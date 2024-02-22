@@ -40,7 +40,7 @@ const endOfJanuary = fromDateId(endOfJanuaryId); // Date object
 
 These two convertions functions were [battle-tested](https://github.com/MarceloPrado/flash-calendar/blob/ee87cb1a695a42840f00f17bbaeb1a795a1e3ba0/packages/flash-calendar/src/helpers/dates.test.ts#L30-L130) to return the expected results, regardless of the timezone.
 
-## Programmatically scrolling to a specific date
+## Programmatically scrolling to a date
 
 Flash Calendar exposes a `ref` that allows imperative scrolling to a desired date.
 
@@ -100,3 +100,13 @@ export function ImperativeScrolling() {
 </video>
 
 </HStack>
+
+## Common issues
+
+Here are the most common issues and a guide on how to fix them.
+
+#### `FlashList's rendered size is not usable.`
+
+Check out [Flash List docs](https://shopify.github.io/flash-list/docs/known-issues/#1-flashlists-rendered-size-is-not-usable-warning) for instructions on how to fix this warning.
+
+**TLDR**: ensure the parent of `<Calendar.List />` has a fixed height or a `flex: 1` style.

@@ -232,3 +232,20 @@ export const DatePicker = () => {
     />
   );
 };
+
+export const ScrollingBackwardsWorkaround = () => {
+  return (
+    <VStack alignItems="stretch" grow spacing={12}>
+      <Text>This preloads all past months between Jan 1st 2020 and today</Text>
+
+      <Calendar.List
+        calendarFutureScrollRangeInMonths={1}
+        calendarInitialMonthId="2024-02-01"
+        calendarMaxDateId="2024-05-01"
+        calendarMinDateId="2020-01-01"
+        calendarPastScrollRangeInMonths={50}
+        onCalendarDayPress={loggingHandler("onCalendarDayPress")}
+      />
+    </VStack>
+  );
+};

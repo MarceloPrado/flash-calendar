@@ -5,7 +5,6 @@ import {
   forwardRef,
   memo,
   useCallback,
-  useEffect,
   useImperativeHandle,
   useMemo,
   useRef,
@@ -118,6 +117,7 @@ export const CalendarList = memo(
 
         // Other props
         theme,
+        onEndReached,
         ...props
       }: CalendarListProps,
       ref: Ref<CalendarListRef>
@@ -190,7 +190,8 @@ export const CalendarList = memo(
 
       const handleOnEndReached = useCallback(() => {
         appendMonths(calendarFutureScrollRangeInMonths);
-      }, [appendMonths, calendarFutureScrollRangeInMonths]);
+        onEndReached?.();
+      }, [appendMonths, calendarFutureScrollRangeInMonths, onEndReached]);
 
       const handleOverrideItemLayout = useCallback<
         NonNullable<FlashListProps<CalendarMonth>["overrideItemLayout"]>

@@ -1,0 +1,93 @@
+---
+sidebar_position: 5
+---
+
+import { HStack } from "@site/src/components/HStack";
+import limitationBackwardScrolling from "@site/static/videos/limitation-backward-scrolling.mp4";
+import limitationBackwardScrollingWorkaround from "@site/static/videos/limitation-backward-scrolling-workaround.mp4";
+
+# Limitations
+
+The following are the current known limitations of Flash Calendar. Please, feel free to contribute and help address them.
+
+## Infinite scrolling doesn't work backwards
+
+We currently use `onEndReached` to append new months, but also need a `onStartReached` to prepend months. We need a reliable way to keep the scroll position intact when the user scrolls
+backwards. Functionality-wise, `prependMonths` is already built. We just need to hook it up to the scroll event.
+
+Waiting for Flash List's [#824](https://github.com/Shopify/flash-list/pull/824).
+
+Here's what happens when you try to scroll backwards:
+
+- **Expected**: The calendar scrolls to previous months infinitely at `calendarPastScrollRangeInMonths` increments.
+- **Actual**: The calendar doesn't scroll past the initial month.
+
+<HStack spacing={24} alignItems="flex-start">
+
+<div>
+
+```tsx
+export const ScrollingBackwardsLimitation = () => {
+  return (
+    <VStack alignItems="stretch" grow spacing={12}>
+      <Text>Notice how it doesn't scroll past January</Text>
+
+      <Calendar.List
+        calendarFutureScrollRangeInMonths={1}
+        calendarInitialMonthId="2024-02-01"
+        calendarMaxDateId="2024-05-01"
+        calendarPastScrollRangeInMonths={1}
+        onCalendarDayPress={loggingHandler("onCalendarDayPress")}
+      />
+    </VStack>
+  );
+};
+```
+
+</div>
+
+<video controls width={300}>
+  <source src={limitationBackwardScrolling} type="video/mp4" />
+</video>
+
+</HStack>
+
+### Work-around
+
+As a work-around, you can use `calendarPastScrollRangeInMonths` and
+`calendarMinDateId` to preload all the months you need to scroll back to.
+
+This can have a performance impact since the month list is held in memory. However, we have an
+[example](https://github.com/MarceloPrado/flash-calendar/blob/70bbf3f5e19a6c10592a6ee606c57d7c880ff3d9/apps/example/src/components/PerfTestCalendar/PerfTestCalendarList.stories.tsx#L69-L102)
+rendering 2.000 months (166 years) just fine. Flash List performs really well with large lists, so it's likely that the main bottelneck will be how many items can be held in memory.
+
+<HStack spacing={24} alignItems="flex-start">
+
+<div>
+
+```tsx
+export const ScrollingBackwardsWorkaround = () => {
+  return (
+    <VStack alignItems="stretch" grow spacing={12}>
+      <Text>This preloads all past months between Jan 1st 2020 and today</Text>
+
+      <Calendar.List
+        calendarFutureScrollRangeInMonths={1}
+        calendarInitialMonthId="2024-02-01"
+        calendarMaxDateId="2024-05-01"
+        calendarMinDateId="2020-01-01"
+        calendarPastScrollRangeInMonths={50}
+        onCalendarDayPress={loggingHandler("onCalendarDayPress")}
+      />
+    </VStack>
+  );
+};
+```
+
+</div>
+
+<video controls width={300}>
+  <source src={limitationBackwardScrollingWorkaround} type="video/mp4" />
+</video>
+
+</HStack>

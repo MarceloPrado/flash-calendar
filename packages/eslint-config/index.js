@@ -32,6 +32,7 @@ module.exports = {
     "turbo/no-undeclared-env-vars": "off",
 
     "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/consistent-type-imports": "error",
     "@typescript-eslint/consistent-type-definitions": "error",
 
