@@ -1,6 +1,6 @@
 {
   "name": "@marceloterreiro/flash-calendar",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": false,
   "description": "A better calendar for React Native.",
   "repository": "github.com/marceloprado/flash-calendar",
