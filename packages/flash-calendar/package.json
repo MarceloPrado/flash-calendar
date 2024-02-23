@@ -5,7 +5,8 @@
   "description": "A better calendar for React Native.",
   "repository": {
     "type": "git",
-    "url": "github.com/marceloprado/flash-calendar"
+    "url": "github.com/marceloprado/flash-calendar",
+    "directory": "packages/flash-calendar"
   },
   "license": "MIT",
   "author": "Marcelo Prado",
