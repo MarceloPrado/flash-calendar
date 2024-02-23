@@ -4,6 +4,7 @@ sidebar_position: 1
 
 import Image from "@theme/IdealImage";
 import playgroundVideo from "@site/static/videos/example-app-demo.mp4";
+import moniVideo from "@site/static/videos/moni-demo.mp4";
 
 # Introduction
 
@@ -42,10 +43,22 @@ To use this package, **you also need to install its peer dependencies**. Check o
 
 **To learn more about Flash Calendar, start [here](/fundamentals/principles).**
 
-## Playground & Examples
+## Playground & examples
 
 There are a bunch of examples, including interactable stories, available in the [`apps/example`](https://github.com/MarceloPrado/flash-calendar/tree/285bcec42efa067455bcf44862eeb0f74985caba/apps/example) package. Read the Contributing section from the README for instructions on how to run it. Here's a sneak peek:
 
 <video controls width={500}>
   <source src={playgroundVideo} type="video/mp4" />
 </video>
+
+## Who's using it?
+
+- [Moni](https://apps.apple.com/br/app/moni-finan%C3%A7as-pessoais/id6462422147), a personal finance app for 🇧🇷 that helps users track their finances effortlessly ([iOS](https://apps.apple.com/br/app/moni-finan%C3%A7as-pessoais/id6462422147), [Android](https://play.google.com/store/apps/details?id=com.marceloterreiro.moni))
+
+Here's a sneak peek of what you can build with Flash Calendar (from Moni's production app):
+
+<video controls width={500}>
+  <source src={moniVideo} type="video/mp4" />
+</video>
+
+In this demo, there are several features working together: [date range picker](/fundamentals/usage#date-range-picker), [custom theme](/fundamentals/customization.mdx#theme-prop), [bottom-sheet integration](/fundamentals/usage#bottom-sheet) and infinite scroll.
