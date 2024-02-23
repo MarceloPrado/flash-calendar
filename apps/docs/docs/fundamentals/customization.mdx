@@ -18,8 +18,9 @@ Before diving into all the things you can customize, let's first understand the 
 
 <Image img={anatomy} width={500} />
 
-| Component                | Description                                                                         | Related props                                                                            |
+| Component                | Description                                                                         | Layout-related props                                                                     |
 | ------------------------ | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `Calendar`               | The main calendar component.                                                        | `calendarSpacing`                                                                        |
 | `Calendar.Row.Month`     | Renders the month row of the calendar                                               | `calendarMonthHeaderHeight`, `getCalendarMonthFormat`                                    |
 | `Calendar.Row.Week`      | Renders each week row of the calendar, including the week day names.                | `calendarWeekHeaderHeight`, `calendarRowHorizontalSpacing`, `calendarRowVerticalSpacing` |
 | `Calendar.Item.Day`      | Renders the day item of the calendar (e.g. `1`, `2`, `3`, etc.)                     | `calendarDayHeight`, `getCalendarDayFormat`                                              |
@@ -123,7 +124,7 @@ export const LinearCalendar = memo(() => {
 
 Check out the full source code [here](https://github.com/MarceloPrado/flash-calendar/blob/468c7153257489a3a527bd400d532223bf35dd0c/apps/example/src/components/ThemeableCalendar/LinearCalendar.tsx#L89).
 
-## Composing your own calendar
+### Composing your own calendar
 
 Sometimes, you need more than just changing styles. You might want to change the layout, add new components, or even remove some of them. In this case, you can easily build your own calendar using the base Calendar components from [above](#anatomy).
 

@@ -1,6 +1,10 @@
-# @marceloterreiro/flash-calendar
+# React Native Flash Calendar
+
+[![npm](https://img.shields.io/npm/l/@marceloterreiro/flash-calendar?style=flat-square)](https://www.npmjs.com/package/@marceloterreiro/flash-calendar) [![npm](https://img.shields.io/badge/types-included-blue?style=flat-square)](https://www.npmjs.com/package/@marceloterreiro/flash-calendar) [![runs with expo](https://img.shields.io/badge/Runs%20with%20Expo-4630EB.svg?style=flat-square&logo=EXPO&labelColor=f3f3f3&logoColor=000)](https://expo.io/)
 
 This is the monorepo for Flash Calendar, an incredibly fast and flexible library to build calendars in React Native.
+
+<img src="./apps/docs/static/img/hero.png" width="800px"/>
 
 ## Contributing
 

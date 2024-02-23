@@ -9,6 +9,7 @@ import basicCalendarList from "./assets/basic-calendar-list.png";
 import dateRangeCalendarList from "./assets/date-range-calendar-list.png";
 import customFormatting from "./assets/custom-formatting.png";
 import customLocale from "./assets/custom-locale.png";
+import disabledDates from "./assets/disabled-dates.png";
 
 # Usage
 
@@ -99,7 +100,9 @@ export function BasicCalendarList() {
 
 ## Date ranges
 
-Building a date range picker with Flash Calendar is easy thanks to the [`useDateRange`](https://github.com/MarceloPrado/flash-calendar/blob/cd59ccfb60ccc3eb75a8e7ec2e347c6888be7091/packages/flash-calendar/src/hooks/useDateRange.ts#L68-L92) hook.
+Building a date range picker with Flash Calendar is easy thanks to the
+[`useDateRange`](https://github.com/MarceloPrado/flash-calendar/blob/cd59ccfb60ccc3eb75a8e7ec2e347c6888be7091/packages/flash-calendar/src/hooks/useDateRange.ts#L68-L92)
+hook:
 
 <HStack spacing={24} alignItems="flex-start">
 
@@ -134,7 +137,9 @@ export const CalendarListDateRange = () => {
 
 ## Localization and date formatting
 
-Flash Calendar was built with a "bring your own date library" approach. This means you can use your preferred date library to format how the dates, weeks and months are displayed.
+Flash Calendar was built with a "bring your own date library" approach. This
+means you can use your preferred date library to format how the dates, weeks and
+months are displayed.
 
 ### Different locale
 
@@ -176,7 +181,11 @@ export function BrazilianCalendar() {
 
 ### Custom date formatting
 
-If you need full control over how the dates are displayed, use the `getCalendarDayFormat`, `getCalendarMonthFormat` and `getCalendarWeekDayFormat` props. They share the [same signature](https://github.com/MarceloPrado/flash-calendar/blob/cd59ccfb60ccc3eb75a8e7ec2e347c6888be7091/packages/flash-calendar/src/hooks/useCalendar.ts#L108-L120) and allow you to use your preferred date library.
+If you need full control over how the dates are displayed, use the
+`getCalendarDayFormat`, `getCalendarMonthFormat` and `getCalendarWeekDayFormat`
+props. They share the [same
+signature](https://github.com/MarceloPrado/flash-calendar/blob/cd59ccfb60ccc3eb75a8e7ec2e347c6888be7091/packages/flash-calendar/src/hooks/useCalendar.ts#L108-L120)
+and allow you to use your preferred date library:
 
 <HStack spacing={24} alignItems="flex-start">
 
@@ -207,5 +216,43 @@ export const CalendarCustomFormatting = () => {
 </div>
 
 <Image img={customFormatting} width={250} />
+
+</HStack>
+
+## Min, max and disabled dates
+
+You can limit the range of selectable dates by using the `calendarMinDateId` and
+`calendarMaxDateId` props. The `calendarDisabledDateIds` prop can be
+used to disable specific dates.
+
+This works for both `Calendar` and `Calendar.List`:
+
+<HStack spacing={24} alignItems="flex-start">
+
+<div>
+
+```tsx
+import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+
+const calendarDisabledDateIds = ["2024-03-14", "2024-03-15"];
+
+export const CalendarCustomFormatting = () => {
+  return (
+    <Calendar
+      calendarDisabledDateIds={calendarDisabledDateIds}
+      calendarMaxDateId="2024-03-20"
+      calendarMinDateId="2024-03-10"
+      calendarMonthId="2024-03-01"
+      onCalendarDayPress={(dateId) => {
+        console.log(`Clicked on ${dateId}`);
+      }}
+    />
+  );
+};
+```
+
+</div>
+
+<Image img={disabledDates} width={250} />
 
 </HStack>
