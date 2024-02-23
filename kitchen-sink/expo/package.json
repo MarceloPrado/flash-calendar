@@ -16,7 +16,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@marceloterreiro/flash-calendar": "^0.0.2",
+    "@marceloterreiro/flash-calendar": "^0.0.3",
     "expo": "~50.0.7",
     "expo-status-bar": "~1.11.1",
     "react": "18.2.0",
@@ -30,5 +30,6 @@
     "eslint": "^8.56.0",
     "source-map-explorer": "^2.5.3",
     "typescript": "^5.3.3"
-  }
+  },
+  "version": null
 }
