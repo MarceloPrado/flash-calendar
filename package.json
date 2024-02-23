@@ -6,6 +6,10 @@
     "kitchen-sink/*",
     "packages/*"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MarceloPrado/flash-calendar"
+  },
   "scripts": {
     "analyze:bundle": "scripts/analyze-bundle.sh",
     "build": "turbo build",
