@@ -6,7 +6,11 @@ This is the monorepo for Flash Calendar, an incredibly fast and flexible library
 
 <img src="./apps/docs/static/img/cover.png" width="800px"/>
 
-## Contributing
+## Documentation & Examples
+
+You can find the Flash Calendar documentation [on the website](https://marceloprado.github.io/flash-calendar/).
+
+## Installation
 
 This project uses [Bun](https://bun.sh/) as its package manager. The first thing you'll need is to [install Bun](https://bun.sh/).
 
@@ -34,27 +38,32 @@ To run the documentation website:
 bun docs
 ```
 
-### Making changes
+## Contributing
 
-Ensure your chagens are unit-tested. To improve DX, run the tests in watch mode with `bun test --watch`. You can also run the tests for a specific file with `bun test --watch {filename}`.
+Ensure your changes are unit-tested. To improve DX, run the tests in watch mode with `bun test --watch`. You can also run the tests for a specific file with `bun test --watch {filename}`.
 
-#### Package structure
+### Package structure
 
-##### /apps
+#### /apps
 
 - `/apps/example`: Storybook host for Flash Calendar, runs with the latest uncompiled code.
 - `/apps/docs`: The documentation website for Flash Calendar.
 
-##### /kitchen-sink
+#### /kitchen-sink
 
 A place to test the published Flash Calendar in a real environment.
 
 - `/kitchen-sink/expo`: Scaffolded expo project to test the flash calendar in a real environment.
 
-##### /packages
+#### /packages
 
 The actual src code for Flash Calendar:
 
 - `/packages/flash-calendar`: The flash calendar package itself.
 - `/packages/eslint-config`: Shared eslint config for the project.
 - `/packages/tsconfig`: Shared tsconfig for the project.
+
+
+### License
+
+Flash Calendar is [MIT licensed](./LICENSE).
