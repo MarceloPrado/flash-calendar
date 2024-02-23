@@ -4,7 +4,7 @@
 
 This is the monorepo for Flash Calendar, an incredibly fast and flexible library to build calendars in React Native.
 
-<img src="./apps/docs/static/img/hero.png" width="800px"/>
+<img src="./apps/docs/static/img/cover.png" width="800px"/>
 
 ## Contributing
 

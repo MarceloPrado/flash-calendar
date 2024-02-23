@@ -8,7 +8,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/MarceloPrado/flash-calendar"
+    "url": "git+https://github.com/MarceloPrado/flash-calendar.git"
   },
   "scripts": {
     "analyze:bundle": "scripts/analyze-bundle.sh",
@@ -36,5 +36,6 @@
     "turbo": "^1.12.1",
     "typescript": "^5.3.3"
   },
-  "packageManager": "bun@1.0.25"
+  "packageManager": "bun@1.0.25",
+  "version": ""
 }
