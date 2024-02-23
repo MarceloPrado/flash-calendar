@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4",
-    "@marceloterreiro/flash-calendar": "^0.0.5",
+    "@marceloterreiro/flash-calendar": "*",
     "@shopify/flash-list": "^1.6.3",
     "expo": "~50.0.7",
     "expo-status-bar": "~1.11.1",
