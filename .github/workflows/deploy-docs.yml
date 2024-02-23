@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "apps/docs/**"
 
 permissions:
   contents: write
