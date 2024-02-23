@@ -8,7 +8,7 @@ This is the monorepo for Flash Calendar, an incredibly fast and flexible library
 
 ## Documentation & Examples
 
-You can find the Flash Calendar documentation [on the website](marceloprado.github.io/flash-calendar/).
+You can find the Flash Calendar documentation [on the website](https://marceloprado.github.io/flash-calendar/).
 
 ## Installation
 
