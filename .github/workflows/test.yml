@@ -7,11 +7,16 @@ jobs:
     name: test
     runs-on: ubuntu-latest
     steps:
-      # ...
       - uses: actions/checkout@v3
       - uses: oven-sh/setup-bun@v1
         with:
           bun-version: "1.0.28"
-      - run: bun install
-      - run: bun run build
-      - run: bun turbo build lint test typecheck
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Build
+        run: bun run build
+
+      - name: Lint, Test, Typecheck
+        run: bun turbo build lint test typecheck

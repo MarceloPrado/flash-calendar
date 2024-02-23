@@ -16,7 +16,7 @@
     "kitchen-sink:expo": "cd kitchen-sink/expo && bun run ios",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
-    "publish-packages": "turbo build lint test typecheck && changeset version && changeset publish",
+    "publish-packages": "turbo build lint test typecheck --filter flash-calendar && changeset version && changeset publish",
     "test": "turbo test",
     "postinstall": "manypkg check"
   },
