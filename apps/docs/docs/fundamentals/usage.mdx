@@ -10,6 +10,7 @@ import dateRangeCalendarList from "./assets/date-range-calendar-list.png";
 import customFormatting from "./assets/custom-formatting.png";
 import customLocale from "./assets/custom-locale.png";
 import disabledDates from "./assets/disabled-dates.png";
+import compact from "./assets/calendar-list-compact.png";
 
 # Usage
 
@@ -254,5 +255,39 @@ export const CalendarCustomFormatting = () => {
 </div>
 
 <Image img={disabledDates} width={250} />
+
+</HStack>
+
+## Custom size and spacing
+
+There are several props to tweak the spacings between the components. Check the [Anatomy](/fundamentals/customization#anatomy) section in the [Customization](/fundamentals/customization) docs for more:
+
+<HStack spacing={24} alignItems="flex-start">
+
+<div>
+
+```tsx
+import { Calendar } from "@marceloterreiro/flash-calendar";
+import { View } from "react-native";
+
+export const CalendarListCompact = () => {
+  return (
+    <View style={{ width: 300, flex: 1 }}>
+      <Calendar.List
+        calendarDayHeight={28}
+        calendarMonthHeaderHeight={20}
+        calendarRowHorizontalSpacing={0}
+        calendarRowVerticalSpacing={4}
+        calendarSpacing={10}
+        onCalendarDayPress={(dateId) => console.log(`Pressed ${dateId}`)}
+      />
+    </View>
+  );
+};
+```
+
+</div>
+
+<Image img={compact} width={250} />
 
 </HStack>
