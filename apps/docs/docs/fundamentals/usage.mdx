@@ -11,6 +11,7 @@ import customFormatting from "./assets/custom-formatting.png";
 import customLocale from "./assets/custom-locale.png";
 import disabledDates from "./assets/disabled-dates.png";
 import compact from "./assets/calendar-list-compact.png";
+import bottomSheetAndroid from "@site/static/videos/bottom-sheet-android.mp4";
 
 # Usage
 
@@ -167,6 +168,7 @@ export function BrazilianCalendar() {
         },
       ]}
       calendarMonthId={today}
+      // highlight-next-line
       calendarFormatLocale="pt-BR"
       onCalendarDayPress={setSelectedDate}
     />
@@ -203,9 +205,11 @@ export const CalendarCustomFormatting = () => {
   return (
     <Calendar
       calendarMonthId={toDateId(threeMonthsAgo)}
+      // highlight-start
       getCalendarDayFormat={format("dd")}
       getCalendarMonthFormat={format("MMMM yyyy (LL/yyyy)")}
       getCalendarWeekDayFormat={format("E")}
+      // highlight-end
       onCalendarDayPress={(dateId) => {
         console.log(`Clicked on ${dateId}`);
       }}
@@ -240,9 +244,11 @@ const calendarDisabledDateIds = ["2024-03-14", "2024-03-15"];
 export const CalendarCustomFormatting = () => {
   return (
     <Calendar
+      // highlight-start
       calendarDisabledDateIds={calendarDisabledDateIds}
       calendarMaxDateId="2024-03-20"
       calendarMinDateId="2024-03-10"
+      // highlight-end
       calendarMonthId="2024-03-01"
       onCalendarDayPress={(dateId) => {
         console.log(`Clicked on ${dateId}`);
@@ -291,3 +297,62 @@ export const CalendarListCompact = () => {
 <Image img={compact} width={250} />
 
 </HStack>
+
+## Bottom sheet
+
+You can replace the base `FlashList` component by passing the
+`CalendarScrollComponent` prop to `Calendar.List`. This is useful when you want
+to use Flash Calendar in an Android [bottom sheet](https://github.com/gorhom/react-native-bottom-sheet).
+
+<HStack spacing={24} alignItems="flex-start">
+
+<div>
+
+```tsx
+import BottomSheet from "@gorhom/bottom-sheet";
+import { Calendar } from "@marceloterreiro/flash-calendar";
+import { FlashList } from "@shopify/flash-list";
+import React, { useCallback, useMemo, useRef } from "react";
+import { Platform, StyleSheet, View } from "react-native";
+
+import { BottomSheetFlashList } from "./components/BottomSheetFlashList";
+
+/**
+ * iOS works fine with default flash list. Is better to keep it
+ * since it's more performant.
+ */
+const SafeFlashList = Platform.select({
+  android: BottomSheetFlashList,
+  ios: FlashList,
+});
+
+export const BottomSheetCalendar = () => {
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const snapPoints = useMemo(() => ["25%", "50%"], []);
+
+  return (
+    <View style={styles.container}>
+      <BottomSheet index={1} ref={bottomSheetRef} snapPoints={snapPoints}>
+        <View style={styles.contentContainer}>
+          <Calendar.List
+            // highlight-next-line
+            CalendarScrollComponent={SafeFlashList}
+            calendarInitialMonthId="2024-02-01"
+            onCalendarDayPress={(dateId) => console.log(`Pressed ${dateId}`)}
+          />
+        </View>
+      </BottomSheet>
+    </View>
+  );
+};
+```
+
+</div>
+
+<video controls width={250}>
+  <source src={bottomSheetAndroid} type="video/mp4" />
+</video>
+
+</HStack>
+
+For a reference implementation of the `BottomSheetFlashList` component, check the [source](https://github.com/MarceloPrado/flash-calendar/blob/9b6996a19b22bc72119b26a7bc04b3b739332483/kitchen-sink/expo/src/components/BottomSheetFlashList/index.ts#L1). Bear in mind this isn't a very performant implementation. Contributions welcomed!

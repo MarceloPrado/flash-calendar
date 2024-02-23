@@ -2,7 +2,7 @@
   "expo": {
     "name": "expo-app",
     "slug": "expo-app",
-    "jsEngine": "jsc",
+    "jsEngine": "hermes",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
