@@ -16,7 +16,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@marceloterreiro/flash-calendar": "^0.0.3",
+    "@marceloterreiro/flash-calendar": "^0.0.4",
     "expo": "~50.0.7",
     "expo-status-bar": "~1.11.1",
     "react": "18.2.0",
