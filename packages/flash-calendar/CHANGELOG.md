@@ -1,5 +1,11 @@
 # @marceloterreiro/flash-calendar
 
+## 0.0.5
+
+### Patch Changes
+
+- cbc7728: Update the registry to Github Packages
+
 ## 0.0.4
 
 ### Patch Changes
