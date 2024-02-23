@@ -103,6 +103,7 @@ export const CalendarList = memo(
         calendarFutureScrollRangeInMonths = 12,
         calendarFirstDayOfWeek = "sunday",
         CalendarScrollComponent = FlashList,
+        calendarFormatLocale,
 
         // Spacings
         calendarSpacing = 20,
@@ -143,6 +144,7 @@ export const CalendarList = memo(
           getCalendarWeekDayFormat,
           calendarMaxDateId,
           calendarMinDateId,
+          calendarFormatLocale,
           calendarMonthHeaderHeight,
           calendarRowHorizontalSpacing,
           getCalendarMonthFormat,
@@ -160,6 +162,7 @@ export const CalendarList = memo(
           getCalendarWeekDayFormat,
           calendarMaxDateId,
           calendarMinDateId,
+          calendarFormatLocale,
           calendarMonthHeaderHeight,
           calendarRowHorizontalSpacing,
           getCalendarMonthFormat,
