@@ -8,6 +8,7 @@
     "url": "github.com/marceloprado/flash-calendar",
     "directory": "packages/flash-calendar"
   },
+  "homepage": "https://marceloprado.github.io/flash-calendar/",
   "license": "MIT",
   "author": "Marcelo Prado",
   "main": "./dist/index.js",
