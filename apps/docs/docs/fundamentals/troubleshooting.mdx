@@ -1,0 +1,174 @@
+---
+sidebar_position: 5
+---
+
+import { HStack } from "@site/src/components/HStack";
+import { VStack } from "@site/src/components/VStack";
+import slowBefore from "@site/static/videos/troubleshooting/slow-before.mp4";
+import slowAfter from "@site/static/videos/troubleshooting/slow-after.mp4";
+
+# Troubleshooting
+
+The following are the most common issues found when using Flash Calendar and a
+guide on how to fix them.
+
+## `FlashList's rendered size is not usable.`
+
+Check out [Flash List
+docs](https://shopify.github.io/flash-list/docs/known-issues/#1-flashlists-rendered-size-is-not-usable-warning)
+for instructions on how to fix this warning.
+
+**TLDR**: ensure the parent of `<Calendar.List />` has a fixed height or a
+`flex: 1` style.
+
+## `ReferenceError: Can't find variable: Intl` (Android)
+
+Flash Calendar uses `Intl` primitives to format dates in a locale-aware way.
+JavaScriptCore (`jsc`), the legacy React Native JS runtime, doesn't support
+`Intl` out of the box on Android.
+
+It's highly advised to upgrade to `Hermes`, the new default JS runtime ([more on
+that](https://reactnative.dev/docs/hermes)). Besides better performance, it also
+supports the `Intl` primitives Flash Calendar uses. For Expo, update your
+`app.json` to use `hermes`:
+
+```json
+{
+  "expo": {
+    "jsEngine": "hermes"
+  }
+}
+```
+
+If your company is stuck with `jsc`, you can either use a polyfill, or bypass
+`Intl` entirely by [providing your own date formatting
+functions](/fundamentals/usage#custom-date-formatting).
+
+## Calendar.List is slow when using date ranges
+
+If you're seeing frame drops when using `Calendar.List`, there's a high chance
+you're suffering from too many re-renders. If you're not careful with
+memoization, the entire list re-renders whenever the `calendarActiveDateRanges`
+prop changes. **Notice the frame drops and how each `BaseCalendar` re-renders in
+the React DevTools profiler (this is bad 👎)**:
+
+<VStack spacing={24} alignItems="flex-start">
+
+<video controls width={"100%"}>
+  <source src={slowBefore} type="video/mp4" />
+</video>
+
+<div>
+
+```tsx
+import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+import { addMonths } from "date-fns";
+import { Text } from "react-native";
+
+const todayId = toDateId(new Date());
+const maxDateId = toDateId(addMonths(new Date(), 12));
+
+export const SlowExample = () => {
+  const [dateIds, setDateIds] = useState<string[]>([]);
+  const dateRanges = dateIds.map((dateId) => ({
+    startId: dateId,
+    endId: dateId,
+  }));
+
+  return (
+    <Calendar.VStack alignItems="stretch" grow spacing={12}>
+      <Text>⚠️ Don't copy-paste this example, it has performance issues</Text>
+
+      <Calendar.List
+        calendarActiveDateRanges={dateRanges}
+        calendarInitialMonthId={todayId}
+        calendarMaxDateId={maxDateId}
+        calendarMinDateId={todayId}
+        onCalendarDayPress={(dateId) => {
+          if (dateIds.includes(dateId)) {
+            setDateIds(dateIds.filter((id) => id !== dateId));
+          } else {
+            setDateIds([...dateIds, dateId]);
+          }
+        }}
+      />
+    </Calendar.VStack>
+  );
+};
+```
+
+</div>
+
+</VStack>
+
+The easiest fix is to use the provided [`useDateRange`
+hook](/fundamentals/usage#date-range-picker). The hook is optimized by default
+and works perfectly with `Calendar.List`.
+
+However, there might be cases where you need to control the `onCalendarDayPress`
+event and decide how the date range logic works. In those cases, make sure you
+memoize the `onCalendarDayPress` and use the [updater function
+pattern](https://react.dev/reference/react/useState#updating-state-based-on-the-previous-state).
+**Notice it runs on 60 FPS and the `BaseCalendar` components don't re-render
+anymore (this is good 👍)**:
+
+<VStack spacing={24} alignItems="flex-start">
+
+<video controls width={"100%"}>
+  <source src={slowAfter} type="video/mp4" />
+</video>
+
+<div>
+
+```tsx
+import type { CalendarOnDayPress } from "@marceloterreiro/flash-calendar";
+import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+import { addMonths } from "date-fns";
+import { useCallback, useState } from "react";
+import { View, Text } from "react-native";
+
+const todayId = toDateId(new Date());
+const maxDateId = toDateId(addMonths(new Date(), 12));
+
+export const SlowExampleAddressed = () => {
+  const [dateIds, setDateIds] = useState<string[]>([]);
+  const dateRanges = dateIds.map((dateId) => ({
+    startId: dateId,
+    endId: dateId,
+  }));
+
+  // highlight-start
+  // This is the fix: memoized onCalendarDayPress and updater function pattern
+  // It keeps `BaseCalendar` props stable, allowing each month to skip re-renders
+  const handleCalendarDayPress = useCallback<CalendarOnDayPress>((dateId) => {
+    setDateIds((dateIds) => {
+      if (dateIds.includes(dateId)) {
+        return dateIds.filter((id) => id !== dateId);
+      } else {
+        return [...dateIds, dateId];
+      }
+    });
+  }, []);
+  // highlight-end
+
+  return (
+    <View style={{ paddingTop: 80, flex: 1, width: "100%" }}>
+      <Calendar.VStack alignItems="stretch" grow spacing={12}>
+        <Text>✅ This is safe to copy, perf issues addressed</Text>
+
+        <Calendar.List
+          calendarActiveDateRanges={dateRanges}
+          calendarInitialMonthId={todayId}
+          calendarMaxDateId={maxDateId}
+          calendarMinDateId={todayId}
+          onCalendarDayPress={handleCalendarDayPress}
+        />
+      </Calendar.VStack>
+    </View>
+  );
+};
+```
+
+</div>
+
+</VStack>
