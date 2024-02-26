@@ -106,31 +106,3 @@ export function ImperativeScrolling() {
 </video>
 
 </HStack>
-
-## Troubleshooting
-
-Here are the most common issues and a guide on how to fix them.
-
-#### `FlashList's rendered size is not usable.`
-
-Check out [Flash List docs](https://shopify.github.io/flash-list/docs/known-issues/#1-flashlists-rendered-size-is-not-usable-warning) for instructions on how to fix this warning.
-
-**TLDR**: ensure the parent of `<Calendar.List />` has a fixed height or a `flex: 1` style.
-
-#### `ReferenceError: Can't find variable: Intl` (Android)
-
-Flash Calendar uses `Intl` primitives to format dates in a locale-aware way.
-JavaScriptCore (`jsc`), the legacy React Native JS runtime, doesn't support `Intl` out of the
-box on Android.
-
-It's highly advised to upgrade to `Hermes`, the new default JS runtime ([more on that](https://reactnative.dev/docs/hermes)). Besides better performance, it also supports the `Intl` primitives Flash Calendar uses. For Expo, update your `app.json` to use `hermes`:
-
-```json
-{
-  "expo": {
-    "jsEngine": "hermes"
-  }
-}
-```
-
-If your company is stuck with `jsc`, you can either use a polyfill, or bypass `Intl` entirely by [providing your own date formatting functions](/fundamentals/usage#custom-date-formatting).
