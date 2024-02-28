@@ -1,5 +1,11 @@
 # @marceloterreiro/flash-calendar
 
+## 0.0.6
+
+### Patch Changes
+
+- 5363835: Fix `<Calendar.List />` losing track of the active date ranges when the list is scrolled past certain amount
+
 ## 0.0.5
 
 ### Patch Changes
