@@ -150,15 +150,25 @@ const BaseCalendar = memo(
 BaseCalendar.displayName = "BaseCalendar";
 
 export const Calendar = memo(
-  ({ calendarActiveDateRanges, ...props }: CalendarProps) => {
+  ({ calendarActiveDateRanges, calendarMonthId, ...props }: CalendarProps) => {
     useEffect(() => {
       activeDateRangesEmitter.emit(
         "onSetActiveDateRanges",
         calendarActiveDateRanges ?? []
       );
-    }, [calendarActiveDateRanges]);
+      /**
+       * While `calendarMonthId` is not used by the effect, we still need it in
+       * the dependency array since [FlashList uses recycling
+       * internally](https://shopify.github.io/flash-list/docs/recycling).
+       *
+       * This means `Calendar` can re-render with different props instead of
+       * getting re-mounted. Without it, we would see staled/invalid data, as
+       * reported by
+       * [#11](https://github.com/MarceloPrado/flash-calendar/issues/11).
+       */
+    }, [calendarActiveDateRanges, calendarMonthId]);
 
-    return <BaseCalendar {...props} />;
+    return <BaseCalendar {...props} calendarMonthId={calendarMonthId} />;
   }
 );
 
