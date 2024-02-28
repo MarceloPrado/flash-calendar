@@ -1,5 +1,7 @@
-import { Calendar } from "@marceloterreiro/flash-calendar";
+import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
 import type { Meta } from "@storybook/react";
+import React, { useState } from "react";
+import { Text, View } from "react-native";
 
 const CalendarMeta: Meta<typeof Calendar> = {
   title: "Calendar.List/Github Issues",
@@ -31,5 +33,29 @@ export const Issue11 = () => {
         console.log("pressed");
       }}
     />
+  );
+};
+
+const today = toDateId(new Date());
+
+// See more: https://github.com/MarceloPrado/flash-calendar/issues/16
+export const Issue16 = () => {
+  const [selectedDate, setSelectedDate] = useState(today);
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Text>Selected date: {selectedDate}</Text>
+      <Calendar.List
+        calendarActiveDateRanges={[
+          {
+            startId: "2024-02-25",
+            endId: "2024-03-02",
+          },
+        ]}
+        calendarInitialMonthId="2024-01-01"
+        calendarMinDateId="2023-02-27"
+        onCalendarDayPress={setSelectedDate}
+      />
+    </View>
   );
 };

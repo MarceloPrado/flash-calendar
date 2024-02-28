@@ -358,4 +358,24 @@ describe("useCalendarList", () => {
     const currentMonthList = result.current.monthList;
     expect(currentMonthList).toHaveLength(1);
   });
+
+  describe("github issues", () => {
+    it("#16: Incorrect scroll position when setting calendarMinDateId", () => {
+      const { result } = renderHook(() =>
+        useCalendarList({
+          calendarInitialMonthId: "2024-01-05",
+          calendarMinDateId: "2023-02-27",
+          calendarFirstDayOfWeek: "sunday",
+          calendarFutureScrollRangeInMonths: 12,
+          calendarPastScrollRangeInMonths: 12,
+        })
+      );
+
+      const { monthList, initialMonthIndex } = result.current;
+
+      expect(monthList[0].id).toBe("2023-02-01");
+      expect(initialMonthIndex).toBe(11);
+      expect(monthList.at(-1)?.id).toBe("2025-01-01");
+    });
+  });
 });

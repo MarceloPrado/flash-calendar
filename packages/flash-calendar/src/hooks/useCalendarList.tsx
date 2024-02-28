@@ -11,6 +11,7 @@ import {
   getWeeksInMonth,
 } from "@/helpers/dates";
 import type { UseCalendarParams } from "@/hooks/useCalendar";
+import { pipe } from "@/helpers/functions";
 
 export interface CalendarMonth {
   id: string;
@@ -101,9 +102,10 @@ const getStartingMonth = (
   const newStartingMonthId = toDateId(startingMonthFromRange);
   const safeMinDateId = calendarMinDateId ?? newStartingMonthId;
 
-  // We've exceeded the min date
+  // We've exceeded the min date.
   return safeMinDateId > newStartingMonthId
-    ? fromDateId(safeMinDateId)
+    ? // Normalize to start of month since each month ID is represented by the first day of month
+      pipe(fromDateId(safeMinDateId), startOfMonth)
     : startingMonthFromRange;
 };
 
@@ -119,10 +121,13 @@ export const useCalendarList = ({
   calendarMaxDateId,
   calendarMinDateId,
 }: UseCalendarListParams) => {
+  // Initialize key values
   const { initialMonth, initialMonthId } = useMemo(() => {
     const baseDate = calendarInitialMonthId
       ? fromDateId(calendarInitialMonthId)
       : fromDateId(toDateId(new Date()));
+
+    // Normalize to start of month since each month ID is represented by the first day of month
     const baseStartOfMonth = startOfMonth(baseDate);
 
     return {
