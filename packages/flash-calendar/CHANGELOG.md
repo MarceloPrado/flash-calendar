@@ -1,5 +1,11 @@
 # @marceloterreiro/flash-calendar
 
+## 0.0.7
+
+### Patch Changes
+
+- ee6b4e5: Fix incorrect scroll position when using the `calendarMinDateId` prop
+
 ## 0.0.6
 
 ### Patch Changes
