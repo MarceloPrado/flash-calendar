@@ -106,3 +106,20 @@ export function ImperativeScrolling() {
 </video>
 
 </HStack>
+
+## Setting Border Radius to `Calendar.Item.Day`
+
+To apply a border radius to the `Calendar.Item.Day` component, it's necessary to specify the radius for all four corners. Here's an example of how to achieve this:
+
+```tsx
+itemDay: {
+  base: () => ({
+    container: {
+      borderTopRightRadius: 10,
+      borderBottomRightRadius: 10,
+      borderTopLeftRadius: 10,
+      borderBottomLeftRadius: 10,
+    },
+  }),
+}
+```
