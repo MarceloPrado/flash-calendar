@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
 export type DayState = "idle" | "active" | "today" | "disabled";
 
 interface DayTheme {
-  container: ViewStyle;
+  container: Omit<ViewStyle, "borderRadius">;
   content: TextStyle;
 }
 type CalendarItemDayTheme = Record<
@@ -44,7 +44,7 @@ const buildBaseStyles = (theme: BaseTheme): CalendarItemDayTheme => {
 
   return {
     active: ({ isPressed, isStartOfRange, isEndOfRange }) => {
-      const baseStyles: DayTheme = isPressed
+      const baseStyles: DayTheme & { container: ViewStyle } = isPressed
         ? {
             container: {
               ...styles.baseContainer,
