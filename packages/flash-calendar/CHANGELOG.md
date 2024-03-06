@@ -1,5 +1,11 @@
 # @marceloterreiro/flash-calendar
 
+## 0.0.8
+
+### Patch Changes
+
+- 4fe1276: Remove `borderRadius` type from `itemDay.container`, given it gets overwritten by the base component.
+
 ## 0.0.7
 
 ### Patch Changes
