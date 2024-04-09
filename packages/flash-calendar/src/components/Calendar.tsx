@@ -1,4 +1,4 @@
-import { memo, useEffect } from "react";
+import { memo, createContext, useEffect, useContext } from "react";
 
 import type {
   CalendarItemDayContainerProps,
@@ -68,7 +68,24 @@ export interface CalendarProps extends UseCalendarParams {
   calendarMonthHeaderHeight?: number;
   /** Theme to customize the calendar component. */
   theme?: CalendarTheme;
+  /** Enable dark mode */
+  darkMode?: boolean;
 }
+
+const calendarContext = createContext<{ darkMode?: boolean } | undefined>(
+  undefined
+);
+
+export const useCalendarContext = () => {
+  const context = useContext(calendarContext);
+
+  if (!context) {
+    throw new Error(
+      "useCalendarContext must be called inside <calendarContext.Provider>"
+    );
+  }
+  return context;
+};
 
 const BaseCalendar = memo(
   ({
@@ -150,7 +167,12 @@ const BaseCalendar = memo(
 BaseCalendar.displayName = "BaseCalendar";
 
 export const Calendar = memo(
-  ({ calendarActiveDateRanges, calendarMonthId, ...props }: CalendarProps) => {
+  ({
+    calendarActiveDateRanges,
+    calendarMonthId,
+    darkMode,
+    ...props
+  }: CalendarProps) => {
     useEffect(() => {
       activeDateRangesEmitter.emit(
         "onSetActiveDateRanges",
@@ -168,7 +190,11 @@ export const Calendar = memo(
        */
     }, [calendarActiveDateRanges, calendarMonthId]);
 
-    return <BaseCalendar {...props} calendarMonthId={calendarMonthId} />;
+    return (
+      <calendarContext.Provider value={{ darkMode }}>
+        <BaseCalendar {...props} calendarMonthId={calendarMonthId} />
+      </calendarContext.Provider>
+    );
   }
 );
 
