@@ -16,6 +16,8 @@ import { Calendar } from "@/components/Calendar";
 import { startOfMonth, toDateId } from "@/helpers/dates";
 import type { CalendarMonth } from "@/hooks/useCalendarList";
 import { getHeightForMonth, useCalendarList } from "@/hooks/useCalendarList";
+import type { CalendarThemeContext } from "@/hooks/useCalendarTheme";
+import { calendarThemeContext } from "@/hooks/useCalendarTheme";
 
 /**
  * Represents each `CalendarList` item. It's enhanced with the required
@@ -118,6 +120,7 @@ export const CalendarList = memo(
 
         // Other props
         theme,
+        colorSchemeToOverride,
         onEndReached,
         ...props
       }: CalendarListProps,
@@ -266,23 +269,30 @@ export const CalendarList = memo(
         return { paddingBottom: calendarSpacing };
       }, [calendarSpacing]);
 
+      const calendarThemeContextValue = useMemo<CalendarThemeContext>(
+        () => ({ colorScheme: colorSchemeToOverride }),
+        [colorSchemeToOverride]
+      );
+
       return (
-        <CalendarScrollComponent
-          data={monthListWithCalendarProps}
-          estimatedItemSize={273}
-          initialScrollIndex={initialMonthIndex}
-          keyExtractor={keyExtractor}
-          onEndReached={handleOnEndReached}
-          overrideItemLayout={handleOverrideItemLayout}
-          ref={flashListRef}
-          renderItem={({ item }) => (
-            <View style={calendarContainerStyle}>
-              <Calendar calendarMonthId={item.id} {...item.calendarProps} />
-            </View>
-          )}
-          showsVerticalScrollIndicator={false}
-          {...flatListProps}
-        />
+        <calendarThemeContext.Provider value={calendarThemeContextValue}>
+          <CalendarScrollComponent
+            data={monthListWithCalendarProps}
+            estimatedItemSize={273}
+            initialScrollIndex={initialMonthIndex}
+            keyExtractor={keyExtractor}
+            onEndReached={handleOnEndReached}
+            overrideItemLayout={handleOverrideItemLayout}
+            ref={flashListRef}
+            renderItem={({ item }) => (
+              <View style={calendarContainerStyle}>
+                <Calendar calendarMonthId={item.id} {...item.calendarProps} />
+              </View>
+            )}
+            showsVerticalScrollIndicator={false}
+            {...flatListProps}
+          />
+        </calendarThemeContext.Provider>
       );
     }
   )

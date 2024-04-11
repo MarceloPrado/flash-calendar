@@ -1,4 +1,5 @@
-import { memo, createContext, useEffect, useContext } from "react";
+import { memo, useEffect, useMemo } from "react";
+import type { ColorSchemeName } from "react-native";
 
 import type {
   CalendarItemDayContainerProps,
@@ -22,6 +23,8 @@ import type { BaseTheme } from "@/helpers/tokens";
 import type { UseCalendarParams } from "@/hooks/useCalendar";
 import { useCalendar } from "@/hooks/useCalendar";
 import { activeDateRangesEmitter } from "@/hooks/useOptimizedDayMetadata";
+import type { CalendarThemeContext } from "@/hooks/useCalendarTheme";
+import { calendarThemeContext } from "@/hooks/useCalendarTheme";
 
 export interface CalendarTheme {
   rowMonth?: CalendarRowMonthProps["theme"];
@@ -68,24 +71,16 @@ export interface CalendarProps extends UseCalendarParams {
   calendarMonthHeaderHeight?: number;
   /** Theme to customize the calendar component. */
   theme?: CalendarTheme;
-  /** Enable dark mode */
-  darkMode?: boolean;
+  /**
+   * When set, Flash Calendar will use this color scheme instead of the system's
+   * value (`light|dark`). This is useful if your app doesn't support dark-mode,
+   * for example.
+   *
+   * We don't advise using this prop - ideally, your app should reflect the
+   * user's preferences.
+   */
+  colorSchemeToOverride?: ColorSchemeName;
 }
-
-const calendarContext = createContext<{ darkMode?: boolean } | undefined>(
-  undefined
-);
-
-export const useCalendarContext = () => {
-  const context = useContext(calendarContext);
-
-  if (!context) {
-    throw new Error(
-      "useCalendarContext must be called inside <calendarContext.Provider>"
-    );
-  }
-  return context;
-};
 
 const BaseCalendar = memo(
   ({
@@ -170,7 +165,7 @@ export const Calendar = memo(
   ({
     calendarActiveDateRanges,
     calendarMonthId,
-    darkMode,
+    colorSchemeToOverride,
     ...props
   }: CalendarProps) => {
     useEffect(() => {
@@ -190,10 +185,15 @@ export const Calendar = memo(
        */
     }, [calendarActiveDateRanges, calendarMonthId]);
 
+    const calendarThemeContextValue = useMemo<CalendarThemeContext>(
+      () => ({ colorScheme: colorSchemeToOverride }),
+      [colorSchemeToOverride]
+    );
+
     return (
-      <calendarContext.Provider value={{ darkMode }}>
+      <calendarThemeContext.Provider value={calendarThemeContextValue}>
         <BaseCalendar {...props} calendarMonthId={calendarMonthId} />
-      </calendarContext.Provider>
+      </calendarThemeContext.Provider>
     );
   }
 );
