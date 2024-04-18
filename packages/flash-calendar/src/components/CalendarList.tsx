@@ -16,8 +16,6 @@ import { Calendar } from "@/components/Calendar";
 import { startOfMonth, toDateId } from "@/helpers/dates";
 import type { CalendarMonth } from "@/hooks/useCalendarList";
 import { getHeightForMonth, useCalendarList } from "@/hooks/useCalendarList";
-import type { CalendarThemeContext } from "@/hooks/useCalendarTheme";
-import { calendarThemeContext } from "@/hooks/useCalendarTheme";
 
 /**
  * Represents each `CalendarList` item. It's enhanced with the required
@@ -119,8 +117,8 @@ export const CalendarList = memo(
         calendarAdditionalHeight = 0,
 
         // Other props
+        calendarColorScheme,
         theme,
-        colorSchemeToOverride,
         onEndReached,
         ...props
       }: CalendarListProps,
@@ -140,20 +138,21 @@ export const CalendarList = memo(
 
       const calendarProps = useMemo(
         (): CalendarMonthEnhanced["calendarProps"] => ({
+          calendarColorScheme,
           calendarActiveDateRanges,
           calendarDayHeight,
+          calendarDisabledDateIds,
           calendarFirstDayOfWeek,
-          getCalendarDayFormat,
-          getCalendarWeekDayFormat,
+          calendarFormatLocale,
           calendarMaxDateId,
           calendarMinDateId,
-          calendarFormatLocale,
           calendarMonthHeaderHeight,
           calendarRowHorizontalSpacing,
-          getCalendarMonthFormat,
           calendarRowVerticalSpacing,
           calendarWeekHeaderHeight,
-          calendarDisabledDateIds,
+          getCalendarDayFormat,
+          getCalendarMonthFormat,
+          getCalendarWeekDayFormat,
           onCalendarDayPress,
           theme,
         }),
@@ -172,6 +171,7 @@ export const CalendarList = memo(
           calendarRowVerticalSpacing,
           calendarWeekHeaderHeight,
           calendarDisabledDateIds,
+          calendarColorScheme,
           onCalendarDayPress,
           theme,
         ]
@@ -269,30 +269,23 @@ export const CalendarList = memo(
         return { paddingBottom: calendarSpacing };
       }, [calendarSpacing]);
 
-      const calendarThemeContextValue = useMemo<CalendarThemeContext>(
-        () => ({ colorScheme: colorSchemeToOverride }),
-        [colorSchemeToOverride]
-      );
-
       return (
-        <calendarThemeContext.Provider value={calendarThemeContextValue}>
-          <CalendarScrollComponent
-            data={monthListWithCalendarProps}
-            estimatedItemSize={273}
-            initialScrollIndex={initialMonthIndex}
-            keyExtractor={keyExtractor}
-            onEndReached={handleOnEndReached}
-            overrideItemLayout={handleOverrideItemLayout}
-            ref={flashListRef}
-            renderItem={({ item }) => (
-              <View style={calendarContainerStyle}>
-                <Calendar calendarMonthId={item.id} {...item.calendarProps} />
-              </View>
-            )}
-            showsVerticalScrollIndicator={false}
-            {...flatListProps}
-          />
-        </calendarThemeContext.Provider>
+        <CalendarScrollComponent
+          data={monthListWithCalendarProps}
+          estimatedItemSize={273}
+          initialScrollIndex={initialMonthIndex}
+          keyExtractor={keyExtractor}
+          onEndReached={handleOnEndReached}
+          overrideItemLayout={handleOverrideItemLayout}
+          ref={flashListRef}
+          renderItem={({ item }) => (
+            <View style={calendarContainerStyle}>
+              <Calendar calendarMonthId={item.id} {...item.calendarProps} />
+            </View>
+          )}
+          showsVerticalScrollIndicator={false}
+          {...flatListProps}
+        />
       );
     }
   )
