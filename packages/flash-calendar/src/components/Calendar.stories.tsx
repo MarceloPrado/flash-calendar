@@ -162,6 +162,6 @@ export const DateRangePicker = (args: typeof KichenSink.args) => {
 
 export const ControlledColorScheme: StoryObj<typeof Calendar> = {
   args: {
-    colorSchemeToOverride: "dark",
+    calendarColorScheme: "dark",
   },
 };

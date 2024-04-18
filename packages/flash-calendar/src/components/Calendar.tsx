@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo } from "react";
+import { memo, useEffect } from "react";
 import type { ColorSchemeName } from "react-native";
 
 import type {
@@ -23,8 +23,7 @@ import type { BaseTheme } from "@/helpers/tokens";
 import type { UseCalendarParams } from "@/hooks/useCalendar";
 import { useCalendar } from "@/hooks/useCalendar";
 import { activeDateRangesEmitter } from "@/hooks/useOptimizedDayMetadata";
-import type { CalendarThemeContext } from "@/hooks/useCalendarTheme";
-import { calendarThemeContext } from "@/hooks/useCalendarTheme";
+import { CalendarThemeProvider } from "@/components/CalendarThemeProvider";
 
 export interface CalendarTheme {
   rowMonth?: CalendarRowMonthProps["theme"];
@@ -69,8 +68,6 @@ export interface CalendarProps extends UseCalendarParams {
    * @defaultValue 20
    */
   calendarMonthHeaderHeight?: number;
-  /** Theme to customize the calendar component. */
-  theme?: CalendarTheme;
   /**
    * When set, Flash Calendar will use this color scheme instead of the system's
    * value (`light|dark`). This is useful if your app doesn't support dark-mode,
@@ -78,8 +75,11 @@ export interface CalendarProps extends UseCalendarParams {
    *
    * We don't advise using this prop - ideally, your app should reflect the
    * user's preferences.
+   * @defaultValue undefined
    */
-  colorSchemeToOverride?: ColorSchemeName;
+  calendarColorScheme?: ColorSchemeName;
+  /** Theme to customize the calendar component. */
+  theme?: CalendarTheme;
 }
 
 const BaseCalendar = memo(
@@ -165,7 +165,7 @@ export const Calendar = memo(
   ({
     calendarActiveDateRanges,
     calendarMonthId,
-    colorSchemeToOverride,
+    calendarColorScheme,
     ...props
   }: CalendarProps) => {
     useEffect(() => {
@@ -185,15 +185,10 @@ export const Calendar = memo(
        */
     }, [calendarActiveDateRanges, calendarMonthId]);
 
-    const calendarThemeContextValue = useMemo<CalendarThemeContext>(
-      () => ({ colorScheme: colorSchemeToOverride }),
-      [colorSchemeToOverride]
-    );
-
     return (
-      <calendarThemeContext.Provider value={calendarThemeContextValue}>
+      <CalendarThemeProvider colorScheme={calendarColorScheme}>
         <BaseCalendar {...props} calendarMonthId={calendarMonthId} />
-      </calendarThemeContext.Provider>
+      </CalendarThemeProvider>
     );
   }
 );

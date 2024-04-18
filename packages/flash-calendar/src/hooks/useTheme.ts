@@ -2,14 +2,13 @@ import { useColorScheme } from "react-native";
 
 import type { BaseTheme } from "@/helpers/tokens";
 import { darkTheme, lightTheme } from "@/helpers/tokens";
-
-import { useCalendarThemeContext } from "./useCalendarTheme";
+import { useCalendarTheme } from "@/components/CalendarThemeProvider";
 
 export const useTheme = (): BaseTheme => {
   const appearance = useColorScheme();
-  const { colorScheme } = useCalendarThemeContext();
+  const { colorScheme } = useCalendarTheme();
 
-  const effectiveTheme = colorScheme ?? appearance;
+  const theme = colorScheme ?? appearance;
 
-  return effectiveTheme === "dark" ? darkTheme : lightTheme;
+  return theme === "dark" ? darkTheme : lightTheme;
 };

@@ -8,8 +8,8 @@ import { memo, useEffect } from "react";
 import { Text } from "react-native";
 import { uppercaseFirstLetter } from "@/helpers/strings";
 
-import { useRenderCount } from "./useRenderCount";
 import { PerfTestCalendarItemDayWithContainer } from "./PerfTestCalendarItemDay";
+import { useRenderCount } from "./useRenderCount";
 
 const BasePerfTestCalendar = memo(
   ({
