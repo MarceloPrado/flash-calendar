@@ -1,5 +1,11 @@
 # @marceloterreiro/flash-calendar
 
+## 0.0.9
+
+### Patch Changes
+
+- 6d00992: - Add an optional `calendarColorScheme` prop that enables overriding the color scheme used by Flash Calendar.
+
 ## 0.0.8
 
 ### Patch Changes
