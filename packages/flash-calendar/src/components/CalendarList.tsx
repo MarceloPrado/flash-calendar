@@ -117,6 +117,7 @@ export const CalendarList = memo(
         calendarAdditionalHeight = 0,
 
         // Other props
+        calendarColorScheme,
         theme,
         onEndReached,
         ...props
@@ -137,20 +138,21 @@ export const CalendarList = memo(
 
       const calendarProps = useMemo(
         (): CalendarMonthEnhanced["calendarProps"] => ({
+          calendarColorScheme,
           calendarActiveDateRanges,
           calendarDayHeight,
+          calendarDisabledDateIds,
           calendarFirstDayOfWeek,
-          getCalendarDayFormat,
-          getCalendarWeekDayFormat,
+          calendarFormatLocale,
           calendarMaxDateId,
           calendarMinDateId,
-          calendarFormatLocale,
           calendarMonthHeaderHeight,
           calendarRowHorizontalSpacing,
-          getCalendarMonthFormat,
           calendarRowVerticalSpacing,
           calendarWeekHeaderHeight,
-          calendarDisabledDateIds,
+          getCalendarDayFormat,
+          getCalendarMonthFormat,
+          getCalendarWeekDayFormat,
           onCalendarDayPress,
           theme,
         }),
@@ -169,6 +171,7 @@ export const CalendarList = memo(
           calendarRowVerticalSpacing,
           calendarWeekHeaderHeight,
           calendarDisabledDateIds,
+          calendarColorScheme,
           onCalendarDayPress,
           theme,
         ]

@@ -1,4 +1,5 @@
 import { memo, useEffect } from "react";
+import type { ColorSchemeName } from "react-native";
 
 import type {
   CalendarItemDayContainerProps,
@@ -22,6 +23,7 @@ import type { BaseTheme } from "@/helpers/tokens";
 import type { UseCalendarParams } from "@/hooks/useCalendar";
 import { useCalendar } from "@/hooks/useCalendar";
 import { activeDateRangesEmitter } from "@/hooks/useOptimizedDayMetadata";
+import { CalendarThemeProvider } from "@/components/CalendarThemeProvider";
 
 export interface CalendarTheme {
   rowMonth?: CalendarRowMonthProps["theme"];
@@ -66,6 +68,16 @@ export interface CalendarProps extends UseCalendarParams {
    * @defaultValue 20
    */
   calendarMonthHeaderHeight?: number;
+  /**
+   * When set, Flash Calendar will use this color scheme instead of the system's
+   * value (`light|dark`). This is useful if your app doesn't support dark-mode,
+   * for example.
+   *
+   * We don't advise using this prop - ideally, your app should reflect the
+   * user's preferences.
+   * @defaultValue undefined
+   */
+  calendarColorScheme?: ColorSchemeName;
   /** Theme to customize the calendar component. */
   theme?: CalendarTheme;
 }
@@ -150,7 +162,12 @@ const BaseCalendar = memo(
 BaseCalendar.displayName = "BaseCalendar";
 
 export const Calendar = memo(
-  ({ calendarActiveDateRanges, calendarMonthId, ...props }: CalendarProps) => {
+  ({
+    calendarActiveDateRanges,
+    calendarMonthId,
+    calendarColorScheme,
+    ...props
+  }: CalendarProps) => {
     useEffect(() => {
       activeDateRangesEmitter.emit(
         "onSetActiveDateRanges",
@@ -168,7 +185,11 @@ export const Calendar = memo(
        */
     }, [calendarActiveDateRanges, calendarMonthId]);
 
-    return <BaseCalendar {...props} calendarMonthId={calendarMonthId} />;
+    return (
+      <CalendarThemeProvider colorScheme={calendarColorScheme}>
+        <BaseCalendar {...props} calendarMonthId={calendarMonthId} />
+      </CalendarThemeProvider>
+    );
   }
 );
 

@@ -159,3 +159,25 @@ export const DateRangePicker = (args: typeof KichenSink.args) => {
     />
   );
 };
+
+export const ControlledColorScheme: StoryObj<typeof Calendar> = {
+  args: {
+    calendarColorScheme: "dark",
+  },
+};
+
+export const LightModeOnly = () => {
+  const { calendarActiveDateRanges, onCalendarDayPress } = useDateRange({
+    startId: "2024-02-04",
+    endId: "2024-02-09",
+  });
+
+  return (
+    <Calendar
+      calendarActiveDateRanges={calendarActiveDateRanges}
+      calendarColorScheme="light"
+      calendarMonthId={toDateId(startOfThisMonth)}
+      onCalendarDayPress={onCalendarDayPress}
+    />
+  );
+};

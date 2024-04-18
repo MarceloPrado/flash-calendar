@@ -109,7 +109,9 @@ export function ImperativeScrolling() {
 
 ## Setting Border Radius to `Calendar.Item.Day`
 
-To apply a border radius to the `Calendar.Item.Day` component, it's necessary to specify the radius for all four corners. Here's an example of how to achieve this:
+To apply a border radius to the `Calendar.Item.Day` component, it's necessary to
+specify the radius for all four corners. Here's an example of how to achieve
+this:
 
 ```tsx
 itemDay: {
@@ -123,3 +125,33 @@ itemDay: {
   }),
 }
 ```
+
+## Avoiding dark mode
+
+If your app doesn't support dynamic themes, you can override Flash Calendar's
+color scheme by passing a `calendarColorScheme` prop:
+
+```tsx
+export const LightModeOnly = () => {
+  const { calendarActiveDateRanges, onCalendarDayPress } = useDateRange({
+    startId: "2024-02-04",
+    endId: "2024-02-09",
+  });
+
+  return (
+    <Calendar
+      calendarActiveDateRanges={calendarActiveDateRanges}
+      calendarColorScheme="light"
+      calendarMonthId={toDateId(startOfThisMonth)}
+      onCalendarDayPress={onCalendarDayPress}
+    />
+  );
+};
+```
+
+When set, Flash Calendar's theming system will use this scheme instead of the
+user system's theme.
+
+**Note**: you should avoid using this prop. Instead, your app should
+support dynamic themes that react to the user's system preferences. The prop is
+provided as an escape hatch for apps that doesn't support dynamic themes yet.
