@@ -7,7 +7,7 @@ import {
   startOfYear,
   subMonths,
 } from "date-fns";
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Button, Text, View } from "react-native";
 
 import type { CalendarListProps, CalendarListRef } from "@/components";
@@ -16,7 +16,7 @@ import { HStack } from "@/components/HStack";
 import { VStack } from "@/components/VStack";
 import { paddingDecorator } from "@/developer/decorators";
 import { loggingHandler } from "@/developer/loggginHandler";
-import { toDateId } from "@/helpers/dates";
+import { fromDateId, toDateId } from "@/helpers/dates";
 import type { CalendarActiveDateRange } from "@/hooks/useCalendar";
 import { useDateRange } from "@/hooks/useDateRange";
 import { useTheme } from "@/hooks/useTheme";
@@ -112,6 +112,14 @@ export function ImperativeScrolling() {
 
   const ref = useRef<CalendarListRef>(null);
 
+  const onCalendarDayPress = useCallback((dateId: string) => {
+    loggingHandler("onCalendarDayPress");
+
+    const additionalOffset = -2; // Offset to account for selected day paddingTop
+
+    ref.current?.scrollToWeek(fromDateId(dateId), true, additionalOffset);
+  }, []);
+
   return (
     <View style={{ paddingTop: 20, flex: 1 }}>
       <VStack alignItems="center" grow spacing={20}>
@@ -145,7 +153,7 @@ export function ImperativeScrolling() {
         <View style={{ flex: 1, width: "100%" }}>
           <Calendar.List
             calendarInitialMonthId={toDateId(currentMonth)}
-            onCalendarDayPress={loggingHandler("onCalendarDayPress")}
+            onCalendarDayPress={onCalendarDayPress}
             ref={ref}
           />
         </View>

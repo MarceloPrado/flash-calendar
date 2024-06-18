@@ -23,6 +23,7 @@ import {
   isWeekend,
   differenceInMonths,
   getWeeksInMonth,
+  getWeekRowIndexInMonth,
 } from "@/helpers/dates";
 import { range } from "@/helpers/numbers";
 import { pipe } from "@/helpers/functions";
@@ -526,5 +527,60 @@ describe("getWeeksInMonth", () => {
       expect(getWeeksInMonth(date, "monday")).toBe(countMonday);
       expect(getWeeksInMonth(date, "sunday")).toBe(countSunday);
     });
+  });
+});
+
+describe("getWeekRowIndexInMonth", () => {
+  const getWeekRowIndexInMonth_sunday = (date: Date) =>
+    getWeekRowIndexInMonth(date, "sunday");
+
+  const getWeekRowIndexInMonth_monday = (date: Date) =>
+    getWeekRowIndexInMonth(date, "monday");
+
+  it("sunday: June", () => {
+    expect(pipe(fromDateId("2024-06-01"), getWeekRowIndexInMonth_sunday)).toBe(
+      1
+    );
+    expect(pipe(fromDateId("2024-06-02"), getWeekRowIndexInMonth_sunday)).toBe(
+      2
+    );
+    expect(pipe(fromDateId("2024-06-03"), getWeekRowIndexInMonth_monday)).toBe(
+      2
+    );
+    expect(pipe(fromDateId("2024-06-12"), getWeekRowIndexInMonth_sunday)).toBe(
+      3
+    );
+    expect(pipe(fromDateId("2024-06-22"), getWeekRowIndexInMonth_sunday)).toBe(
+      4
+    );
+    expect(pipe(fromDateId("2024-06-28"), getWeekRowIndexInMonth_sunday)).toBe(
+      5
+    );
+    expect(pipe(fromDateId("2024-06-30"), getWeekRowIndexInMonth_sunday)).toBe(
+      6
+    );
+  });
+  it("monday: June", () => {
+    expect(pipe(fromDateId("2024-06-01"), getWeekRowIndexInMonth_monday)).toBe(
+      1
+    );
+    expect(pipe(fromDateId("2024-06-02"), getWeekRowIndexInMonth_monday)).toBe(
+      1
+    );
+    expect(pipe(fromDateId("2024-06-03"), getWeekRowIndexInMonth_monday)).toBe(
+      2
+    );
+    expect(pipe(fromDateId("2024-06-12"), getWeekRowIndexInMonth_monday)).toBe(
+      3
+    );
+    expect(pipe(fromDateId("2024-06-22"), getWeekRowIndexInMonth_monday)).toBe(
+      4
+    );
+    expect(pipe(fromDateId("2024-06-28"), getWeekRowIndexInMonth_monday)).toBe(
+      5
+    );
+    expect(pipe(fromDateId("2024-06-30"), getWeekRowIndexInMonth_monday)).toBe(
+      5
+    );
   });
 });
