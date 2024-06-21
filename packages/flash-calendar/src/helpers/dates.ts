@@ -1,3 +1,5 @@
+import { addDays as addDaysFns } from "date-fns";
+
 /**
  * Returns the date formatted as YYYY-MM-DD, ensuring timezone doesn't affect
  * the result.
@@ -7,6 +9,7 @@ export function toDateId(date: Date) {
   const month = date.getMonth() + 1; // getMonth() returns 0-11
   const day = date.getDate();
 
+  console.log("debug: Date  ", date.toDateString());
   // Pad single digit month and day with leading zeros
   const monthFormatted = month < 10 ? `0${month}` : month;
   const dayFormatted = day < 10 ? `0${day}` : day;
@@ -18,6 +21,8 @@ export function toDateId(date: Date) {
  * Converts a date ID to a `Date` object, correctly accounting for timezone.
  */
 export function fromDateId(dateId: string) {
+  console.log("debug: Date id ", dateId);
+
   const [year, month, day] = dateId.split("-").map(Number);
   return new Date(year, month - 1, day);
 }
@@ -87,7 +92,6 @@ export function subMonths(date: Date, months: number) {
  */
 export function addDays(date: Date, days: number) {
   const newDate = new Date(date);
-  newDate.setDate(newDate.getDate() + days);
   return newDate;
 }
 

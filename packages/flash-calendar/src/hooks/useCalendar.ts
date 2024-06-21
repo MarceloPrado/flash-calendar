@@ -299,7 +299,9 @@ export const buildCalendar = (params: UseCalendarParams) => {
         id,
       }),
     });
+    const prev = dayToIterate;
     dayToIterate = addDays(dayToIterate, 1);
+    console.log(`debugnew Prev: ${prev}, next day: ${dayToIterate}`);
   }
 
   // Once all the days of the month have been added, we need to add the empty days at the end

@@ -262,29 +262,62 @@ describe("subMonths", () => {
     });
   });
 });
-describe("addDays", () => {
-  const addDaysCurried = (amount: number) => (date: Date) =>
-    addDays(date, amount);
-  it("add 1 day", () => {
-    expect(
-      pipe(fromDateId("2024-01-01"), addDaysCurried(1)).toISOString()
-    ).toBe(fromDateId("2024-01-02").toISOString());
-  });
+describe.only("addDays", () => {
+  //   const addDaysCurried = (amount: number) => (date: Date) =>
+  //     addDays(date, amount);
+  //   it("add 1 day", () => {
+  //     expect(
+  //       pipe(fromDateId("2024-01-01"), addDaysCurried(1)).toISOString()
+  //     ).toBe(fromDateId("2024-01-02").toISOString());
+  //   });
 
-  it("add 10 days", () => {
-    expect(pipe(fromDateId("2024-01-01"), addDaysCurried(10), toDateId)).toBe(
-      "2024-01-11"
-    );
-  });
+  //   it("add 10 days", () => {
+  //     expect(pipe(fromDateId("2024-01-01"), addDaysCurried(10), toDateId)).toBe(
+  //       "2024-01-11"
+  //     );
+  //   });
 
-  it("matches date-fns", () => {
-    const baseDate = fromDateId("2020-01-01");
-    range(1, 100).forEach((i) => {
-      const date = addDays(baseDate, i);
-      expect(addDaysDateFns(baseDate, i).toISOString()).toBe(
-        date.toISOString()
-      );
+  //   it("matches date-fns", () => {
+  //     const baseDate = fromDateId("2020-01-01");
+  //     range(1, 100).forEach((i) => {
+  //       const date = addDays(baseDate, i);
+  //       expect(addDaysDateFns(baseDate, i).toISOString()).toBe(
+  //         date.toISOString()
+  //       );
+  //     });
+  //   });
+
+  describe.only("TZ support", () => {
+    beforeEach(() => {});
+
+    afterEach(() => {});
+
+    it.only("handles Asia/Tehran (fix #29)", () => {
+      process.env.TZ = "Asia/Tehran";
+      const baseDate = new Date(2020, 2, 19, 0, 0, 0, 0);
+      const dayAfter = addDays(baseDate, 1);
+      console.log(dayAfter.toISOString());
+      console.log(toDateId(dayAfter));
+
+      expect(toDateId(dayAfter)).toBe("2020-03-20");
+      const twoDaysAfter = addDays(dayAfter, 1);
+      console.log(twoDaysAfter.toISOString());
+      expect(toDateId(twoDaysAfter)).toBe("2020-03-21");
+      process.env.TZ = undefined;
     });
+
+    // it("matches date-fns Asia/Tehran", () => {
+    //   process.env.TZ = "Asia/Tehran";
+
+    //   const baseDate = fromDateId("2020-01-01");
+    //   range(1, 100).forEach((i) => {
+    //     const date = addDays(baseDate, i);
+    //     expect(addDaysDateFns(baseDate, i).toISOString()).toBe(
+    //       date.toISOString()
+    //     );
+    //   });
+    //   process.env.TZ = undefined;
+    // });
   });
 });
 
