@@ -143,11 +143,9 @@ export function getWeeksInMonth(
 }
 
 /**
- * Get the week row index of the given date in the month.
- * The week index is 1-based.
+ * Get the week of the month of the given date. The week index is 1-based.
  */
-
-export function getWeekRowIndexInMonth(
+export function getWeekOfMonth(
   date: Date,
   firstDayOfWeek: "monday" | "sunday"
 ) {

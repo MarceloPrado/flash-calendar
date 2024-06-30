@@ -8,6 +8,7 @@ import {
   addMonths as addMonthsDateFns,
   subMonths as subMonthsDateFns,
   getWeeksInMonth as getWeeksInMonthDateFns,
+  getWeekOfMonth as getWeekOfMonthDateFns,
 } from "date-fns";
 
 import {
@@ -23,7 +24,7 @@ import {
   isWeekend,
   differenceInMonths,
   getWeeksInMonth,
-  getWeekRowIndexInMonth,
+  getWeekOfMonth,
 } from "@/helpers/dates";
 import { range } from "@/helpers/numbers";
 import { pipe } from "@/helpers/functions";
@@ -530,57 +531,37 @@ describe("getWeeksInMonth", () => {
   });
 });
 
-describe("getWeekRowIndexInMonth", () => {
-  const getWeekRowIndexInMonth_sunday = (date: Date) =>
-    getWeekRowIndexInMonth(date, "sunday");
-
-  const getWeekRowIndexInMonth_monday = (date: Date) =>
-    getWeekRowIndexInMonth(date, "monday");
+describe("getWeekOfMonth", () => {
+  const getWeekOfMonth_sunday = (date: Date) => getWeekOfMonth(date, "sunday");
+  const getWeekOfMonth_monday = (date: Date) => getWeekOfMonth(date, "monday");
 
   it("sunday: June", () => {
-    expect(pipe(fromDateId("2024-06-01"), getWeekRowIndexInMonth_sunday)).toBe(
-      1
-    );
-    expect(pipe(fromDateId("2024-06-02"), getWeekRowIndexInMonth_sunday)).toBe(
-      2
-    );
-    expect(pipe(fromDateId("2024-06-03"), getWeekRowIndexInMonth_monday)).toBe(
-      2
-    );
-    expect(pipe(fromDateId("2024-06-12"), getWeekRowIndexInMonth_sunday)).toBe(
-      3
-    );
-    expect(pipe(fromDateId("2024-06-22"), getWeekRowIndexInMonth_sunday)).toBe(
-      4
-    );
-    expect(pipe(fromDateId("2024-06-28"), getWeekRowIndexInMonth_sunday)).toBe(
-      5
-    );
-    expect(pipe(fromDateId("2024-06-30"), getWeekRowIndexInMonth_sunday)).toBe(
-      6
-    );
+    expect(pipe(fromDateId("2024-06-01"), getWeekOfMonth_sunday)).toBe(1);
+    expect(pipe(fromDateId("2024-06-02"), getWeekOfMonth_sunday)).toBe(2);
+    expect(pipe(fromDateId("2024-06-03"), getWeekOfMonth_monday)).toBe(2);
+    expect(pipe(fromDateId("2024-06-12"), getWeekOfMonth_sunday)).toBe(3);
+    expect(pipe(fromDateId("2024-06-22"), getWeekOfMonth_sunday)).toBe(4);
+    expect(pipe(fromDateId("2024-06-28"), getWeekOfMonth_sunday)).toBe(5);
+    expect(pipe(fromDateId("2024-06-30"), getWeekOfMonth_sunday)).toBe(6);
   });
   it("monday: June", () => {
-    expect(pipe(fromDateId("2024-06-01"), getWeekRowIndexInMonth_monday)).toBe(
-      1
-    );
-    expect(pipe(fromDateId("2024-06-02"), getWeekRowIndexInMonth_monday)).toBe(
-      1
-    );
-    expect(pipe(fromDateId("2024-06-03"), getWeekRowIndexInMonth_monday)).toBe(
-      2
-    );
-    expect(pipe(fromDateId("2024-06-12"), getWeekRowIndexInMonth_monday)).toBe(
-      3
-    );
-    expect(pipe(fromDateId("2024-06-22"), getWeekRowIndexInMonth_monday)).toBe(
-      4
-    );
-    expect(pipe(fromDateId("2024-06-28"), getWeekRowIndexInMonth_monday)).toBe(
-      5
-    );
-    expect(pipe(fromDateId("2024-06-30"), getWeekRowIndexInMonth_monday)).toBe(
-      5
-    );
+    expect(pipe(fromDateId("2024-06-01"), getWeekOfMonth_monday)).toBe(1);
+    expect(pipe(fromDateId("2024-06-02"), getWeekOfMonth_monday)).toBe(1);
+    expect(pipe(fromDateId("2024-06-03"), getWeekOfMonth_monday)).toBe(2);
+    expect(pipe(fromDateId("2024-06-12"), getWeekOfMonth_monday)).toBe(3);
+    expect(pipe(fromDateId("2024-06-22"), getWeekOfMonth_monday)).toBe(4);
+    expect(pipe(fromDateId("2024-06-28"), getWeekOfMonth_monday)).toBe(5);
+    expect(pipe(fromDateId("2024-06-30"), getWeekOfMonth_monday)).toBe(5);
+  });
+  it("matches date-fns", () => {
+    const baseDate = fromDateId("2024-06-01");
+    range(1, 500).forEach((i) => {
+      const date = addDays(baseDate, i);
+      const countMonday = getWeekOfMonthDateFns(date, { weekStartsOn: 1 });
+      const countSunday = getWeekOfMonthDateFns(date, { weekStartsOn: 0 });
+
+      expect(getWeekOfMonth(date, "monday")).toBe(countMonday);
+      expect(getWeekOfMonth(date, "sunday")).toBe(countSunday);
+    });
   });
 });

@@ -13,11 +13,7 @@ import { View } from "react-native";
 
 import type { CalendarProps } from "@/components/Calendar";
 import { Calendar } from "@/components/Calendar";
-import {
-  getWeekRowIndexInMonth,
-  startOfMonth,
-  toDateId,
-} from "@/helpers/dates";
+import { getWeekOfMonth, startOfMonth, toDateId } from "@/helpers/dates";
 import type { CalendarMonth } from "@/hooks/useCalendarList";
 import { getHeightForMonth, useCalendarList } from "@/hooks/useCalendarList";
 
@@ -288,10 +284,7 @@ export const CalendarList = memo(
         scrollToWeek(date, animated, additionalOffset = 0) {
           const currentMonthOffset = getScrollOffsetForMonth(date);
 
-          const weekRowIndex = getWeekRowIndexInMonth(
-            date,
-            calendarFirstDayOfWeek
-          );
+          const weekRowIndex = getWeekOfMonth(date, calendarFirstDayOfWeek);
 
           const weekRowHeight =
             calendarDayHeight + calendarRowVerticalSpacing + additionalOffset;
