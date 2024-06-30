@@ -7,7 +7,7 @@ import {
   startOfYear,
   subMonths,
 } from "date-fns";
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Button, Text, View } from "react-native";
 
 import type { CalendarListProps, CalendarListRef } from "@/components";
@@ -16,7 +16,7 @@ import { HStack } from "@/components/HStack";
 import { VStack } from "@/components/VStack";
 import { paddingDecorator } from "@/developer/decorators";
 import { loggingHandler } from "@/developer/loggginHandler";
-import { toDateId } from "@/helpers/dates";
+import { fromDateId, toDateId } from "@/helpers/dates";
 import type { CalendarActiveDateRange } from "@/hooks/useCalendar";
 import { useDateRange } from "@/hooks/useDateRange";
 import { useTheme } from "@/hooks/useTheme";
@@ -110,7 +110,22 @@ export function SpacingSparse() {
 export function ImperativeScrolling() {
   const [currentMonth, setCurrentMonth] = useState(startOfMonth(new Date()));
 
+  const [activeDateId, setActiveDateId] = useState<string | undefined>(
+    toDateId(addDays(currentMonth, 3))
+  );
+
+  const calendarActiveDateRanges = useMemo<CalendarActiveDateRange[]>(() => {
+    if (!activeDateId) return [];
+
+    return [{ startId: activeDateId, endId: activeDateId }];
+  }, [activeDateId]);
+
   const ref = useRef<CalendarListRef>(null);
+
+  const onCalendarDayPress = useCallback((dateId: string) => {
+    ref.current?.scrollToDate(fromDateId(dateId), true);
+    setActiveDateId(dateId);
+  }, []);
 
   return (
     <View style={{ paddingTop: 20, flex: 1 }}>
@@ -120,7 +135,7 @@ export function ImperativeScrolling() {
             onPress={() => {
               const pastMonth = subMonths(currentMonth, 1);
               setCurrentMonth(pastMonth);
-              ref.current?.scrollToDate(pastMonth, true);
+              ref.current?.scrollToMonth(pastMonth, true);
             }}
             title="Past month"
           />
@@ -129,7 +144,7 @@ export function ImperativeScrolling() {
             onPress={() => {
               const nextMonth = addMonths(currentMonth, 1);
               setCurrentMonth(nextMonth);
-              ref.current?.scrollToDate(nextMonth, true);
+              ref.current?.scrollToMonth(nextMonth, true);
             }}
             title="Next month"
           />
@@ -138,14 +153,15 @@ export function ImperativeScrolling() {
           onPress={() => {
             const thisMonth = startOfMonth(new Date());
             setCurrentMonth(thisMonth);
-            ref.current?.scrollToDate(thisMonth, true);
+            ref.current?.scrollToMonth(thisMonth, true);
           }}
           title="Today"
         />
         <View style={{ flex: 1, width: "100%" }}>
           <Calendar.List
+            calendarActiveDateRanges={calendarActiveDateRanges}
             calendarInitialMonthId={toDateId(currentMonth)}
-            onCalendarDayPress={loggingHandler("onCalendarDayPress")}
+            onCalendarDayPress={onCalendarDayPress}
             ref={ref}
           />
         </View>

@@ -48,7 +48,9 @@ These two convertions functions were [battle-tested](https://github.com/MarceloP
 
 ## Programmatically scrolling to a date
 
-Flash Calendar exposes a `ref` that allows imperative scrolling to a desired date.
+Flash Calendar exposes a `ref` that allows imperative scrolling to a desired
+date (`.scrollToDate`), a month (`.scrollToMonth`), or an offset
+(`.scrollToOffset`).
 
 <HStack spacing={24} alignItems="flex-start">
 
@@ -63,8 +65,11 @@ import { Button, Text, View } from "react-native";
 
 export function ImperativeScrolling() {
   const [currentMonth, setCurrentMonth] = useState(startOfMonth(new Date()));
-
   const ref = useRef<CalendarListRef>(null);
+
+  const onCalendarDayPress = useCallback((dateId: string) => {
+    ref.current?.scrollToDate(fromDateId(dateId), true);
+  }, []);
 
   return (
     <View style={{ paddingTop: 20, flex: 1 }}>
@@ -73,7 +78,7 @@ export function ImperativeScrolling() {
           onPress={() => {
             const pastMonth = subMonths(currentMonth, 1);
             setCurrentMonth(pastMonth);
-            ref.current?.scrollToDate(pastMonth, true);
+            ref.current?.scrollToMonth(pastMonth, true);
           }}
           title="Past month"
         />
@@ -82,7 +87,7 @@ export function ImperativeScrolling() {
           onPress={() => {
             const nextMonth = addMonths(currentMonth, 1);
             setCurrentMonth(nextMonth);
-            ref.current?.scrollToDate(nextMonth, true);
+            ref.current?.scrollToMonth(nextMonth, true);
           }}
           title="Next month"
         />
@@ -90,7 +95,7 @@ export function ImperativeScrolling() {
       <View style={{ flex: 1, width: "100%" }}>
         <Calendar.List
           calendarInitialMonthId={toDateId(currentMonth)}
-          onCalendarDayPress={(dateId) => console.log(`Pressed ${dateId}`)}
+          onCalendarDayPress={onCalendarDayPress}
           ref={ref}
         />
       </View>
@@ -106,6 +111,12 @@ export function ImperativeScrolling() {
 </video>
 
 </HStack>
+
+You can also pass an `additionalOffset` to fine-tune the scroll position:
+
+```tsx
+.scrollToDate(fromDateId("2024-07-01"), true, { additionalOffset: 4 })
+```
 
 ## Setting Border Radius to `Calendar.Item.Day`
 

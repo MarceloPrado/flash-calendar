@@ -141,3 +141,23 @@ export function getWeeksInMonth(
 
   return Math.ceil((dayOfWeek + totalDays) / 7);
 }
+
+/**
+ * Get the week of the month of the given date. The week index is 1-based.
+ */
+export function getWeekOfMonth(
+  date: Date,
+  firstDayOfWeek: "monday" | "sunday"
+) {
+  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+  let dayOfWeek = firstDay.getDay();
+
+  // Adjust the first day of the week
+  if (firstDayOfWeek === "monday") {
+    dayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+  }
+
+  const dayOfMonth = date.getDate();
+
+  return Math.floor((dayOfWeek + dayOfMonth - 1) / 7) + 1;
+}
