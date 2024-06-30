@@ -1,7 +1,12 @@
+import type {
+  CalendarOnDayPress,
+  CalendarTheme,
+} from "@marceloterreiro/flash-calendar";
 import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
 import type { Meta } from "@storybook/react";
-import React, { useState } from "react";
-import { Text, View } from "react-native";
+import React, { useCallback, useMemo, useState } from "react";
+import { Alert, Text, View } from "react-native";
+import { useTheme } from "@/hooks/useTheme";
 
 const CalendarMeta: Meta<typeof Calendar> = {
   title: "Calendar.List/Github Issues",
@@ -55,6 +60,66 @@ export const Issue16 = () => {
         calendarInitialMonthId="2024-01-01"
         calendarMinDateId="2023-02-27"
         onCalendarDayPress={setSelectedDate}
+      />
+    </View>
+  );
+};
+
+const disabledRange = {
+  start: "2024-06-01",
+  end: "2024-06-15",
+};
+
+function isDisabled(dateId: string) {
+  return dateId >= disabledRange.start && dateId <= disabledRange.end;
+}
+
+// See more: https://github.com/MarceloPrado/flash-calendar/issues/38
+export const Issue38 = () => {
+  const [selectedDate, setSelectedDate] = useState(today);
+  const { colors } = useTheme();
+
+  const customTheme = useMemo(() => {
+    const theme: CalendarTheme = {
+      itemDay: {
+        idle: ({ id }) => {
+          if (isDisabled(id)) {
+            return {
+              container: {},
+              content: {
+                color: colors.content.disabled,
+              },
+            };
+          }
+          return {};
+        },
+      },
+    };
+
+    return theme;
+  }, [colors.content.disabled]);
+
+  const handleCalendarDayPress: CalendarOnDayPress = useCallback((dateId) => {
+    if (isDisabled(dateId)) {
+      Alert.alert("This date is disabled");
+      return;
+    }
+    setSelectedDate(dateId);
+  }, []);
+
+  const calendarActiveDateRanges = useMemo(() => {
+    if (!selectedDate) return [];
+    return [{ startId: selectedDate, endId: selectedDate }];
+  }, [selectedDate]);
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Text>Selected date: {selectedDate}</Text>
+      <Calendar.List
+        calendarActiveDateRanges={calendarActiveDateRanges}
+        calendarInitialMonthId="2024-06-01"
+        onCalendarDayPress={handleCalendarDayPress}
+        theme={customTheme}
       />
     </View>
   );
