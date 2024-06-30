@@ -9,7 +9,7 @@ import { CalendarListDemo } from "./CalendarList";
 import { BottomSheetCalendar } from "./BottomSheetCalendar";
 import { CalendarCustomFormatting } from "./CalendarCustomFormatting";
 import { ImperativeScrolling } from "./ImperativeScroll";
-import { SlowExampleAddressed } from "./SlowExampleAddressed";
+// import { SlowExampleAddressed } from "./SlowExampleAddressed";
 
 export default function App() {
   const [demo, setDemo] = useState<"calendar" | "calendarList">("calendar");
@@ -33,10 +33,9 @@ export default function App() {
 
           {demo === "calendar" ? <CalendarDemo /> : <CalendarListDemo />}
         </View> */}
-        {/* <ImperativeScrolling /> */}
-        {/* <ImperativeScrolling /> */}
+        <ImperativeScrolling />
         {/* <BottomSheetCalendar /> */}
-        <SlowExampleAddressed />
+        {/* <SlowExampleAddressed /> */}
       </SafeAreaView>
     </GestureHandlerRootView>
   );

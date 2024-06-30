@@ -110,14 +110,24 @@ export function SpacingSparse() {
 export function ImperativeScrolling() {
   const [currentMonth, setCurrentMonth] = useState(startOfMonth(new Date()));
 
+  const [activeDateId, setActiveDateId] = useState<string | undefined>(
+    toDateId(addDays(currentMonth, 3))
+  );
+
+  const calendarActiveDateRanges = useMemo<CalendarActiveDateRange[]>(() => {
+    if (!activeDateId) return [];
+
+    return [{ startId: activeDateId, endId: activeDateId }];
+  }, [activeDateId]);
+
   const ref = useRef<CalendarListRef>(null);
 
   const onCalendarDayPress = useCallback((dateId: string) => {
-    loggingHandler("onCalendarDayPress");
-
     const additionalOffset = -2; // Offset to account for selected day paddingTop
-
-    ref.current?.scrollToWeek(fromDateId(dateId), true, additionalOffset);
+    ref.current?.scrollToDate(fromDateId(dateId), true, {
+      additionalOffset,
+    });
+    setActiveDateId(dateId);
   }, []);
 
   return (
@@ -128,7 +138,7 @@ export function ImperativeScrolling() {
             onPress={() => {
               const pastMonth = subMonths(currentMonth, 1);
               setCurrentMonth(pastMonth);
-              ref.current?.scrollToDate(pastMonth, true);
+              ref.current?.scrollToMonth(pastMonth, true);
             }}
             title="Past month"
           />
@@ -137,7 +147,7 @@ export function ImperativeScrolling() {
             onPress={() => {
               const nextMonth = addMonths(currentMonth, 1);
               setCurrentMonth(nextMonth);
-              ref.current?.scrollToDate(nextMonth, true);
+              ref.current?.scrollToMonth(nextMonth, true);
             }}
             title="Next month"
           />
@@ -146,12 +156,13 @@ export function ImperativeScrolling() {
           onPress={() => {
             const thisMonth = startOfMonth(new Date());
             setCurrentMonth(thisMonth);
-            ref.current?.scrollToDate(thisMonth, true);
+            ref.current?.scrollToMonth(thisMonth, true);
           }}
           title="Today"
         />
         <View style={{ flex: 1, width: "100%" }}>
           <Calendar.List
+            calendarActiveDateRanges={calendarActiveDateRanges}
             calendarInitialMonthId={toDateId(currentMonth)}
             onCalendarDayPress={onCalendarDayPress}
             ref={ref}

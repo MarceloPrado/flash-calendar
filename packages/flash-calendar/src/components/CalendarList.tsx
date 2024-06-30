@@ -90,11 +90,11 @@ export interface CalendarListProps
 }
 
 export interface CalendarListRef {
-  scrollToDate: (date: Date, animated: boolean) => void;
-  scrollToWeek: (
+  scrollToMonth: (date: Date, animated: boolean) => void;
+  scrollToDate: (
     date: Date,
     animated: boolean,
-    additionalOffset?: number
+    params?: { additionalOffset?: number }
   ) => void;
   scrollToOffset: (offset: number, animated: boolean) => void;
 }
@@ -271,7 +271,7 @@ export const CalendarList = memo(
       const flashListRef = useRef<FlashList<CalendarMonthEnhanced>>(null);
 
       useImperativeHandle(ref, () => ({
-        scrollToDate(date, animated) {
+        scrollToMonth(date, animated) {
           // Wait for the next render cycle to ensure the list has been
           // updated with the new months.
           setTimeout(() => {
@@ -281,19 +281,22 @@ export const CalendarList = memo(
             });
           }, 0);
         },
-        scrollToWeek(date, animated, additionalOffset = 0) {
+        scrollToDate(
+          date,
+          animated,
+          { additionalOffset = 0 } = {
+            additionalOffset: 0,
+          }
+        ) {
           const currentMonthOffset = getScrollOffsetForMonth(date);
 
-          const weekRowIndex = getWeekOfMonth(date, calendarFirstDayOfWeek);
-
-          const weekRowHeight =
+          const weekOfMonthIndex = getWeekOfMonth(date, calendarFirstDayOfWeek);
+          const rowHeight =
             calendarDayHeight + calendarRowVerticalSpacing + additionalOffset;
-
-          const weekPosition =
-            weekRowHeight * weekRowIndex + calendarWeekHeaderHeight;
-
+          const weekOffset =
+            calendarWeekHeaderHeight + rowHeight * weekOfMonthIndex;
           flashListRef.current?.scrollToOffset({
-            offset: currentMonthOffset + weekPosition,
+            offset: currentMonthOffset + weekOffset,
             animated,
           });
         },
