@@ -112,6 +112,12 @@ export function ImperativeScrolling() {
 
 </HStack>
 
+You can also pass an `additionalOffset` to fine-tune the scroll position:
+
+```tsx
+.scrollToDate(fromDateId("2024-07-01"), true, { additionalOffset: 4 })
+```
+
 ## Setting Border Radius to `Calendar.Item.Day`
 
 To apply a border radius to the `Calendar.Item.Day` component, it's necessary to

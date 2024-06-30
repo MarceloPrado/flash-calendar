@@ -123,10 +123,7 @@ export function ImperativeScrolling() {
   const ref = useRef<CalendarListRef>(null);
 
   const onCalendarDayPress = useCallback((dateId: string) => {
-    const additionalOffset = -2; // Offset to account for selected day paddingTop
-    ref.current?.scrollToDate(fromDateId(dateId), true, {
-      additionalOffset,
-    });
+    ref.current?.scrollToDate(fromDateId(dateId), true);
     setActiveDateId(dateId);
   }, []);
 

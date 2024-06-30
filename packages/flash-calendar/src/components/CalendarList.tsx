@@ -89,12 +89,23 @@ export interface CalendarListProps
   renderItem?: FlashListProps<CalendarMonthEnhanced>["renderItem"];
 }
 
+interface ImperativeScrollParams {
+  /**
+   * An additional offset to add to the final scroll position. Useful when
+   * you need to slightly change the final scroll position.
+   */
+  additionalOffset?: number;
+}
 export interface CalendarListRef {
-  scrollToMonth: (date: Date, animated: boolean) => void;
+  scrollToMonth: (
+    date: Date,
+    animated: boolean,
+    params?: ImperativeScrollParams
+  ) => void;
   scrollToDate: (
     date: Date,
     animated: boolean,
-    params?: { additionalOffset?: number }
+    params?: ImperativeScrollParams
   ) => void;
   scrollToOffset: (offset: number, animated: boolean) => void;
 }
@@ -230,6 +241,10 @@ export const CalendarList = memo(
         ]
       );
 
+      /**
+       * Returns the offset for the given month (how much the user needs to
+       * scroll to reach the month).
+       */
       const getScrollOffsetForMonth = useCallback(
         (date: Date) => {
           const monthId = toDateId(startOfMonth(date));
@@ -271,12 +286,16 @@ export const CalendarList = memo(
       const flashListRef = useRef<FlashList<CalendarMonthEnhanced>>(null);
 
       useImperativeHandle(ref, () => ({
-        scrollToMonth(date, animated) {
+        scrollToMonth(
+          date,
+          animated,
+          { additionalOffset = 0 } = { additionalOffset: 0 }
+        ) {
           // Wait for the next render cycle to ensure the list has been
           // updated with the new months.
           setTimeout(() => {
             flashListRef.current?.scrollToOffset({
-              offset: getScrollOffsetForMonth(date),
+              offset: getScrollOffsetForMonth(date) + additionalOffset,
               animated,
             });
           }, 0);
@@ -289,14 +308,22 @@ export const CalendarList = memo(
           }
         ) {
           const currentMonthOffset = getScrollOffsetForMonth(date);
-
           const weekOfMonthIndex = getWeekOfMonth(date, calendarFirstDayOfWeek);
-          const rowHeight =
-            calendarDayHeight + calendarRowVerticalSpacing + additionalOffset;
-          const weekOffset =
+          const rowHeight = calendarDayHeight + calendarRowVerticalSpacing;
+
+          let weekOffset =
             calendarWeekHeaderHeight + rowHeight * weekOfMonthIndex;
+
+          /**
+           * We need to subtract one vertical spacing to avoid cutting off the
+           * desired date. A simple way of understanding why is imagining we
+           * want to scroll exactly to the given date, but leave a little bit of
+           * breathing room (`calendarRowVerticalSpacing`) above it.
+           */
+          weekOffset = weekOffset - calendarRowVerticalSpacing;
+
           flashListRef.current?.scrollToOffset({
-            offset: currentMonthOffset + weekOffset,
+            offset: currentMonthOffset + weekOffset + additionalOffset,
             animated,
           });
         },
