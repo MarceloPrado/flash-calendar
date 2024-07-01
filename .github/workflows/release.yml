@@ -23,7 +23,7 @@ jobs:
         run: bun install
 
       - name: Build project
-        run: bun run build --filter flash-calendar
+        run: bun run build --filter @marceloterreiro/flash-calendar
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
