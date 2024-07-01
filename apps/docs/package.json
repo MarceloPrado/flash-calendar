@@ -17,9 +17,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@docusaurus/core": "3.1.1",
-    "@docusaurus/plugin-ideal-image": "^3.1.1",
-    "@docusaurus/preset-classic": "3.1.1",
+    "@docusaurus/core": "^3.4.0",
+    "@docusaurus/plugin-ideal-image": "^3.4.0",
+    "@docusaurus/preset-classic": "^3.4.0",
     "@mdx-js/react": "^3.0.0",
     "clsx": "^2.0.0",
     "prism-react-renderer": "^2.3.0",
@@ -28,10 +28,10 @@
     "react-loadable": "npm:@docusaurus/react-loadable@5.5.2"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "3.1.1",
-    "@docusaurus/remark-plugin-npm2yarn": "^3.1.1",
-    "@docusaurus/tsconfig": "3.1.1",
-    "@docusaurus/types": "3.1.1",
+    "@docusaurus/module-type-aliases": "^3.4.0",
+    "@docusaurus/remark-plugin-npm2yarn": "^3.4.0",
+    "@docusaurus/tsconfig": "^3.4.0",
+    "@docusaurus/types": "^3.4.0",
     "@marceloterreiro/eslint-config": "*",
     "typescript": "^5.3.3"
   },
