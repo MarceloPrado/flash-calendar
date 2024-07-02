@@ -2,24 +2,13 @@ import { themes as prismThemes } from "prism-react-renderer";
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
 
-const npm2Yarn = [
-  require("@docusaurus/remark-plugin-npm2yarn"),
-  {
-    sync: true,
-    converters: [
-      ["bun", (code) => code.replace(/npm/g, "bun")],
-      ["yarn", (code) => code.replace(/npm/g, "yarn")],
-    ],
-  },
-];
-
 const config: Config = {
   title: "Flash Calendar",
   tagline: "The fastest calendar component for React Native",
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
-  url: "https://your-docusaurus-site.example.com",
+  url: "https://marceloprado.github.io",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: "/flash-calendar/",
@@ -59,8 +48,12 @@ const config: Config = {
   plugins: ["@docusaurus/plugin-ideal-image"],
 
   themeConfig: {
-    // Replace with your project's social card
-    image: "img/docusaurus-social-card.jpg",
+    algolia: {
+      appId: "XZ9MYUH844",
+      apiKey: "f23abd1fe4bf9bf91c59d7ccd526269d",
+      indexName: "marcelopradoio",
+    },
+    image: "img/social-card.png",
     navbar: {
       title: "Flash Calendar",
       logo: {

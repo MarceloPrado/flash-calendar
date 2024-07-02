@@ -29,7 +29,6 @@
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^3.4.0",
-    "@docusaurus/remark-plugin-npm2yarn": "^3.4.0",
     "@docusaurus/tsconfig": "^3.4.0",
     "@docusaurus/types": "^3.4.0",
     "@marceloterreiro/eslint-config": "*",
