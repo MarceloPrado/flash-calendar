@@ -96,10 +96,9 @@ BasePerfTestCalendar.displayName = "BasePerfTestCalendar";
 export const PerfTestCalendar = memo(
   ({ calendarActiveDateRanges, calendarMonthId, ...props }: CalendarProps) => {
     useEffect(() => {
-      activeDateRangesEmitter.emit(
-        "onSetActiveDateRanges",
-        calendarActiveDateRanges ?? []
-      );
+      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
+        ranges: calendarActiveDateRanges ?? [],
+      });
       /**
        * While `calendarMonthId` is not used by the effect, we still need it in
        * the dependency array since [FlashList uses recycling

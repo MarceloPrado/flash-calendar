@@ -7,6 +7,11 @@ import {
   type CalendarDayMetadata,
 } from "@/hooks/useCalendar";
 
+interface OnSetActiveDateRangesPayload {
+  instanceId?: string;
+  ranges: CalendarActiveDateRange[];
+}
+
 /**
  * An event emitter for the active date ranges. This notifies the calendar items
  * when their state changes, allowing just the affected items to re-render.
@@ -16,8 +21,13 @@ import {
  * for a reference implementation.
  */
 export const activeDateRangesEmitter = mitt<{
-  onSetActiveDateRanges: CalendarActiveDateRange[];
+  onSetActiveDateRanges: OnSetActiveDateRangesPayload;
 }>();
+
+/**
+ * The default calendar instance ID. This is used when no instance ID is provided.
+ */
+const DEFAULT_CALENDAR_INSTANCE_ID = "flash-calendar-default-instance";
 
 /**
  * Returns an optimized metadata for a particular day. This hook listens to the
@@ -28,8 +38,14 @@ export const activeDateRangesEmitter = mitt<{
  * exported in case you need to build your own calendar. Check the source code
  * for a reference implementation.
  */
-export const useOptimizedDayMetadata = (baseMetadata: CalendarDayMetadata) => {
+export const useOptimizedDayMetadata = (
+  baseMetadata: CalendarDayMetadata,
+  calendarInstanceId?: string
+) => {
   const [metadata, setMetadata] = useState(baseMetadata);
+
+  const safeCalendarInstanceId =
+    calendarInstanceId ?? DEFAULT_CALENDAR_INSTANCE_ID;
 
   // Ensure the metadata is updated when the base changes.
   useEffect(() => {
@@ -37,13 +53,19 @@ export const useOptimizedDayMetadata = (baseMetadata: CalendarDayMetadata) => {
   }, [baseMetadata]);
 
   useEffect(() => {
-    const handler = (activeDateRanges: CalendarActiveDateRange[]) => {
+    const handler = (payload: OnSetActiveDateRangesPayload) => {
+      const { ranges, instanceId = DEFAULT_CALENDAR_INSTANCE_ID } = payload;
+      if (instanceId !== safeCalendarInstanceId) {
+        // This event is not for this instance, ignore it.
+        return;
+      }
+
       // We're only interested in the active date ranges, no need to worry about
       // disabled states. These are already covered by the base metadata.
       const { isStartOfRange, isEndOfRange, isRangeValid, state } =
         getStateFields({
           id: metadata.id,
-          calendarActiveDateRanges: activeDateRanges,
+          calendarActiveDateRanges: ranges,
         });
 
       if (state === "active") {
@@ -65,7 +87,7 @@ export const useOptimizedDayMetadata = (baseMetadata: CalendarDayMetadata) => {
     return () => {
       activeDateRangesEmitter.off("onSetActiveDateRanges", handler);
     };
-  }, [baseMetadata, metadata]);
+  }, [baseMetadata, safeCalendarInstanceId, metadata]);
 
   return metadata;
 };

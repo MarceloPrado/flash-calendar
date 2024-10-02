@@ -18,13 +18,13 @@ export interface CalendarItemEmptyProps {
   };
 }
 
-export const CalendarItemEmpty = memo(
-  ({ height, theme }: CalendarItemEmptyProps) => {
-    const containerStyles = useMemo(() => {
-      return [{ ...styles.container, height }, theme?.container];
-    }, [height, theme?.container]);
+export const CalendarItemEmpty = memo(function CalendarItemEmpty(
+  props: CalendarItemEmptyProps
+) {
+  const { height, theme } = props;
+  const containerStyles = useMemo(() => {
+    return [{ ...styles.container, height }, theme?.container];
+  }, [height, theme?.container]);
 
-    return <View style={containerStyles} />;
-  }
-);
-CalendarItemEmpty.displayName = "CalendarItemEmpty";
+  return <View style={containerStyles} />;
+});

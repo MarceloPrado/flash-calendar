@@ -1,12 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { addDays, subDays } from "date-fns";
 import { format } from "date-fns/fp/format";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { Text } from "react-native";
 
 import { paddingDecorator } from "@/developer/decorators";
 import { loggingHandler } from "@/developer/loggginHandler";
 import { endOfMonth, startOfMonth, toDateId } from "@/helpers/dates";
 import { useDateRange } from "@/hooks/useDateRange";
+import { VStack } from "@/components/VStack";
 
 import { Calendar } from "./Calendar";
 
@@ -128,7 +130,7 @@ export const WithCustomFormatting = (args: typeof KichenSink.args) => {
 };
 
 export const DatePicker = (args: typeof KichenSink.args) => {
-  const [activeDateId, setActiveDateId] = useState<string | undefined>(
+  const [activeDateId, setActiveDateId] = useState(
     toDateId(addDays(startOfThisMonth, 3))
   );
 
@@ -181,3 +183,44 @@ export const LightModeOnly = () => {
     />
   );
 };
+
+export const TwoCalendarsMounted = () => {
+  return (
+    <VStack spacing={48}>
+      <CalendarInstanceDemo instanceId="First" startingIndex={3} />
+      <CalendarInstanceDemo instanceId="Second" startingIndex={10} />
+    </VStack>
+  );
+};
+
+function CalendarInstanceDemo({
+  instanceId,
+  startingIndex,
+}: {
+  instanceId: string;
+  startingIndex: number;
+}) {
+  const [date, setDate] = useState(
+    toDateId(addDays(startOfThisMonth, startingIndex))
+  );
+  const rerender = useRef(0);
+  rerender.current += 1;
+  return (
+    <VStack spacing={8}>
+      <Calendar
+        calendarActiveDateRanges={[
+          {
+            startId: date,
+            endId: date,
+          },
+        ]}
+        calendarInstanceId={instanceId}
+        calendarMonthId={date}
+        onCalendarDayPress={setDate}
+      />
+      <Text>
+        {instanceId} date: {date} (re-renders: {rerender.current}⚡)
+      </Text>
+    </VStack>
+  );
+}

@@ -111,251 +111,252 @@ export interface CalendarListRef {
 }
 
 export const CalendarList = memo(
-  forwardRef(
-    (
-      {
-        // List-related props
-        calendarInitialMonthId,
-        calendarPastScrollRangeInMonths = 12,
-        calendarFutureScrollRangeInMonths = 12,
-        calendarFirstDayOfWeek = "sunday",
-        CalendarScrollComponent = FlashList,
-        calendarFormatLocale,
+  forwardRef(function CalendarList(
+    props: CalendarListProps,
+    ref: Ref<CalendarListRef>
+  ) {
+    const {
+      // List-related props
+      calendarInitialMonthId,
+      calendarPastScrollRangeInMonths = 12,
+      calendarFutureScrollRangeInMonths = 12,
+      calendarFirstDayOfWeek = "sunday",
+      CalendarScrollComponent = FlashList,
+      calendarFormatLocale,
 
-        // Spacings
-        calendarSpacing = 20,
-        calendarRowHorizontalSpacing,
-        calendarRowVerticalSpacing = 8,
+      // Spacings
+      calendarSpacing = 20,
+      calendarRowHorizontalSpacing,
+      calendarRowVerticalSpacing = 8,
 
-        // Heights
-        calendarMonthHeaderHeight = 20,
-        calendarDayHeight = 32,
-        calendarWeekHeaderHeight = calendarDayHeight,
-        calendarAdditionalHeight = 0,
+      // Heights
+      calendarMonthHeaderHeight = 20,
+      calendarDayHeight = 32,
+      calendarWeekHeaderHeight = calendarDayHeight,
+      calendarAdditionalHeight = 0,
 
-        // Other props
-        calendarColorScheme,
-        theme,
-        onEndReached,
-        ...props
-      }: CalendarListProps,
-      ref: Ref<CalendarListRef>
-    ) => {
-      const {
-        onCalendarDayPress,
+      // Other props
+      calendarColorScheme,
+      theme,
+      onEndReached,
+      ...otherProps
+    } = props;
+
+    const {
+      calendarActiveDateRanges,
+      calendarDisabledDateIds,
+      calendarInstanceId,
+      calendarMaxDateId,
+      calendarMinDateId,
+      getCalendarDayFormat,
+      getCalendarMonthFormat,
+      getCalendarWeekDayFormat,
+      onCalendarDayPress,
+      ...flatListProps
+    } = otherProps;
+
+    const calendarProps = useMemo(
+      (): CalendarMonthEnhanced["calendarProps"] => ({
         calendarActiveDateRanges,
+        calendarColorScheme,
+        calendarDayHeight,
         calendarDisabledDateIds,
-        getCalendarDayFormat,
-        getCalendarWeekDayFormat,
-        getCalendarMonthFormat,
+        calendarFirstDayOfWeek,
+        calendarFormatLocale,
+        calendarInstanceId,
         calendarMaxDateId,
         calendarMinDateId,
-        ...flatListProps
-      } = props;
+        calendarMonthHeaderHeight,
+        calendarRowHorizontalSpacing,
+        calendarRowVerticalSpacing,
+        calendarWeekHeaderHeight,
+        getCalendarDayFormat,
+        getCalendarMonthFormat,
+        getCalendarWeekDayFormat,
+        onCalendarDayPress,
+        theme,
+      }),
+      [
+        calendarColorScheme,
+        calendarActiveDateRanges,
+        calendarDayHeight,
+        calendarDisabledDateIds,
+        calendarFirstDayOfWeek,
+        calendarFormatLocale,
+        calendarMaxDateId,
+        calendarMinDateId,
+        calendarMonthHeaderHeight,
+        calendarRowHorizontalSpacing,
+        calendarRowVerticalSpacing,
+        calendarWeekHeaderHeight,
+        getCalendarDayFormat,
+        getCalendarMonthFormat,
+        getCalendarWeekDayFormat,
+        calendarInstanceId,
+        onCalendarDayPress,
+        theme,
+      ]
+    );
 
-      const calendarProps = useMemo(
-        (): CalendarMonthEnhanced["calendarProps"] => ({
-          calendarColorScheme,
-          calendarActiveDateRanges,
-          calendarDayHeight,
-          calendarDisabledDateIds,
-          calendarFirstDayOfWeek,
-          calendarFormatLocale,
-          calendarMaxDateId,
-          calendarMinDateId,
-          calendarMonthHeaderHeight,
-          calendarRowHorizontalSpacing,
-          calendarRowVerticalSpacing,
-          calendarWeekHeaderHeight,
-          getCalendarDayFormat,
-          getCalendarMonthFormat,
-          getCalendarWeekDayFormat,
-          onCalendarDayPress,
-          theme,
-        }),
-        [
-          calendarActiveDateRanges,
-          calendarDayHeight,
-          calendarFirstDayOfWeek,
-          getCalendarDayFormat,
-          getCalendarWeekDayFormat,
-          calendarMaxDateId,
-          calendarMinDateId,
-          calendarFormatLocale,
-          calendarMonthHeaderHeight,
-          calendarRowHorizontalSpacing,
-          getCalendarMonthFormat,
-          calendarRowVerticalSpacing,
-          calendarWeekHeaderHeight,
-          calendarDisabledDateIds,
-          calendarColorScheme,
-          onCalendarDayPress,
-          theme,
-        ]
-      );
+    const { initialMonthIndex, monthList, appendMonths, addMissingMonths } =
+      useCalendarList({
+        calendarFirstDayOfWeek,
+        calendarFutureScrollRangeInMonths,
+        calendarPastScrollRangeInMonths,
+        calendarInitialMonthId,
+        calendarMaxDateId,
+        calendarMinDateId,
+      });
 
-      const { initialMonthIndex, monthList, appendMonths, addMissingMonths } =
-        useCalendarList({
-          calendarFirstDayOfWeek,
-          calendarFutureScrollRangeInMonths,
-          calendarPastScrollRangeInMonths,
-          calendarInitialMonthId,
-          calendarMaxDateId,
-          calendarMinDateId,
+    const monthListWithCalendarProps = useMemo(() => {
+      return monthList.map((month) => ({
+        ...month,
+        calendarProps,
+      }));
+    }, [calendarProps, monthList]);
+
+    const handleOnEndReached = useCallback(() => {
+      appendMonths(calendarFutureScrollRangeInMonths);
+      onEndReached?.();
+    }, [appendMonths, calendarFutureScrollRangeInMonths, onEndReached]);
+
+    const handleOverrideItemLayout = useCallback<
+      NonNullable<FlashListProps<CalendarMonth>["overrideItemLayout"]>
+    >(
+      (layout, item) => {
+        const monthHeight = getHeightForMonth({
+          calendarMonth: item,
+          calendarSpacing,
+          calendarDayHeight,
+          calendarMonthHeaderHeight,
+          calendarRowVerticalSpacing,
+          calendarAdditionalHeight,
+          calendarWeekHeaderHeight,
         });
+        layout.size = monthHeight;
+      },
+      [
+        calendarAdditionalHeight,
+        calendarDayHeight,
+        calendarMonthHeaderHeight,
+        calendarRowVerticalSpacing,
+        calendarSpacing,
+        calendarWeekHeaderHeight,
+      ]
+    );
 
-      const monthListWithCalendarProps = useMemo(() => {
-        return monthList.map((month) => ({
-          ...month,
-          calendarProps,
-        }));
-      }, [calendarProps, monthList]);
+    /**
+     * Returns the offset for the given month (how much the user needs to
+     * scroll to reach the month).
+     */
+    const getScrollOffsetForMonth = useCallback(
+      (date: Date) => {
+        const monthId = toDateId(startOfMonth(date));
 
-      const handleOnEndReached = useCallback(() => {
-        appendMonths(calendarFutureScrollRangeInMonths);
-        onEndReached?.();
-      }, [appendMonths, calendarFutureScrollRangeInMonths, onEndReached]);
+        let baseMonthList = monthList;
+        let index = baseMonthList.findIndex((month) => month.id === monthId);
 
-      const handleOverrideItemLayout = useCallback<
-        NonNullable<FlashListProps<CalendarMonth>["overrideItemLayout"]>
-      >(
-        (layout, item) => {
-          const monthHeight = getHeightForMonth({
-            calendarMonth: item,
+        if (index === -1) {
+          baseMonthList = addMissingMonths(monthId);
+          index = baseMonthList.findIndex((month) => month.id === monthId);
+        }
+
+        return baseMonthList.slice(0, index).reduce((acc, month) => {
+          const currentHeight = getHeightForMonth({
+            calendarMonth: month,
             calendarSpacing,
             calendarDayHeight,
             calendarMonthHeaderHeight,
             calendarRowVerticalSpacing,
-            calendarAdditionalHeight,
             calendarWeekHeaderHeight,
+            calendarAdditionalHeight,
           });
-          layout.size = monthHeight;
-        },
-        [
-          calendarAdditionalHeight,
-          calendarDayHeight,
-          calendarMonthHeaderHeight,
-          calendarRowVerticalSpacing,
-          calendarSpacing,
-          calendarWeekHeaderHeight,
-        ]
-      );
 
-      /**
-       * Returns the offset for the given month (how much the user needs to
-       * scroll to reach the month).
-       */
-      const getScrollOffsetForMonth = useCallback(
-        (date: Date) => {
-          const monthId = toDateId(startOfMonth(date));
+          return acc + currentHeight;
+        }, 0);
+      },
+      [
+        addMissingMonths,
+        calendarAdditionalHeight,
+        calendarDayHeight,
+        calendarMonthHeaderHeight,
+        calendarRowVerticalSpacing,
+        calendarSpacing,
+        calendarWeekHeaderHeight,
+        monthList,
+      ]
+    );
 
-          let baseMonthList = monthList;
-          let index = baseMonthList.findIndex((month) => month.id === monthId);
+    const flashListRef = useRef<FlashList<CalendarMonthEnhanced>>(null);
 
-          if (index === -1) {
-            baseMonthList = addMissingMonths(monthId);
-            index = baseMonthList.findIndex((month) => month.id === monthId);
-          }
-
-          return baseMonthList.slice(0, index).reduce((acc, month) => {
-            const currentHeight = getHeightForMonth({
-              calendarMonth: month,
-              calendarSpacing,
-              calendarDayHeight,
-              calendarMonthHeaderHeight,
-              calendarRowVerticalSpacing,
-              calendarWeekHeaderHeight,
-              calendarAdditionalHeight,
-            });
-
-            return acc + currentHeight;
-          }, 0);
-        },
-        [
-          addMissingMonths,
-          calendarAdditionalHeight,
-          calendarDayHeight,
-          calendarMonthHeaderHeight,
-          calendarRowVerticalSpacing,
-          calendarSpacing,
-          calendarWeekHeaderHeight,
-          monthList,
-        ]
-      );
-
-      const flashListRef = useRef<FlashList<CalendarMonthEnhanced>>(null);
-
-      useImperativeHandle(ref, () => ({
-        scrollToMonth(
-          date,
-          animated,
-          { additionalOffset = 0 } = { additionalOffset: 0 }
-        ) {
-          // Wait for the next render cycle to ensure the list has been
-          // updated with the new months.
-          setTimeout(() => {
-            flashListRef.current?.scrollToOffset({
-              offset: getScrollOffsetForMonth(date) + additionalOffset,
-              animated,
-            });
-          }, 0);
-        },
-        scrollToDate(
-          date,
-          animated,
-          { additionalOffset = 0 } = {
-            additionalOffset: 0,
-          }
-        ) {
-          const currentMonthOffset = getScrollOffsetForMonth(date);
-          const weekOfMonthIndex = getWeekOfMonth(date, calendarFirstDayOfWeek);
-          const rowHeight = calendarDayHeight + calendarRowVerticalSpacing;
-
-          let weekOffset =
-            calendarWeekHeaderHeight + rowHeight * weekOfMonthIndex;
-
-          /**
-           * We need to subtract one vertical spacing to avoid cutting off the
-           * desired date. A simple way of understanding why is imagining we
-           * want to scroll exactly to the given date, but leave a little bit of
-           * breathing room (`calendarRowVerticalSpacing`) above it.
-           */
-          weekOffset = weekOffset - calendarRowVerticalSpacing;
-
+    useImperativeHandle(ref, () => ({
+      scrollToMonth(
+        date,
+        animated,
+        { additionalOffset = 0 } = { additionalOffset: 0 }
+      ) {
+        // Wait for the next render cycle to ensure the list has been
+        // updated with the new months.
+        setTimeout(() => {
           flashListRef.current?.scrollToOffset({
-            offset: currentMonthOffset + weekOffset + additionalOffset,
+            offset: getScrollOffsetForMonth(date) + additionalOffset,
             animated,
           });
-        },
-        scrollToOffset(offset, animated) {
-          flashListRef.current?.scrollToOffset({ offset, animated });
-        },
-      }));
+        }, 0);
+      },
+      scrollToDate(
+        date,
+        animated,
+        { additionalOffset = 0 } = {
+          additionalOffset: 0,
+        }
+      ) {
+        const currentMonthOffset = getScrollOffsetForMonth(date);
+        const weekOfMonthIndex = getWeekOfMonth(date, calendarFirstDayOfWeek);
+        const rowHeight = calendarDayHeight + calendarRowVerticalSpacing;
 
-      const calendarContainerStyle = useMemo(() => {
-        return { paddingBottom: calendarSpacing };
-      }, [calendarSpacing]);
+        let weekOffset =
+          calendarWeekHeaderHeight + rowHeight * weekOfMonthIndex;
 
-      return (
-        <CalendarScrollComponent
-          data={monthListWithCalendarProps}
-          estimatedItemSize={273}
-          initialScrollIndex={initialMonthIndex}
-          keyExtractor={keyExtractor}
-          onEndReached={handleOnEndReached}
-          overrideItemLayout={handleOverrideItemLayout}
-          ref={flashListRef}
-          renderItem={({ item }) => (
-            <View style={calendarContainerStyle}>
-              <Calendar calendarMonthId={item.id} {...item.calendarProps} />
-            </View>
-          )}
-          showsVerticalScrollIndicator={false}
-          {...flatListProps}
-        />
-      );
-    }
-  )
+        /**
+         * We need to subtract one vertical spacing to avoid cutting off the
+         * desired date. A simple way of understanding why is imagining we
+         * want to scroll exactly to the given date, but leave a little bit of
+         * breathing room (`calendarRowVerticalSpacing`) above it.
+         */
+        weekOffset = weekOffset - calendarRowVerticalSpacing;
+
+        flashListRef.current?.scrollToOffset({
+          offset: currentMonthOffset + weekOffset + additionalOffset,
+          animated,
+        });
+      },
+      scrollToOffset(offset, animated) {
+        flashListRef.current?.scrollToOffset({ offset, animated });
+      },
+    }));
+
+    const calendarContainerStyle = useMemo(() => {
+      return { paddingBottom: calendarSpacing };
+    }, [calendarSpacing]);
+
+    return (
+      <CalendarScrollComponent
+        data={monthListWithCalendarProps}
+        estimatedItemSize={273}
+        initialScrollIndex={initialMonthIndex}
+        keyExtractor={keyExtractor}
+        onEndReached={handleOnEndReached}
+        overrideItemLayout={handleOverrideItemLayout}
+        ref={flashListRef}
+        renderItem={({ item }) => (
+          <View style={calendarContainerStyle}>
+            <Calendar calendarMonthId={item.id} {...item.calendarProps} />
+          </View>
+        )}
+        showsVerticalScrollIndicator={false}
+        {...flatListProps}
+      />
+    );
+  })
 );
-
-CalendarList.displayName = "CalendarList";
