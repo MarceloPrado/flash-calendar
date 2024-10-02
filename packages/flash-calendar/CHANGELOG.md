@@ -1,5 +1,11 @@
 # @marceloterreiro/flash-calendar
 
+## 1.1.0
+
+### Minor Changes
+
+- 863edce: Add the ability to mount more than one calendar at once
+
 ## 1.0.0
 
 ### Major Changes
