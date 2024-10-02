@@ -42,6 +42,18 @@ export type CalendarOnDayPress = (dateId: string) => void;
 
 export interface CalendarProps extends UseCalendarParams {
   /**
+   * A unique identifier for this calendar instance. This is useful if you
+   * need to render more than one calendar at once. This allows Flash Calendar
+   * to scope its state to the given instance.
+   *
+   * No need to get fancy with `uuid` or anything like that - a simple static
+   * string is enough.
+   *
+   * If not provided, Flash Calendar will use a default value which will hoist
+   * the state in a global scope.
+   */
+  calendarInstanceId?: string;
+  /**
    * The spacing between each calendar row (the month header, the week days row,
    * and the weeks row)
    * @defaultValue 8
@@ -87,13 +99,14 @@ export interface CalendarProps extends UseCalendarParams {
 
 const BaseCalendar = memo(function BaseCalendar(props: CalendarProps) {
   const {
-    onCalendarDayPress,
+    calendarInstanceId,
     calendarRowVerticalSpacing = 8,
     calendarRowHorizontalSpacing = 8,
-    theme,
     calendarDayHeight = 32,
     calendarMonthHeaderHeight = 20,
     calendarWeekHeaderHeight = calendarDayHeight,
+    onCalendarDayPress,
+    theme,
 
     ...buildCalendarParams
   } = props;
@@ -145,6 +158,7 @@ const BaseCalendar = memo(function BaseCalendar(props: CalendarProps) {
 
             return (
               <CalendarItemDayWithContainer
+                calendarInstanceId={calendarInstanceId}
                 containerTheme={theme?.itemDayContainer}
                 dayHeight={calendarDayHeight}
                 daySpacing={calendarRowHorizontalSpacing}
@@ -165,16 +179,17 @@ const BaseCalendar = memo(function BaseCalendar(props: CalendarProps) {
 
 export const Calendar = memo(function Calendar(props: CalendarProps) {
   const {
+    calendarInstanceId,
     calendarActiveDateRanges,
     calendarMonthId,
     calendarColorScheme,
     ...otherProps
   } = props;
   useEffect(() => {
-    activeDateRangesEmitter.emit(
-      "onSetActiveDateRanges",
-      calendarActiveDateRanges ?? []
-    );
+    activeDateRangesEmitter.emit("onSetActiveDateRanges", {
+      instanceId: calendarInstanceId,
+      ranges: calendarActiveDateRanges ?? [],
+    });
     /**
      * While `calendarMonthId` is not used by the effect, we still need it in
      * the dependency array since [FlashList uses recycling
@@ -185,11 +200,15 @@ export const Calendar = memo(function Calendar(props: CalendarProps) {
      * reported by
      * [#11](https://github.com/MarceloPrado/flash-calendar/issues/11).
      */
-  }, [calendarActiveDateRanges, calendarMonthId]);
+  }, [calendarActiveDateRanges, calendarInstanceId, calendarMonthId]);
 
   return (
     <CalendarThemeProvider colorScheme={calendarColorScheme}>
-      <BaseCalendar {...otherProps} calendarMonthId={calendarMonthId} />
+      <BaseCalendar
+        {...otherProps}
+        calendarInstanceId={calendarInstanceId}
+        calendarMonthId={calendarMonthId}
+      />
     </CalendarThemeProvider>
   );
 });

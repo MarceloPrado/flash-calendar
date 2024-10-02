@@ -7,6 +7,7 @@ import { HStack } from "@site/src/components/HStack";
 import basicCalendar from "./assets/basic-calendar.png";
 import basicCalendarList from "./assets/basic-calendar-list.png";
 import dateRangeCalendarList from "./assets/date-range-calendar-list.png";
+import twoCalendarsMounted from "./assets/two-calendars-mounted.png";
 import customFormatting from "./assets/custom-formatting.png";
 import customLocale from "./assets/custom-locale.png";
 import disabledDates from "./assets/disabled-dates.png";
@@ -360,3 +361,47 @@ the
 [source](https://github.com/marceloprado/flash-calendar/blob/d832d72867d40c9b375c30aec9985b181c0a80f3/kitchen-sink/expo/src/components/BottomSheetFlashList/BottomSheetFlashList.tsx).
 Bear in mind this isn't a very performant implementation. Contributions
 welcomed!
+
+## Two calendars in the same screen
+
+To render more than one calendar in the same screen, use the
+`calendarInstanceId` prop. This works for both `Calendar` and `Calendar.List`:
+
+<HStack spacing={24} alignItems="flex-start">
+
+<div>
+
+```tsx
+import { Calendar, useDateRange } from "@marceloterreiro/flash-calendar";
+
+export const TwoCalendarsMounted = () => {
+  const dateRangeOne = useDateRange();
+  const dateRangeTwo = useDateRange();
+  return (
+    <VStack grow spacing={48}>
+      <VStack grow spacing={4}>
+        <Text>First calendar</Text>
+        <Calendar
+          calendarInstanceId="First"
+          calendarMonthId="2024-08-01"
+          {...dateRangeOne}
+        />
+      </VStack>
+      <VStack grow spacing={4}>
+        <Text>Second calendar</Text>
+        <Calendar
+          calendarInstanceId="Second"
+          calendarMonthId="2024-08-01"
+          {...dateRangeTwo}
+        />
+      </VStack>
+    </VStack>
+  );
+};
+```
+
+</div>
+
+<Image img={twoCalendarsMounted} width={250} />
+
+</HStack>

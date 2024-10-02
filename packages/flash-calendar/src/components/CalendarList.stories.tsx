@@ -265,3 +265,62 @@ export const ScrollingBackwardsWorkaround = () => {
     </VStack>
   );
 };
+
+export const TwoCalendarListsMounted = () => {
+  return (
+    <VStack grow spacing={48}>
+      <CalendarInstanceDemo instanceId="First" startingIndex={3} />
+      <CalendarInstanceDemo instanceId="Second" startingIndex={10} />
+    </VStack>
+  );
+};
+
+function CalendarInstanceDemo({
+  instanceId,
+  startingIndex,
+}: {
+  instanceId: string;
+  startingIndex: number;
+}) {
+  const calendarDateRangeProps = useDateRange();
+  const rerender = useRef(0);
+  rerender.current += 1;
+  return (
+    <VStack grow spacing={8}>
+      <Calendar.List
+        {...calendarDateRangeProps}
+        calendarInstanceId={instanceId}
+      />
+      <Text>
+        {instanceId}: {calendarDateRangeProps.dateRange.startId} -{" "}
+        {calendarDateRangeProps.dateRange.endId} (re-renders: {rerender.current}
+        ⚡)
+      </Text>
+    </VStack>
+  );
+}
+
+export const Demo = () => {
+  const dateRangeOne = useDateRange();
+  const dateRangeTwo = useDateRange();
+  return (
+    <VStack grow spacing={48}>
+      <VStack grow spacing={4}>
+        <Text>First calendar</Text>
+        <Calendar
+          calendarInstanceId="First"
+          calendarMonthId="2024-08-01"
+          {...dateRangeOne}
+        />
+      </VStack>
+      <VStack grow spacing={4}>
+        <Text>Second calendar</Text>
+        <Calendar
+          calendarInstanceId="Second"
+          calendarMonthId="2024-08-01"
+          {...dateRangeTwo}
+        />
+      </VStack>
+    </VStack>
+  );
+};

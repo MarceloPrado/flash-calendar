@@ -288,6 +288,18 @@ export interface CalendarItemDayWithContainerProps
   extends Omit<CalendarItemDayProps, "height">,
     Pick<CalendarItemDayContainerProps, "daySpacing" | "dayHeight"> {
   containerTheme?: CalendarItemDayContainerTheme;
+  /**
+   * A unique identifier for this calendar instance. This is useful if you
+   * need to render more than one calendar at once. This allows Flash Calendar
+   * to scope its state to the given instance.
+   *
+   * No need to get fancy with `uuid` or anything like that - a simple static
+   * string is enough.
+   *
+   * If not provided, Flash Calendar will use a default value which will hoist
+   * the state in a global scope.
+   */
+  calendarInstanceId?: string;
 }
 
 export const CalendarItemDayWithContainer = ({
@@ -298,8 +310,9 @@ export const CalendarItemDayWithContainer = ({
   dayHeight,
   daySpacing,
   containerTheme,
+  calendarInstanceId,
 }: CalendarItemDayWithContainerProps) => {
-  const metadata = useOptimizedDayMetadata(baseMetadata);
+  const metadata = useOptimizedDayMetadata(baseMetadata, calendarInstanceId);
 
   return (
     <CalendarItemDayContainer

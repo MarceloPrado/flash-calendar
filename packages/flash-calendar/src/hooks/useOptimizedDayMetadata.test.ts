@@ -105,12 +105,14 @@ describe("useOptimizedDayMetadata", () => {
 
     // Emit event
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", [
-        {
-          startId: "2024-02-01",
-          endId: "2024-02-16",
-        },
-      ]);
+      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
+        ranges: [
+          {
+            startId: "2024-02-01",
+            endId: "2024-02-16",
+          },
+        ],
+      });
     });
 
     expect(result.current).toEqual({
@@ -152,12 +154,14 @@ describe("useOptimizedDayMetadata", () => {
 
     // Emit event
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", [
-        {
-          startId: "2024-02-01",
-          endId: "2024-02-16",
-        },
-      ]);
+      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
+        ranges: [
+          {
+            startId: "2024-02-01",
+            endId: "2024-02-16",
+          },
+        ],
+      });
     });
 
     expect(result.current).toEqual({
@@ -199,12 +203,14 @@ describe("useOptimizedDayMetadata", () => {
 
     // Emit event
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", [
-        {
-          startId: "2024-02-01",
-          endId: "2024-02-01",
-        },
-      ]);
+      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
+        ranges: [
+          {
+            startId: "2024-02-01",
+            endId: "2024-02-01",
+          },
+        ],
+      });
     });
 
     expect(result.current).toEqual({
@@ -247,12 +253,14 @@ describe("useOptimizedDayMetadata", () => {
 
     // Emit event
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", [
-        {
-          startId: "2024-02-01",
-          endId: "2024-02-17",
-        },
-      ]);
+      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
+        ranges: [
+          {
+            startId: "2024-02-01",
+            endId: "2024-02-17",
+          },
+        ],
+      });
     });
 
     expect(result.current).toEqual(baseMetadata);
@@ -260,12 +268,14 @@ describe("useOptimizedDayMetadata", () => {
 
     // Emit another event
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", [
-        {
-          startId: "2024-02-19",
-          endId: "2024-02-23",
-        },
-      ]);
+      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
+        ranges: [
+          {
+            startId: "2024-02-19",
+            endId: "2024-02-23",
+          },
+        ],
+      });
     });
 
     expect(result.current).toEqual(baseMetadata);
@@ -273,12 +283,14 @@ describe("useOptimizedDayMetadata", () => {
 
     // Emit an incomplete range
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", [
-        {
-          startId: "2024-02-01",
-          endId: undefined,
-        },
-      ]);
+      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
+        ranges: [
+          {
+            startId: "2024-02-01",
+            endId: undefined,
+          },
+        ],
+      });
     });
 
     expect(result.current).toEqual(baseMetadata);
@@ -286,12 +298,14 @@ describe("useOptimizedDayMetadata", () => {
 
     // Check if the metadata is updated when the range is complete
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", [
-        {
-          startId: "2024-02-01",
-          endId: "2024-02-20",
-        },
-      ]);
+      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
+        ranges: [
+          {
+            startId: "2024-02-01",
+            endId: "2024-02-20",
+          },
+        ],
+      });
     });
     expect(result.current).toEqual({
       ...baseMetadata,
@@ -331,12 +345,14 @@ describe("useOptimizedDayMetadata", () => {
 
     // Emit event
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", [
-        {
-          startId: "2024-02-01",
-          endId: "2024-02-01",
-        },
-      ]);
+      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
+        ranges: [
+          {
+            startId: "2024-02-01",
+            endId: "2024-02-01",
+          },
+        ],
+      });
     });
 
     expect(result.current).toEqual({
@@ -350,16 +366,217 @@ describe("useOptimizedDayMetadata", () => {
 
     // Emit another range
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", [
-        {
-          startId: "2024-02-03",
-          endId: "2024-02-03",
-        },
-      ]);
+      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
+        ranges: [
+          {
+            startId: "2024-02-03",
+            endId: "2024-02-03",
+          },
+        ],
+      });
     });
 
     // Back to the initial state
     expect(result.current).toEqual(baseMetadata);
     expect(result.all).toHaveLength(3);
+  });
+});
+
+describe("useOptimizedDayMetadata with calendarInstanceId", () => {
+  const getBaseMetadata = (date: string): CalendarDayMetadata => ({
+    date: fromDateId(date),
+    displayLabel: date.split("-")[2],
+    id: date,
+    isDifferentMonth: false,
+    isDisabled: false,
+    isEndOfMonth: false,
+    isEndOfRange: false,
+    isEndOfWeek: false,
+    isRangeValid: false,
+    isStartOfMonth: false,
+    isStartOfRange: false,
+    isStartOfWeek: false,
+    isToday: false,
+    isWeekend: false,
+    state: "idle",
+  });
+
+  it("uses the default instance ID when not provided", () => {
+    const baseMetadata = getBaseMetadata("2024-02-16");
+    const { result } = renderHook(() => useOptimizedDayMetadata(baseMetadata));
+
+    act(() => {
+      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
+        ranges: [
+          {
+            startId: "2024-02-16",
+            endId: "2024-02-16",
+          },
+        ],
+      });
+    });
+
+    expect(result.current).toEqual({
+      ...baseMetadata,
+      state: "active",
+      isStartOfRange: true,
+      isEndOfRange: true,
+      isRangeValid: true,
+    });
+  });
+
+  it("responds to events for the correct instance ID", () => {
+    const instanceId = "test-calendar-1";
+    const baseMetadata = getBaseMetadata("2024-02-16");
+    const { result } = renderHook(() =>
+      useOptimizedDayMetadata(baseMetadata, instanceId)
+    );
+
+    act(() => {
+      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
+        instanceId,
+        ranges: [
+          {
+            startId: "2024-02-16",
+            endId: "2024-02-16",
+          },
+        ],
+      });
+    });
+
+    expect(result.current).toEqual({
+      ...baseMetadata,
+      state: "active",
+      isStartOfRange: true,
+      isEndOfRange: true,
+      isRangeValid: true,
+    });
+  });
+
+  it("ignores events for different instance IDs", () => {
+    const instanceId = "test-calendar-2";
+    const baseMetadata = getBaseMetadata("2024-02-16");
+    const { result } = renderHook(() =>
+      useOptimizedDayMetadata(baseMetadata, instanceId)
+    );
+
+    act(() => {
+      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
+        instanceId: "different-calendar",
+        ranges: [
+          {
+            startId: "2024-02-16",
+            endId: "2024-02-16",
+          },
+        ],
+      });
+    });
+
+    // The metadata should not change
+    expect(result.current).toEqual(baseMetadata);
+  });
+
+  it("handles multiple instances correctly", () => {
+    const instanceId1 = "test-calendar-3";
+    const instanceId2 = "test-calendar-4";
+
+    const baseMetadata1 = getBaseMetadata("2024-02-16");
+    const baseMetadata2 = getBaseMetadata("2024-02-16");
+
+    const { result: result1 } = renderHook(() =>
+      useOptimizedDayMetadata(baseMetadata1, instanceId1)
+    );
+    const { result: result2 } = renderHook(() =>
+      useOptimizedDayMetadata(baseMetadata2, instanceId2)
+    );
+
+    act(() => {
+      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
+        instanceId: instanceId1,
+        ranges: [
+          {
+            startId: "2024-02-16",
+            endId: "2024-02-16",
+          },
+        ],
+      });
+    });
+
+    expect(result1.current).toEqual({
+      ...baseMetadata1,
+      state: "active",
+      isStartOfRange: true,
+      isEndOfRange: true,
+      isRangeValid: true,
+    });
+    expect(result2.current).toEqual(baseMetadata2);
+
+    act(() => {
+      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
+        instanceId: instanceId2,
+        ranges: [
+          {
+            startId: "2024-02-15",
+            endId: "2024-02-17",
+          },
+        ],
+      });
+    });
+
+    expect(result1.current).toEqual({
+      ...baseMetadata1,
+      state: "active",
+      isStartOfRange: true,
+      isEndOfRange: true,
+      isRangeValid: true,
+    });
+    expect(result2.current).toEqual({
+      ...baseMetadata2,
+      state: "active",
+      isRangeValid: true,
+    });
+  });
+
+  it("resets state for the correct instance when a new range is selected", () => {
+    const instanceId = "test-calendar-5";
+    const baseMetadata = getBaseMetadata("2024-02-16");
+    const { result } = renderHook(() =>
+      useOptimizedDayMetadata(baseMetadata, instanceId)
+    );
+
+    act(() => {
+      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
+        instanceId,
+        ranges: [
+          {
+            startId: "2024-02-16",
+            endId: "2024-02-16",
+          },
+        ],
+      });
+    });
+
+    expect(result.current).toEqual({
+      ...baseMetadata,
+      state: "active",
+      isStartOfRange: true,
+      isEndOfRange: true,
+      isRangeValid: true,
+    });
+
+    act(() => {
+      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
+        instanceId,
+        ranges: [
+          {
+            startId: "2024-02-18",
+            endId: "2024-02-20",
+          },
+        ],
+      });
+    });
+
+    // Should reset to base state
+    expect(result.current).toEqual(baseMetadata);
   });
 });
