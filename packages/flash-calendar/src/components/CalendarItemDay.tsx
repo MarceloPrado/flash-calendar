@@ -1,7 +1,13 @@
 import type { ReactNode } from "react";
 import { useCallback, useMemo } from "react";
 import type { TextStyle, ViewStyle } from "react-native";
-import { Pressable, StyleSheet, Text, type TextProps, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  type TextProps,
+  View,
+} from "react-native";
 
 import type { BaseTheme } from "@/helpers/tokens";
 import type { CalendarDayMetadata } from "@/hooks/useCalendar";
@@ -126,7 +132,8 @@ const buildBaseStyles = (theme: BaseTheme): CalendarItemDayTheme => {
   };
 };
 
-export interface CalendarItemDayProps extends Omit<TextProps, 'onPress'> {
+export interface CalendarItemDayProps
+  extends Omit<TextProps, "children" | "onPress"> {
   children: ReactNode;
   onPress: (id: string) => void;
   metadata: CalendarDayMetadata;
