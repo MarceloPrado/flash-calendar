@@ -1,13 +1,7 @@
 import type { ReactNode } from "react";
 import { useCallback, useMemo } from "react";
-import type { TextStyle, ViewStyle } from "react-native";
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  type TextProps,
-  View,
-} from "react-native";
+import type { TextProps, TextStyle, ViewStyle } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import type { BaseTheme } from "@/helpers/tokens";
 import type { CalendarDayMetadata } from "@/hooks/useCalendar";
