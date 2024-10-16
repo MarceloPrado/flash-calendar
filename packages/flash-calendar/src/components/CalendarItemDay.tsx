@@ -143,7 +143,7 @@ export interface CalendarItemDayProps {
   /** The cell's height */
   height: number;
   /** Optional TextProps to spread to the <Text> component. */
-  textProps: Omit<TextProps, "children" | "onPress">;
+  textProps?: Omit<TextProps, "children" | "onPress">;
 }
 
 /**
