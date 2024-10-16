@@ -126,8 +126,7 @@ const buildBaseStyles = (theme: BaseTheme): CalendarItemDayTheme => {
   };
 };
 
-export interface CalendarItemDayProps
-  extends Omit<TextProps, "children" | "onPress"> {
+export interface CalendarItemDayProps {
   children: ReactNode;
   onPress: (id: string) => void;
   metadata: CalendarDayMetadata;
@@ -143,6 +142,8 @@ export interface CalendarItemDayProps
   >;
   /** The cell's height */
   height: number;
+  /** Optional TextProps to spread to the <Text> component. */
+  textProps: Omit<TextProps, "children" | "onPress">;
 }
 
 /**
@@ -159,7 +160,7 @@ export const CalendarItemDay = ({
   theme,
   height,
   metadata,
-  ...rest
+  textProps,
 }: CalendarItemDayProps) => {
   const baseTheme = useTheme();
   const baseStyles = useMemo(() => {
@@ -198,7 +199,7 @@ export const CalendarItemDay = ({
         const { content } = baseStyles[metadata.state](params);
         return (
           <Text
-            {...rest}
+            {...textProps}
             style={{
               ...content,
               ...theme?.base?.({ ...metadata, isPressed }).content,

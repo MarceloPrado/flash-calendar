@@ -21,7 +21,7 @@ interface CalendarItemWeekNameTheme {
   content?: TextStyle;
 }
 
-export interface CalendarItemWeekNameProps extends Omit<TextProps, "children"> {
+export interface CalendarItemWeekNameProps {
   children: ReactNode;
   /**
    * The height of the week name, needed to correctly measure the calendar's
@@ -29,13 +29,15 @@ export interface CalendarItemWeekNameProps extends Omit<TextProps, "children"> {
   height: number;
   /** The theme of the week name, useful for customizing the component. */
   theme?: CalendarItemWeekNameTheme;
+  /** Optional TextProps to spread to the <Text> component. */
+  textProps?: Omit<TextProps, "children">;
 }
 
 export const CalendarItemWeekName = ({
   children,
   height,
   theme,
-  ...rest
+  textProps,
 }: CalendarItemWeekNameProps) => {
   const { colors } = useTheme();
   const { containerStyles, contentStyles } = useMemo(() => {
@@ -50,7 +52,7 @@ export const CalendarItemWeekName = ({
 
   return (
     <View style={containerStyles}>
-      <Text {...rest} style={contentStyles}>
+      <Text {...textProps} style={contentStyles}>
         {children}
       </Text>
     </View>
