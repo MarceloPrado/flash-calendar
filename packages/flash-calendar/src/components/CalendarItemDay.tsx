@@ -202,6 +202,7 @@ export const CalendarItemDay = ({
             {...textProps}
             style={{
               ...content,
+              ...(textProps?.style ?? ({} as object)),
               ...theme?.base?.({ ...metadata, isPressed }).content,
               ...theme?.[metadata.state]?.({ ...metadata, isPressed }).content,
             }}
