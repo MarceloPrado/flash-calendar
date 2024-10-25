@@ -128,6 +128,38 @@ Check out the full source code [here](https://github.com/MarceloPrado/flash-cale
 
 Sometimes, you need more than just changing styles. You might want to change the layout, add new components, or even remove some of them. In this case, you can easily build your own calendar using the base Calendar components from [above](#anatomy).
 
+The sky is the limit here. Here are two demos from the example app:
+
+<HStack spacing={24} alignItems="flex-start">
+
+<VStack spacing={12} alignItems="center">
+  <VStack spacing={4} alignItems="center">
+
+    <span style={{ fontWeight: "bold" }}>Windows XP calendar • [source code](https://github.com/MarceloPrado/flash-calendar/blob/468c7153257489a3a527bd400d532223bf35dd0c/apps/example/src/components/ThemeableCalendar/Calendar.stories.tsx#L41-L106)</span>
+    <span style={{ opacity: 0.8 }}>A nostalgic rebuild to showcase what's possible with Flash Calendar.</span>
+
+  </VStack>
+  <video controls width={300}>
+    <source src={windowsXpCalendarVideo} type="video/mp4" />
+  </video>
+</VStack>
+
+<VStack spacing={12} alignItems="center">
+  <VStack spacing={4} alignItems="center">
+
+    <span style={{ fontWeight: "bold", margin: 0 }}>Perf calendar • [source code](https://github.com/MarceloPrado/flash-calendar/blob/468c7153257489a3a527bd400d532223bf35dd0c/apps/example/src/components/PerfTestCalendar/PerfTestCalendarList.stories.tsx#L47-L67)</span>
+    <span style={{ opacity: 0.8, margin: 0 }}>A calendar built to measure re-renders.</span>
+
+  </VStack>
+  <video controls width={300}>
+    <source src={perfCalendarVideo} type="video/mp4" />
+  </video>
+</VStack>
+
+</HStack>
+
+### Changing the text props
+
 You can override the `textProps` to control the nested [Text components](https://reactnative.dev/docs/text). For example [disabling font scaling](https://reactnative.dev/docs/text#allowfontscaling) for accessibility on the Calendar's Day:
 
 ```tsx
@@ -187,6 +219,8 @@ export const PerfTestCalendarItemDayWithContainer = ({
   );
 };
 ```
+
+### Overriding the hovered and focused interaction states
 
 If you need to support web [Pressable InteractionStates](https://necolas.github.io/react-native-web/docs/pressable/#examples), you can also leverage `isHovered` and `isFocused` alongside `isPressed`:
 
@@ -265,33 +299,3 @@ export const LinearCalendar = memo(() => {
   );
 });
 ```
-
-The sky is the limit here. Here are two demos from the example app:
-
-<HStack spacing={24} alignItems="flex-start">
-
-<VStack spacing={12} alignItems="center">
-  <VStack spacing={4} alignItems="center">
-
-    <span style={{ fontWeight: "bold" }}>Windows XP calendar • [source code](https://github.com/MarceloPrado/flash-calendar/blob/468c7153257489a3a527bd400d532223bf35dd0c/apps/example/src/components/ThemeableCalendar/Calendar.stories.tsx#L41-L106)</span>
-    <span style={{ opacity: 0.8 }}>A nostalgic rebuild to showcase what's possible with Flash Calendar.</span>
-
-  </VStack>
-  <video controls width={300}>
-    <source src={windowsXpCalendarVideo} type="video/mp4" />
-  </video>
-</VStack>
-
-<VStack spacing={12} alignItems="center">
-  <VStack spacing={4} alignItems="center">
-
-    <span style={{ fontWeight: "bold", margin: 0 }}>Perf calendar • [source code](https://github.com/MarceloPrado/flash-calendar/blob/468c7153257489a3a527bd400d532223bf35dd0c/apps/example/src/components/PerfTestCalendar/PerfTestCalendarList.stories.tsx#L47-L67)</span>
-    <span style={{ opacity: 0.8, margin: 0 }}>A calendar built to measure re-renders.</span>
-
-  </VStack>
-  <video controls width={300}>
-    <source src={perfCalendarVideo} type="video/mp4" />
-  </video>
-</VStack>
-
-</HStack>

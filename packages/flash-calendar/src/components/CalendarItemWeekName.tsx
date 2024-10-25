@@ -45,10 +45,17 @@ export const CalendarItemWeekName = ({
     const contentStyles = [
       styles.content,
       { color: colors.content.primary },
+      textProps?.style,
       theme?.content,
     ];
     return { containerStyles, contentStyles };
-  }, [colors.content.primary, height, theme?.container, theme?.content]);
+  }, [
+    colors.content.primary,
+    height,
+    theme?.container,
+    theme?.content,
+    textProps?.style,
+  ]);
 
   return (
     <View style={containerStyles}>
