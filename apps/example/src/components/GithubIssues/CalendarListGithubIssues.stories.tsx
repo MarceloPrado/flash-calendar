@@ -1,12 +1,15 @@
 import type {
+  CalendarMonth,
   CalendarOnDayPress,
   CalendarTheme,
 } from "@marceloterreiro/flash-calendar";
 import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+import type { FlashListProps } from "@shopify/flash-list";
 import type { Meta } from "@storybook/react";
-import React, { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Alert, Text, View } from "react-native";
 import { useTheme } from "@/hooks/useTheme";
+import { VStack } from "@/components/VStack";
 
 const CalendarMeta: Meta<typeof Calendar> = {
   title: "Calendar.List/Github Issues",
@@ -120,6 +123,37 @@ export const Issue38 = () => {
         calendarInitialMonthId="2024-06-01"
         onCalendarDayPress={handleCalendarDayPress}
         theme={customTheme}
+      />
+    </View>
+  );
+};
+
+// See more at: https://github.com/MarceloPrado/flash-calendar/issues/65
+export const ListenToVisibleMonth = () => {
+  const [selectedDate, setSelectedDate] = useState(today);
+  const [visibleMonth, setVisibleMonth] = useState(today);
+
+  const handleViewableItemsChanged = useCallback<
+    NonNullable<FlashListProps<CalendarMonth>["onViewableItemsChanged"]>
+  >(({ viewableItems }) => {
+    const firstVisibleItem = viewableItems.find((item) => item.isViewable);
+
+    if (firstVisibleItem) {
+      setVisibleMonth(firstVisibleItem.item.id);
+    }
+  }, []);
+
+  return (
+    <View style={{ flex: 1, gap: 24 }}>
+      <View style={{ gap: 12 }}>
+        <Text>Selected date: {selectedDate}</Text>
+        <Text>Visible month: {visibleMonth}</Text>
+      </View>
+      <Calendar.List
+        calendarActiveDateRanges={[{ startId: today, endId: today }]}
+        calendarInitialMonthId="2024-06-01"
+        onCalendarDayPress={setSelectedDate}
+        onViewableItemsChanged={handleViewableItemsChanged}
       />
     </View>
   );
