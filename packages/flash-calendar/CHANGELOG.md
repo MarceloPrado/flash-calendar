@@ -1,5 +1,11 @@
 # @marceloterreiro/flash-calendar
 
+## 1.2.0
+
+### Minor Changes
+
+- f3b9ec8: Add the ability to pass TextProps to the <Text> fields especially when supporting accessibility
+
 ## 1.1.0
 
 ### Minor Changes
