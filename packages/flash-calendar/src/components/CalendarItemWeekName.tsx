@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { useMemo } from "react";
-import type { TextStyle, ViewStyle } from "react-native";
+import type { TextProps, TextStyle, ViewStyle } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
 
 import { lightTheme } from "@/helpers/tokens";
@@ -29,12 +29,15 @@ export interface CalendarItemWeekNameProps {
   height: number;
   /** The theme of the week name, useful for customizing the component. */
   theme?: CalendarItemWeekNameTheme;
+  /** Optional TextProps to spread to the <Text> component. */
+  textProps?: Omit<TextProps, "children">;
 }
 
 export const CalendarItemWeekName = ({
   children,
   height,
   theme,
+  textProps,
 }: CalendarItemWeekNameProps) => {
   const { colors } = useTheme();
   const { containerStyles, contentStyles } = useMemo(() => {
@@ -42,14 +45,23 @@ export const CalendarItemWeekName = ({
     const contentStyles = [
       styles.content,
       { color: colors.content.primary },
+      textProps?.style,
       theme?.content,
     ];
     return { containerStyles, contentStyles };
-  }, [colors.content.primary, height, theme?.container, theme?.content]);
+  }, [
+    colors.content.primary,
+    height,
+    theme?.container,
+    theme?.content,
+    textProps?.style,
+  ]);
 
   return (
     <View style={containerStyles}>
-      <Text style={contentStyles}>{children}</Text>
+      <Text {...textProps} style={contentStyles}>
+        {children}
+      </Text>
     </View>
   );
 };

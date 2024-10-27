@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { useCallback, useMemo } from "react";
-import type { TextStyle, ViewStyle } from "react-native";
+import type { TextProps, TextStyle, ViewStyle } from "react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import type { BaseTheme } from "@/helpers/tokens";
@@ -142,6 +142,8 @@ export interface CalendarItemDayProps {
   >;
   /** The cell's height */
   height: number;
+  /** Optional TextProps to spread to the <Text> component. */
+  textProps?: Omit<TextProps, "children" | "onPress">;
 }
 
 /**
@@ -158,6 +160,7 @@ export const CalendarItemDay = ({
   theme,
   height,
   metadata,
+  textProps,
 }: CalendarItemDayProps) => {
   const baseTheme = useTheme();
   const baseStyles = useMemo(() => {
@@ -196,8 +199,10 @@ export const CalendarItemDay = ({
         const { content } = baseStyles[metadata.state](params);
         return (
           <Text
+            {...textProps}
             style={{
               ...content,
+              ...(textProps?.style ?? ({} as object)),
               ...theme?.base?.({ ...metadata, isPressed }).content,
               ...theme?.[metadata.state]?.({ ...metadata, isPressed }).content,
             }}
