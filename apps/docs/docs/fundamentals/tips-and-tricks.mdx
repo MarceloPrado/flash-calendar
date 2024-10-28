@@ -166,3 +166,39 @@ user system's theme.
 **Note**: you should avoid using this prop. Instead, your app should
 support dynamic themes that react to the user's system preferences. The prop is
 provided as an escape hatch for apps that doesn't support dynamic themes yet.
+
+## Listening to the visible months
+
+You can listen to which months are currently visible by hooking into the [`onViewableItemsChange`](https://shopify.github.io/flash-list/docs/usage#onviewableitemschanged) prop:
+
+```tsx
+export const ListenToVisibleMonth = () => {
+  const [selectedDate, setSelectedDate] = useState(today);
+  const [visibleMonth, setVisibleMonth] = useState(today);
+
+  const handleViewableItemsChanged = useCallback<
+    NonNullable<FlashListProps<CalendarMonth>["onViewableItemsChanged"]>
+  >(({ viewableItems }) => {
+    const firstVisibleItem = viewableItems.find((item) => item.isViewable);
+
+    if (firstVisibleItem) {
+      setVisibleMonth(firstVisibleItem.item.id);
+    }
+  }, []);
+
+  return (
+    <View style={{ flex: 1, gap: 24 }}>
+      <View style={{ gap: 12 }}>
+        <Text>Selected date: {selectedDate}</Text>
+        <Text>Visible month: {visibleMonth}</Text>
+      </View>
+      <Calendar.List
+        calendarActiveDateRanges={[{ startId: today, endId: today }]}
+        calendarInitialMonthId="2024-11-01"
+        onCalendarDayPress={setSelectedDate}
+        onViewableItemsChanged={handleViewableItemsChanged}
+      />
+    </View>
+  );
+};
+```
