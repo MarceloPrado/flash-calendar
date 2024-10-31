@@ -9,7 +9,6 @@ import type { Meta } from "@storybook/react";
 import { useCallback, useMemo, useState } from "react";
 import { Alert, Text, View } from "react-native";
 import { useTheme } from "@/hooks/useTheme";
-import { VStack } from "@/components/VStack";
 
 const CalendarMeta: Meta<typeof Calendar> = {
   title: "Calendar.List/Github Issues",

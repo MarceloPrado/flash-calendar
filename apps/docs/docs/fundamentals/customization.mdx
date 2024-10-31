@@ -219,3 +219,83 @@ export const PerfTestCalendarItemDayWithContainer = ({
   );
 };
 ```
+
+### Overriding the hovered and focused interaction states
+
+If you need to support web [Pressable InteractionStates](https://necolas.github.io/react-native-web/docs/pressable/#examples), you can also leverage `isHovered` and `isFocused` alongside `isPressed`:
+
+```tsx
+import { CalendarTheme } from "@marceloterreiro/flash-calendar";
+
+const linearAccent = "#585ABF";
+
+const linearTheme: CalendarTheme = {
+  rowMonth: {
+    content: {
+      textAlign: "left",
+      color: "rgba(255, 255, 255, 0.5)",
+      fontWeight: "700",
+    },
+  },
+  rowWeek: {
+    container: {
+      borderBottomWidth: 1,
+      borderBottomColor: "rgba(255, 255, 255, 0.1)",
+      borderStyle: "solid",
+    },
+  },
+  itemWeekName: { content: { color: "rgba(255, 255, 255, 0.5)" } },
+  itemDayContainer: {
+    activeDayFiller: {
+      backgroundColor: linearAccent,
+    },
+  },
+  itemDay: {
+    idle: ({ isPressed, isHovered, isWeekend }) => ({
+      container: {
+        backgroundColor: isPressed || isHovered ? linearAccent : "transparent",
+        borderRadius: 4,
+      },
+      content: {
+        color: isWeekend && !isPressed ? "rgba(255, 255, 255, 0.5)" : "#ffffff",
+      },
+    }),
+    today: ({ isPressed, isHovered }) => ({
+      container: {
+        borderColor: "rgba(255, 255, 255, 0.5)",
+        borderRadius: isPressed || isHovered ? 4 : 30,
+        backgroundColor: isPressed || isHovered ? linearAccent : "transparent",
+      },
+      content: {
+        color: isPressed || isHovered ? "#ffffff" : "rgba(255, 255, 255, 0.5)",
+      },
+    }),
+    active: ({ isEndOfRange, isStartOfRange }) => ({
+      container: {
+        backgroundColor: linearAccent,
+        borderTopLeftRadius: isStartOfRange ? 4 : 0,
+        borderBottomLeftRadius: isStartOfRange ? 4 : 0,
+        borderTopRightRadius: isEndOfRange ? 4 : 0,
+        borderBottomRightRadius: isEndOfRange ? 4 : 0,
+      },
+      content: {
+        color: "#ffffff",
+      },
+    }),
+  },
+};
+
+export const LinearCalendar = memo(() => {
+  return (
+    <Calendar
+      calendarDayHeight={30}
+      calendarFirstDayOfWeek="sunday"
+      calendarMonthId={toDateId(new Date())}
+      calendarRowHorizontalSpacing={16}
+      calendarRowVerticalSpacing={16}
+      onCalendarDayPress={(dateId) => console.log(`Pressed date ${dateId}`)}
+      theme={linearTheme}
+    />
+  );
+});
+```

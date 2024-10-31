@@ -8,6 +8,14 @@ import type { CalendarDayMetadata } from "@/hooks/useCalendar";
 import { useOptimizedDayMetadata } from "@/hooks/useOptimizedDayMetadata";
 import { useTheme } from "@/hooks/useTheme";
 
+// react-native-web/overrides.ts
+declare module "react-native" {
+  interface PressableStateCallbackType {
+    hovered?: boolean;
+    focused?: boolean;
+  }
+}
+
 const styles = StyleSheet.create({
   baseContainer: {
     padding: 6,
@@ -33,6 +41,8 @@ type CalendarItemDayTheme = Record<
     isStartOfRange: boolean;
     isEndOfRange: boolean;
     isPressed: boolean;
+    isHovered?: boolean;
+    isFocused?: boolean;
   }) => DayTheme
 >;
 
@@ -43,28 +53,29 @@ const buildBaseStyles = (theme: BaseTheme): CalendarItemDayTheme => {
   };
 
   return {
-    active: ({ isPressed, isStartOfRange, isEndOfRange }) => {
-      const baseStyles: DayTheme & { container: ViewStyle } = isPressed
-        ? {
-            container: {
-              ...styles.baseContainer,
-              backgroundColor: theme.colors.background.tertiary,
-            },
-            content: {
-              ...baseContent,
-              color: theme.colors.content.primary,
-            },
-          }
-        : {
-            container: {
-              ...styles.baseContainer,
-              backgroundColor: theme.colors.background.inverse.primary,
-            },
-            content: {
-              ...baseContent,
-              color: theme.colors.content.inverse.primary,
-            },
-          };
+    active: ({ isPressed, isHovered, isStartOfRange, isEndOfRange }) => {
+      const baseStyles: DayTheme & { container: ViewStyle } =
+        isPressed || isHovered
+          ? {
+              container: {
+                ...styles.baseContainer,
+                backgroundColor: theme.colors.background.tertiary,
+              },
+              content: {
+                ...baseContent,
+                color: theme.colors.content.primary,
+              },
+            }
+          : {
+              container: {
+                ...styles.baseContainer,
+                backgroundColor: theme.colors.background.inverse.primary,
+              },
+              content: {
+                ...baseContent,
+                color: theme.colors.content.inverse.primary,
+              },
+            };
 
       baseStyles.container.borderRadius = 0;
       if (isStartOfRange) {
@@ -87,8 +98,8 @@ const buildBaseStyles = (theme: BaseTheme): CalendarItemDayTheme => {
         color: theme.colors.content.disabled,
       },
     }),
-    idle: ({ isPressed }) => {
-      return isPressed
+    idle: ({ isPressed, isHovered }) => {
+      return isPressed || isHovered
         ? {
             container: {
               ...styles.baseContainer,
@@ -104,8 +115,8 @@ const buildBaseStyles = (theme: BaseTheme): CalendarItemDayTheme => {
             content: baseContent,
           };
     },
-    today: ({ isPressed }) => {
-      return isPressed
+    today: ({ isPressed, isHovered }) => {
+      return isPressed || isHovered
         ? {
             container: {
               ...styles.baseContainer,
@@ -136,6 +147,8 @@ export interface CalendarItemDayProps {
       (
         params: CalendarDayMetadata & {
           isPressed: boolean;
+          isHovered?: boolean;
+          isFocused?: boolean;
         }
       ) => Partial<DayTheme>
     >
@@ -175,9 +188,15 @@ export const CalendarItemDay = ({
     <Pressable
       disabled={metadata.state === "disabled"}
       onPress={handlePress}
-      style={({ pressed: isPressed }) => {
+      style={({
+        pressed: isPressed,
+        hovered: isHovered,
+        focused: isFocused,
+      }) => {
         const params = {
           isPressed,
+          isHovered,
+          isFocused,
           isEndOfRange: metadata.isEndOfRange ?? false,
           isStartOfRange: metadata.isStartOfRange ?? false,
         };
@@ -190,9 +209,11 @@ export const CalendarItemDay = ({
         };
       }}
     >
-      {({ pressed: isPressed }) => {
+      {({ pressed: isPressed, hovered: isHovered, focused: isFocused }) => {
         const params = {
           isPressed,
+          isHovered,
+          isFocused,
           isEndOfRange: metadata.isEndOfRange ?? false,
           isStartOfRange: metadata.isStartOfRange ?? false,
         };
@@ -203,8 +224,14 @@ export const CalendarItemDay = ({
             style={{
               ...content,
               ...(textProps?.style ?? ({} as object)),
-              ...theme?.base?.({ ...metadata, isPressed }).content,
-              ...theme?.[metadata.state]?.({ ...metadata, isPressed }).content,
+              ...theme?.base?.({ ...metadata, isPressed, isHovered, isFocused })
+                .content,
+              ...theme?.[metadata.state]?.({
+                ...metadata,
+                isPressed,
+                isHovered,
+                isFocused,
+              }).content,
             }}
           >
             {children}
