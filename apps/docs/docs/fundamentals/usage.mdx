@@ -3,6 +3,7 @@ sidebar_position: 2
 ---
 
 import Image from "@theme/IdealImage";
+import Admonition from "@theme/Admonition";
 import { HStack } from "@site/src/components/HStack";
 import basicCalendar from "./assets/basic-calendar.png";
 import basicCalendarList from "./assets/basic-calendar-list.png";
@@ -223,6 +224,52 @@ export const CalendarCustomFormatting = () => {
 
 <Image img={customFormatting} width={250} />
 
+</HStack>
+
+#### Note on referential equality
+
+Due to Flash Calendar's architecture, it's important to make your date
+formatting functions stable. You should move them outside the component
+scope (preferred) or memoize them with `useCallback`. Refer to [Issue
+69](https://github.com/MarceloPrado/flash-calendar/issues/69) for more.
+
+<HStack spacing={12}>
+  <Admonition type="tip" title="DO">
+    Make the formatting functions stable.
+
+    ```tsx
+    const today = toDateId(new Date());
+
+    const Example = () => {
+      return (
+        <View style={{ flex: 1 }}>
+          <Calendar
+            calendarMonthId={today}
+            getCalendarWeekDayFormat={formatWeekDay}
+          />
+        </View>
+      );
+    };
+
+    const formatWeekDay = (date: Date) =>
+      format(date, "EEEEEE");
+    ```
+
+  </Admonition>
+  <Admonition type="danger" title="DON'T">
+    Break referential equality by inlining the formatting functions.
+
+    ```tsx
+    <Calendar
+      calendarMonthId={today}
+      getCalendarWeekDayFormat={(date) =>
+        // prettier-ignore
+        format(date, "EEEEEE")
+      }
+    />
+    ```
+
+  </Admonition>
 </HStack>
 
 ## Min, max and disabled dates
