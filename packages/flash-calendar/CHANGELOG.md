@@ -1,5 +1,11 @@
 # @marceloterreiro/flash-calendar
 
+## 1.3.0
+
+### Minor Changes
+
+- b66668c: Added support for react-native-web Pressable InteractionState to support hovered and focused alongside pressed
+
 ## 1.2.0
 
 ### Minor Changes
