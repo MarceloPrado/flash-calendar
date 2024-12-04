@@ -6,7 +6,7 @@ import {
 import type { Meta } from "@storybook/react";
 import { addDays, format } from "date-fns";
 import { useEffect, useState } from "react";
-import { Button, View } from "react-native";
+import { View } from "react-native";
 
 const CalendarMeta: Meta<typeof Calendar> = {
   title: "Calendar/Github Issues",
