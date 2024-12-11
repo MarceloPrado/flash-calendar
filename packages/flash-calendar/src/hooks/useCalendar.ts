@@ -132,6 +132,12 @@ export interface UseCalendarParams {
    * unless they are part of an active range.
    */
   calendarDisabledDateIds?: string[];
+  /**
+   * When set to `true`, the calendar will show a loading state. This is useful
+   * when you're fetching data to populate the calendar.
+   * @default false
+   */
+  isLoading?: boolean;
 }
 
 type GetStateFields = Pick<
@@ -140,6 +146,7 @@ type GetStateFields = Pick<
   | "calendarMinDateId"
   | "calendarMaxDateId"
   | "calendarDisabledDateIds"
+  | "isLoading"
 > & {
   todayId?: string;
   id: string;
@@ -155,6 +162,7 @@ export const getStateFields = ({
   calendarMinDateId,
   calendarMaxDateId,
   calendarDisabledDateIds,
+  isLoading = false,
 }: GetStateFields): CalendarDayStateFields => {
   const activeRange = calendarActiveDateRanges?.find(({ startId, endId }) => {
     // Regular range
@@ -178,7 +186,9 @@ export const getStateFields = ({
 
   const isToday = todayId === id;
 
-  const state: DayState = activeRange
+  const state: DayState = isLoading
+    ? "loading"
+    : activeRange
     ? ("active" as const)
     : isDisabled
     ? "disabled"

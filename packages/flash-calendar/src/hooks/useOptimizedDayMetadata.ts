@@ -68,7 +68,7 @@ export const useOptimizedDayMetadata = (
           calendarActiveDateRanges: ranges,
         });
 
-      if (state === "active") {
+      if (state === "active" && baseMetadata.state !== "loading") {
         setMetadata((prev) => ({
           ...prev,
           isStartOfRange,
