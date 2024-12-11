@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export type DayState = "idle" | "active" | "today" | "disabled";
+export type DayState = "idle" | "active" | "today" | "disabled" | "loading";
 
 interface DayTheme {
   container: Omit<ViewStyle, "borderRadius">;
@@ -134,6 +134,13 @@ const buildBaseStyles = (theme: BaseTheme): CalendarItemDayTheme => {
             content: baseContent,
           };
     },
+    loading: () => ({
+      container: {
+        ...styles.baseContainer,
+        backgroundColor: theme.colors.background.tertiary,
+      },
+      content: { ...baseContent, opacity: 0 },
+    }),
   };
 };
 
@@ -186,7 +193,7 @@ export const CalendarItemDay = ({
 
   return (
     <Pressable
-      disabled={metadata.state === "disabled"}
+      disabled={metadata.state === "disabled" || metadata.state === "loading"}
       onPress={handlePress}
       style={({
         pressed: isPressed,

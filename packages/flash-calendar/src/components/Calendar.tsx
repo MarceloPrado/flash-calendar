@@ -95,6 +95,11 @@ export interface CalendarProps extends UseCalendarParams {
   onCalendarDayPress: CalendarOnDayPress;
   /** Theme to customize the calendar component. */
   theme?: CalendarTheme;
+  /**
+   * The component to show when the calendar is loading.
+   * @description This is only shown when `isLoading` is `true`.
+   */
+  loadingComponent?: React.ReactNode;
 }
 
 const BaseCalendar = memo(function BaseCalendar(props: CalendarProps) {
@@ -107,6 +112,7 @@ const BaseCalendar = memo(function BaseCalendar(props: CalendarProps) {
     calendarWeekHeaderHeight = calendarDayHeight,
     onCalendarDayPress,
     theme,
+    loadingComponent,
 
     ...buildCalendarParams
   } = props;
@@ -139,6 +145,20 @@ const BaseCalendar = memo(function BaseCalendar(props: CalendarProps) {
       {weeksList.map((week, index) => (
         <CalendarRowWeek key={index}>
           {week.map((dayProps) => {
+            if (dayProps.state === "loading" && loadingComponent) {
+              return (
+                <CalendarItemDayContainer
+                  dayHeight={calendarDayHeight}
+                  daySpacing={calendarRowHorizontalSpacing}
+                  isStartOfWeek={dayProps.isStartOfWeek}
+                  key={dayProps.id}
+                  theme={theme?.itemDayContainer}
+                >
+                  {loadingComponent}
+                </CalendarItemDayContainer>
+              );
+            }
+
             if (dayProps.isDifferentMonth) {
               return (
                 <CalendarItemDayContainer
