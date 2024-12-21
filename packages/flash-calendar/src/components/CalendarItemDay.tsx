@@ -248,7 +248,7 @@ interface CalendarItemDayContainerTheme {
   spacer?: ViewStyle;
   /** An absolute positioned filler to join the active days together in a single
    * complete range. */
-  activeDayFiller?: ViewStyle;
+  activeDayFiller?: ViewStyle | ((params: CalendarDayMetadata) => ViewStyle);
 }
 
 export interface CalendarItemDayContainerProps {
@@ -266,6 +266,7 @@ export interface CalendarItemDayContainerProps {
   daySpacing: number;
   /** The day's height */
   dayHeight: number;
+  metadata?: CalendarDayMetadata;
 }
 
 export const CalendarItemDayContainer = ({
@@ -275,6 +276,7 @@ export const CalendarItemDayContainer = ({
   theme,
   daySpacing,
   dayHeight,
+  metadata,
 }: CalendarItemDayContainerProps) => {
   const baseTheme = useTheme();
   const spacerStyles = useMemo<ViewStyle>(() => {
@@ -299,13 +301,16 @@ export const CalendarItemDayContainer = ({
       right: -(daySpacing + 1), // +1 to cover the 1px gap
       width: daySpacing + 2, // +2 to cover the 1px gap (distributes evenly on both sides)
       backgroundColor: baseTheme.colors.background.inverse.primary,
-      ...theme?.activeDayFiller,
+      ...(typeof theme?.activeDayFiller === "function" && !!metadata
+        ? theme.activeDayFiller(metadata)
+        : theme?.activeDayFiller),
     };
   }, [
     baseTheme.colors.background.inverse.primary,
     daySpacing,
+    metadata,
     shouldShowActiveDayFiller,
-    theme?.activeDayFiller,
+    theme,
   ]);
 
   return (
@@ -351,6 +356,7 @@ export const CalendarItemDayWithContainer = ({
       dayHeight={dayHeight}
       daySpacing={daySpacing}
       isStartOfWeek={metadata.isStartOfWeek}
+      metadata={metadata}
       shouldShowActiveDayFiller={
         metadata.isRangeValid && !metadata.isEndOfWeek
           ? !metadata.isEndOfRange

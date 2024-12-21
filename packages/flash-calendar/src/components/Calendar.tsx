@@ -146,6 +146,7 @@ const BaseCalendar = memo(function BaseCalendar(props: CalendarProps) {
                   daySpacing={calendarRowHorizontalSpacing}
                   isStartOfWeek={dayProps.isStartOfWeek}
                   key={dayProps.id}
+                  metadata={dayProps}
                   theme={theme?.itemDayContainer}
                 >
                   <CalendarItemEmpty
