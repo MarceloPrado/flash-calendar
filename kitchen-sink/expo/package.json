@@ -16,15 +16,15 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@gorhom/bottom-sheet": "^4",
+    "@gorhom/bottom-sheet": "^5.2.4",
     "@marceloterreiro/flash-calendar": "*",
     "@shopify/flash-list": "^2.0.3",
     "expo": "53.0.22",
     "expo-status-bar": "~1.11.1",
     "react": "19.0.0",
     "react-native": "0.79.5",
-    "react-native-gesture-handler": "~2.14.0",
-    "react-native-reanimated": "~3.6.2"
+    "react-native-gesture-handler": "~2.24.0",
+    "react-native-reanimated": "~3.17.4"
   },
   "devDependencies": {
     "@babel/core": "^7.28.3",
