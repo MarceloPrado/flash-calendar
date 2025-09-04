@@ -1,4 +1,4 @@
-import {
+import React, {
   Children,
   Fragment,
   isValidElement,
@@ -30,7 +30,7 @@ export interface VStackProps {
 }
 
 function isFragment(child: ReactNode): child is ReactElement {
-  return isValidElement(child) && child.type === Fragment;
+  return isValidElement(child) && child.type === React.Fragment;
 }
 
 export function VStack({
@@ -48,13 +48,19 @@ export function VStack({
       justifyContent,
       flex: grow ? 1 : undefined,
     }),
-    [alignItems, grow, justifyContent, spacing]
+    [alignItems, grow, justifyContent, spacing],
   );
 
   return (
     <View style={containerStyles}>
       {Children.toArray(children)
-        .map((c) => (isFragment(c) ? c.props.children : c))
+        .map((c) => {
+          if (isFragment(c)) {
+            const element = c as ReactElement;
+            return (element.props as any).children as ReactNode;
+          }
+          return c;
+        })
         .flat()
         .filter((c) => c !== null && typeof c !== "undefined")
         .map((child, i) => (

@@ -1,14 +1,8 @@
 /* eslint-env node */
-
 const path = require("path");
 
+const withStorybook = require("@storybook/react-native/metro/withStorybook");
 const { getDefaultConfig } = require("expo/metro-config");
-const { generate } = require("@storybook/react-native/scripts/generate");
-
-// Storybook setup
-generate({
-  configPath: path.resolve(__dirname, "./.storybook"),
-});
 
 // Find the project and workspace directories
 const projectRoot = __dirname;
@@ -29,4 +23,8 @@ config.resolver.nodeModulesPaths = [
 // Storybook setup
 config.transformer.unstable_allowRequireContext = true;
 
-module.exports = config;
+module.exports = withStorybook(config, {
+  enabled: true,
+  // Path to your storybook config
+  configPath: path.resolve(__dirname, "./.storybook"),
+});
