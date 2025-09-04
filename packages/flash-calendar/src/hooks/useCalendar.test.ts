@@ -58,10 +58,10 @@ describe("buildCalendar", () => {
 
     // Filler days are built correctly
     expect(
-      [sunday, monday, tuesday, wednesday].every((day) => day.isDifferentMonth)
+      [sunday, monday, tuesday, wednesday].every((day) => day.isDifferentMonth),
     ).toBe(true);
     expect(
-      [thursday, friday, saturday].every((day) => day.isDifferentMonth)
+      [thursday, friday, saturday].every((day) => day.isDifferentMonth),
     ).toBe(false);
 
     // Labels are correct
@@ -95,8 +95,8 @@ describe("buildCalendar", () => {
     expect(saturday.isEndOfWeek).toBe(true);
     expect(
       [sunday, monday, tuesday, wednesday, thursday].every(
-        (day) => day.isDifferentMonth
-      )
+        (day) => day.isDifferentMonth,
+      ),
     ).toBe(false);
     expect([friday, saturday].every((day) => day.isDifferentMonth)).toBe(true);
 
@@ -374,7 +374,7 @@ describe("buildCalendar", () => {
       expect(
         january.weeksList
           .flatMap((week) => week.map((day) => day.state))
-          .every((state) => state === "idle")
+          .every((state) => state === "idle"),
       ).toBeTrue();
     });
   });
