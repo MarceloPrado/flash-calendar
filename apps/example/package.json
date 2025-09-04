@@ -4,17 +4,19 @@
   "private": true,
   "main": "./index.js",
   "scripts": {
-    "android": "expo start --android",
+    "android": "expo run:android",
     "clean": "rm -rf dist && rm -rf node_modules",
     "dev": "expo start",
-    "ios": "expo start --ios",
+    "ios": "expo run:ios",
     "lint": "eslint src",
     "start": "expo start",
     "typecheck": "tsc --noEmit",
     "storybook-generate": "sb-rn-get-stories",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "prebuild": "bunx expo prebuild"
   },
   "dependencies": {
+    "@gorhom/bottom-sheet": "^5.2.4",
     "@marceloterreiro/flash-calendar": "*",
     "@shopify/flash-list": "^2.0.3",
     "date-fns": "^3.3.1",
@@ -22,23 +24,27 @@
     "expo-status-bar": "~1.11.1",
     "polished": "^4.2.2",
     "react": "19.0.0",
-    "react-native": "0.79.5"
+    "react-native": "0.79.5",
+    "react-native-gesture-handler": "~2.24.0",
+    "react-native-reanimated": "~3.17.4",
+    "react-native-svg": "15.11.2"
   },
   "devDependencies": {
     "@babel/core": "^7.28.3",
     "@marceloterreiro/eslint-config": "*",
     "@marceloterreiro/tsconfig": "*",
-    "@react-native-async-storage/async-storage": "^1.21.0",
-    "@react-native-community/datetimepicker": "^7.6.2",
+    "@react-native-async-storage/async-storage": "2.1.2",
+    "@react-native-community/datetimepicker": "^8.4.4",
     "@react-native-community/slider": "^5.0.1",
     "@storybook/addon-ondevice-actions": "^9.1.1",
+    "@storybook/addon-ondevice-backgrounds": "^9.1.1",
     "@storybook/addon-ondevice-controls": "^9.1.1",
     "@storybook/react-native": "^9.1.1",
     "@types/react": "~19.0.0",
     "babel-loader": "^10.0.0",
     "eslint": "^8.56.0",
-    "react-dom": "^19.0.0",
-    "react-native-safe-area-context": "^5.6.1",
+    "react-dom": "19.0.0",
+    "react-native-safe-area-context": "5.4.0",
     "typescript": "^5.3.3"
   }
 }

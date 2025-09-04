@@ -26,5 +26,5 @@ config.transformer.unstable_allowRequireContext = true;
 module.exports = withStorybook(config, {
   enabled: true,
   // Path to your storybook config
-  configPath: path.resolve(__dirname, "./.storybook"),
+  configPath: path.resolve(__dirname, "./.rnstorybook"),
 });

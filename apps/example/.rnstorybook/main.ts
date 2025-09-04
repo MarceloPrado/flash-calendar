@@ -1,4 +1,5 @@
 import * as path from "path";
+import type { StorybookConfig } from "@storybook/react-native";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,11 +15,12 @@ const exampleStories = path.resolve(
   "../src/components/**/*.stories.?(ts|tsx|js|jsx)",
 );
 
-const main = {
+const main: StorybookConfig = {
   stories: [flashCalendarStories, exampleStories],
   addons: [
     "@storybook/addon-ondevice-controls",
     "@storybook/addon-ondevice-actions",
+    "@storybook/addon-ondevice-backgrounds",
   ],
 };
 
