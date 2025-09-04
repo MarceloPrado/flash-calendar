@@ -11,7 +11,7 @@ export const CalendarCustomFormatting = () => {
       getCalendarDayFormat={format("dd")}
       getCalendarMonthFormat={format("MMMM yyyy (LL/yyyy)")}
       getCalendarWeekDayFormat={format("E")}
-      onCalendarDayPress={(dateId) => {
+      onCalendarDayPress={(dateId: string) => {
         console.log(`Clicked on ${dateId}`);
       }}
     />

@@ -32,7 +32,7 @@
     "@docusaurus/tsconfig": "^3.4.0",
     "@docusaurus/types": "^3.4.0",
     "@marceloterreiro/eslint-config": "*",
-    "typescript": "^5.3.3"
+    "typescript": "^5.8.3"
   },
   "browserslist": {
     "production": [

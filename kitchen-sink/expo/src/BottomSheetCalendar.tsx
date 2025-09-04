@@ -32,7 +32,9 @@ export const BottomSheetCalendar = () => {
           <Calendar.List
             CalendarScrollComponent={SafeFlashList}
             calendarInitialMonthId="2024-02-01"
-            onCalendarDayPress={(dateId) => console.log(`Pressed ${dateId}`)}
+            onCalendarDayPress={(dateId: string) =>
+              console.log(`Pressed ${dateId}`)
+            }
           />
         </View>
       </BottomSheet>

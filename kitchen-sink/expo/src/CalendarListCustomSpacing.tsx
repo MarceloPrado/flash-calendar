@@ -10,7 +10,9 @@ export const CalendarListCompact = () => {
         calendarRowHorizontalSpacing={0}
         calendarRowVerticalSpacing={4}
         calendarSpacing={10}
-        onCalendarDayPress={(dateId) => console.log(`Pressed ${dateId}`)}
+        onCalendarDayPress={(dateId: string) =>
+          console.log(`Pressed ${dateId}`)
+        }
       />
     </View>
   );

@@ -14,15 +14,18 @@ export const SlowExampleAddressed = () => {
     endId: dateId,
   }));
 
-  const handleCalendarDayPress = useCallback<CalendarOnDayPress>((dateId) => {
-    setDateIds((dateIds) => {
-      if (dateIds.includes(dateId)) {
-        return dateIds.filter((id) => id !== dateId);
-      } else {
-        return [...dateIds, dateId];
-      }
-    });
-  }, []);
+  const handleCalendarDayPress = useCallback<CalendarOnDayPress>(
+    (dateId: string) => {
+      setDateIds((dateIds) => {
+        if (dateIds.includes(dateId)) {
+          return dateIds.filter((id) => id !== dateId);
+        } else {
+          return [...dateIds, dateId];
+        }
+      });
+    },
+    [],
+  );
 
   return (
     <View style={{ paddingTop: 80, flex: 1, width: "100%" }}>

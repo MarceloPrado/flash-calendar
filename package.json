@@ -34,7 +34,7 @@
     "prettier": "^2.8.8",
     "react-loadable": "npm:@docusaurus/react-loadable@5.5.2",
     "turbo": "^2.0.6",
-    "typescript": "^5.3.3"
+    "typescript": "^5.8.3"
   },
   "packageManager": "bun@1.0.25",
   "version": ""
