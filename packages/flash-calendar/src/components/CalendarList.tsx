@@ -100,12 +100,12 @@ export interface CalendarListRef {
   scrollToMonth: (
     date: Date,
     animated: boolean,
-    params?: ImperativeScrollParams
+    params?: ImperativeScrollParams,
   ) => void;
   scrollToDate: (
     date: Date,
     animated: boolean,
-    params?: ImperativeScrollParams
+    params?: ImperativeScrollParams,
   ) => void;
   scrollToOffset: (offset: number, animated: boolean) => void;
 }
@@ -113,7 +113,7 @@ export interface CalendarListRef {
 export const CalendarList = memo(
   forwardRef(function CalendarList(
     props: CalendarListProps,
-    ref: Ref<CalendarListRef>
+    ref: Ref<CalendarListRef>,
   ) {
     const {
       // List-related props
@@ -195,7 +195,7 @@ export const CalendarList = memo(
         calendarInstanceId,
         onCalendarDayPress,
         theme,
-      ]
+      ],
     );
 
     const { initialMonthIndex, monthList, appendMonths, addMissingMonths } =
@@ -218,11 +218,16 @@ export const CalendarList = memo(
     const handleOnEndReached = useCallback(() => {
       if (calendarMaxDateId) {
         onEndReached?.();
-        return
+        return;
       }
       appendMonths(calendarFutureScrollRangeInMonths);
       onEndReached?.();
-    }, [appendMonths, calendarFutureScrollRangeInMonths, onEndReached]);
+    }, [
+      appendMonths,
+      calendarFutureScrollRangeInMonths,
+      calendarMaxDateId,
+      onEndReached,
+    ]);
 
     const handleOverrideItemLayout = useCallback<
       NonNullable<FlashListProps<CalendarMonth>["overrideItemLayout"]>
@@ -246,7 +251,7 @@ export const CalendarList = memo(
         calendarRowVerticalSpacing,
         calendarSpacing,
         calendarWeekHeaderHeight,
-      ]
+      ],
     );
 
     /**
@@ -288,7 +293,7 @@ export const CalendarList = memo(
         calendarSpacing,
         calendarWeekHeaderHeight,
         monthList,
-      ]
+      ],
     );
 
     const flashListRef = useRef<FlashList<CalendarMonthEnhanced>>(null);
@@ -297,7 +302,7 @@ export const CalendarList = memo(
       scrollToMonth(
         date,
         animated,
-        { additionalOffset = 0 } = { additionalOffset: 0 }
+        { additionalOffset = 0 } = { additionalOffset: 0 },
       ) {
         // Wait for the next render cycle to ensure the list has been
         // updated with the new months.
@@ -313,7 +318,7 @@ export const CalendarList = memo(
         animated,
         { additionalOffset = 0 } = {
           additionalOffset: 0,
-        }
+        },
       ) {
         const currentMonthOffset = getScrollOffsetForMonth(date);
         const weekOfMonthIndex = getWeekOfMonth(date, calendarFirstDayOfWeek);
@@ -362,5 +367,5 @@ export const CalendarList = memo(
         {...flatListProps}
       />
     );
-  })
+  }),
 );
