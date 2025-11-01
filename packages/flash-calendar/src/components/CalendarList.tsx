@@ -152,6 +152,7 @@ export const CalendarList = memo(
       getCalendarMonthFormat,
       getCalendarWeekDayFormat,
       onCalendarDayPress,
+      CalendarPressableComponent,
       ...flatListProps
     } = otherProps;
 
@@ -175,6 +176,7 @@ export const CalendarList = memo(
         getCalendarWeekDayFormat,
         onCalendarDayPress,
         theme,
+        CalendarPressableComponent,
       }),
       [
         calendarColorScheme,
@@ -195,6 +197,7 @@ export const CalendarList = memo(
         calendarInstanceId,
         onCalendarDayPress,
         theme,
+        CalendarPressableComponent,
       ]
     );
 

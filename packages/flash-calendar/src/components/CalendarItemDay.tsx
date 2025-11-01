@@ -157,6 +157,8 @@ export interface CalendarItemDayProps {
   height: number;
   /** Optional TextProps to spread to the <Text> component. */
   textProps?: Omit<TextProps, "children" | "onPress">;
+  /** Optional component to replace the default <Pressable> component. */
+  CalendarPressableComponent?: React.ComponentType<{ onPress: () => void }>;
 }
 
 /**
@@ -174,6 +176,7 @@ export const CalendarItemDay = ({
   height,
   metadata,
   textProps,
+  CalendarPressableComponent,
 }: CalendarItemDayProps) => {
   const baseTheme = useTheme();
   const baseStyles = useMemo(() => {
@@ -184,8 +187,10 @@ export const CalendarItemDay = ({
     onPress(metadata.id);
   }, [metadata.id, onPress]);
 
+  const PressableComponent = CalendarPressableComponent ?? Pressable;
+
   return (
-    <Pressable
+    <PressableComponent
       disabled={metadata.state === "disabled"}
       onPress={handlePress}
       style={({
@@ -238,7 +243,7 @@ export const CalendarItemDay = ({
           </Text>
         );
       }}
-    </Pressable>
+    </PressableComponent>
   );
 };
 
@@ -343,6 +348,7 @@ export const CalendarItemDayWithContainer = ({
   daySpacing,
   containerTheme,
   calendarInstanceId,
+  CalendarPressableComponent,
 }: CalendarItemDayWithContainerProps) => {
   const metadata = useOptimizedDayMetadata(baseMetadata, calendarInstanceId);
 
@@ -359,6 +365,7 @@ export const CalendarItemDayWithContainer = ({
       theme={containerTheme}
     >
       <CalendarItemDay
+        CalendarPressableComponent={CalendarPressableComponent}
         height={dayHeight}
         metadata={metadata}
         onPress={onPress}

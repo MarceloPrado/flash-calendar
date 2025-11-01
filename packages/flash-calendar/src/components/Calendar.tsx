@@ -95,6 +95,8 @@ export interface CalendarProps extends UseCalendarParams {
   onCalendarDayPress: CalendarOnDayPress;
   /** Theme to customize the calendar component. */
   theme?: CalendarTheme;
+  /** Optional component to replace the default <Pressable> component. */
+  CalendarPressableComponent?: React.ComponentType<{ onPress: () => void }>;
 }
 
 const BaseCalendar = memo(function BaseCalendar(props: CalendarProps) {
@@ -107,7 +109,7 @@ const BaseCalendar = memo(function BaseCalendar(props: CalendarProps) {
     calendarWeekHeaderHeight = calendarDayHeight,
     onCalendarDayPress,
     theme,
-
+    CalendarPressableComponent,
     ...buildCalendarParams
   } = props;
 
@@ -158,6 +160,7 @@ const BaseCalendar = memo(function BaseCalendar(props: CalendarProps) {
 
             return (
               <CalendarItemDayWithContainer
+                CalendarPressableComponent={CalendarPressableComponent}
                 calendarInstanceId={calendarInstanceId}
                 containerTheme={theme?.itemDayContainer}
                 dayHeight={calendarDayHeight}
