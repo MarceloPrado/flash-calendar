@@ -2,4 +2,4 @@
 "@marceloterreiro/flash-calendar": minor
 ---
 
-Fix infinite loop when you pass 1 to calendarFutureScrollRangeInMonths and today date to calendarMaxDateId
+Fixes an infinite loop triggered when calendarMaxDateId is today and calendarFutureScrollRangeInMonths is one.
