@@ -1,5 +1,5 @@
 import { memo, useEffect } from "react";
-import type { ColorSchemeName } from "react-native";
+import type { ColorSchemeName, PressableProps } from "react-native";
 
 import type {
   CalendarItemDayContainerProps,
@@ -24,6 +24,12 @@ import type { UseCalendarParams } from "@/hooks/useCalendar";
 import { useCalendar } from "@/hooks/useCalendar";
 import { activeDateRangesEmitter } from "@/hooks/useOptimizedDayMetadata";
 import { CalendarThemeProvider } from "@/components/CalendarThemeProvider";
+
+export type PressableLike = React.ComponentType<
+  Pick<PressableProps, "children" | "style" | "disabled"> & {
+    onPress: () => void;
+  }
+>;
 
 export interface CalendarTheme {
   rowMonth?: CalendarRowMonthProps["theme"];
@@ -96,7 +102,7 @@ export interface CalendarProps extends UseCalendarParams {
   /** Theme to customize the calendar component. */
   theme?: CalendarTheme;
   /** Optional component to replace the default <Pressable> component. */
-  CalendarPressableComponent?: React.ComponentType<{ onPress: () => void }>;
+  CalendarPressableComponent?: PressableLike;
 }
 
 const BaseCalendar = memo(function BaseCalendar(props: CalendarProps) {
