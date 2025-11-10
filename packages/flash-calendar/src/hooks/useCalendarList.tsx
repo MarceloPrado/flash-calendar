@@ -170,10 +170,10 @@ export const useCalendarList = ({
         startingMonth
       );
 
-      const reachedListEnd = monthList.find(
+      const hasReachedEndingMonth = monthList.find(
         (m) => m.id === toDateId(endingMonth)
       );
-      if (reachedListEnd) {
+      if (hasReachedEndingMonth) {
         return monthList;
       }
 
