@@ -1,5 +1,5 @@
 import { memo, useEffect } from "react";
-import type { ColorSchemeName } from "react-native";
+import type { ColorSchemeName, PressableProps } from "react-native";
 
 import type {
   CalendarItemDayContainerProps,
@@ -24,6 +24,12 @@ import type { UseCalendarParams } from "@/hooks/useCalendar";
 import { useCalendar } from "@/hooks/useCalendar";
 import { activeDateRangesEmitter } from "@/hooks/useOptimizedDayMetadata";
 import { CalendarThemeProvider } from "@/components/CalendarThemeProvider";
+
+export type PressableLike = React.ComponentType<
+  Pick<PressableProps, "children" | "style" | "disabled"> & {
+    onPress: () => void;
+  }
+>;
 
 export interface CalendarTheme {
   rowMonth?: CalendarRowMonthProps["theme"];
@@ -95,6 +101,8 @@ export interface CalendarProps extends UseCalendarParams {
   onCalendarDayPress: CalendarOnDayPress;
   /** Theme to customize the calendar component. */
   theme?: CalendarTheme;
+  /** Optional component to replace the default <Pressable> component. */
+  CalendarPressableComponent?: PressableLike;
 }
 
 const BaseCalendar = memo(function BaseCalendar(props: CalendarProps) {
@@ -107,7 +115,7 @@ const BaseCalendar = memo(function BaseCalendar(props: CalendarProps) {
     calendarWeekHeaderHeight = calendarDayHeight,
     onCalendarDayPress,
     theme,
-
+    CalendarPressableComponent,
     ...buildCalendarParams
   } = props;
 
@@ -158,6 +166,7 @@ const BaseCalendar = memo(function BaseCalendar(props: CalendarProps) {
 
             return (
               <CalendarItemDayWithContainer
+                CalendarPressableComponent={CalendarPressableComponent}
                 calendarInstanceId={calendarInstanceId}
                 containerTheme={theme?.itemDayContainer}
                 dayHeight={calendarDayHeight}

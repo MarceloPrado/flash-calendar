@@ -8,6 +8,8 @@ import type { CalendarDayMetadata } from "@/hooks/useCalendar";
 import { useOptimizedDayMetadata } from "@/hooks/useOptimizedDayMetadata";
 import { useTheme } from "@/hooks/useTheme";
 
+import type { PressableLike } from "./Calendar";
+
 // react-native-web/overrides.ts
 declare module "react-native" {
   interface PressableStateCallbackType {
@@ -157,6 +159,8 @@ export interface CalendarItemDayProps {
   height: number;
   /** Optional TextProps to spread to the <Text> component. */
   textProps?: Omit<TextProps, "children" | "onPress">;
+  /** Optional component to replace the default <Pressable> component. */
+  CalendarPressableComponent?: PressableLike;
 }
 
 /**
@@ -174,6 +178,7 @@ export const CalendarItemDay = ({
   height,
   metadata,
   textProps,
+  CalendarPressableComponent = Pressable as PressableLike,
 }: CalendarItemDayProps) => {
   const baseTheme = useTheme();
   const baseStyles = useMemo(() => {
@@ -185,7 +190,7 @@ export const CalendarItemDay = ({
   }, [metadata.id, onPress]);
 
   return (
-    <Pressable
+    <CalendarPressableComponent
       disabled={metadata.state === "disabled"}
       onPress={handlePress}
       style={({
@@ -238,7 +243,7 @@ export const CalendarItemDay = ({
           </Text>
         );
       }}
-    </Pressable>
+    </CalendarPressableComponent>
   );
 };
 
@@ -343,6 +348,7 @@ export const CalendarItemDayWithContainer = ({
   daySpacing,
   containerTheme,
   calendarInstanceId,
+  CalendarPressableComponent,
 }: CalendarItemDayWithContainerProps) => {
   const metadata = useOptimizedDayMetadata(baseMetadata, calendarInstanceId);
 
@@ -359,6 +365,7 @@ export const CalendarItemDayWithContainer = ({
       theme={containerTheme}
     >
       <CalendarItemDay
+        CalendarPressableComponent={CalendarPressableComponent}
         height={dayHeight}
         metadata={metadata}
         onPress={onPress}

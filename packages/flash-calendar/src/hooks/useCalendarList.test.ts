@@ -248,6 +248,7 @@ describe("useCalendarList", () => {
     it("Returns a single month when min and max are in the same month", () => {
       const { result } = renderHook(() =>
         useCalendarList({
+          calendarInitialMonthId: "2024-01-01",
           calendarFirstDayOfWeek: "sunday",
           calendarFutureScrollRangeInMonths: 12,
           calendarPastScrollRangeInMonths: 12,
