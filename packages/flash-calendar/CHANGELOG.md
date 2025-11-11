@@ -1,5 +1,11 @@
 # @marceloterreiro/flash-calendar
 
+## 1.4.0
+
+### Minor Changes
+
+- f291f09: Add support for passing custom pressable components
+
 ## 1.3.0
 
 ### Minor Changes
