@@ -1,4 +1,4 @@
-import type { Preview } from "@storybook/react";
+import type { Preview } from "@storybook/react-native";
 import { backgroundDecorator } from "@/developer/decorators";
 
 const preview: Preview = {
