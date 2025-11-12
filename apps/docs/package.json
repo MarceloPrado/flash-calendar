@@ -32,7 +32,6 @@
     "@docusaurus/tsconfig": "^3.9.2",
     "@docusaurus/types": "^3.9.2",
     "@marceloterreiro/eslint-config": "*",
-    "sharp": "^0.34.5",
     "typescript": "~5.8.3"
   },
   "browserslist": {
