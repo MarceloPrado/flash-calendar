@@ -1,5 +1,11 @@
 # @marceloterreiro/flash-calendar
 
+## 1.5.0
+
+### Minor Changes
+
+- 3b65183: Fixes an infinite loop triggered when calendarMaxDateId is today and calendarFutureScrollRangeInMonths is one.
+
 ## 1.4.0
 
 ### Minor Changes
