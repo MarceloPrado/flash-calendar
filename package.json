@@ -36,6 +36,9 @@
     "turbo": "^2.0.6",
     "typescript": "~5.8.3"
   },
+  "overrides": {
+    "react": "19.0.0"
+  },
   "packageManager": "bun@1.0.25",
   "version": ""
 }
