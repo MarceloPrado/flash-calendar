@@ -40,7 +40,6 @@
     "eslint": "^8.56.0",
     "react-dom": "19.0.0",
     "react-native-safe-area-context": "5.4.0",
-    "sharp": "^0.34.5",
     "storybook": "^10.0.7",
     "typescript": "~5.8.3"
   }
