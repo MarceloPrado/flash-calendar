@@ -29,7 +29,9 @@ export interface VStackProps {
   grow?: boolean;
 }
 
-function isFragment(child: ReactNode): child is ReactElement {
+function isFragment(
+  child: ReactNode
+): child is ReactElement<{ children?: ReactNode }> {
   return isValidElement(child) && child.type === Fragment;
 }
 
