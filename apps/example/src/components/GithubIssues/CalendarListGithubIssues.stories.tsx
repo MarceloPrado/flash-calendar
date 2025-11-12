@@ -5,7 +5,7 @@ import type {
 } from "@marceloterreiro/flash-calendar";
 import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
 import type { FlashListProps } from "@shopify/flash-list";
-import type { Meta } from "@storybook/react";
+import type { Meta } from "@storybook/react-native";
 import { useCallback, useMemo, useState } from "react";
 import { Alert, Text, View } from "react-native";
 import { useTheme } from "@/hooks/useTheme";

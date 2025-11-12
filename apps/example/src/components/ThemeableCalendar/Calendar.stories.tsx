@@ -7,7 +7,7 @@ import {
   fromDateId,
   toDateId,
 } from "@marceloterreiro/flash-calendar";
-import type { Meta } from "@storybook/react";
+import type { Meta } from "@storybook/react-native";
 import { add, sub } from "date-fns";
 import { format } from "date-fns/fp";
 import { useCallback, useMemo, useState } from "react";
