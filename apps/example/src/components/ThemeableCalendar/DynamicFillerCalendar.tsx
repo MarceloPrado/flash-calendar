@@ -162,9 +162,9 @@ export const DynamicFillerCalendar = memo(() => {
       {isDateRangeValid && (
         <View style={styles.buttonContainer}>
           <Button
-            title="Clear Range"
-            onPress={onClearDateRange}
             color="#4CAF50"
+            onPress={onClearDateRange}
+            title="Clear Range"
           />
         </View>
       )}
