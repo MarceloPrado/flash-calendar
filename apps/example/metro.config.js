@@ -3,12 +3,9 @@
 const path = require("path");
 
 const { getDefaultConfig } = require("expo/metro-config");
-const { generate } = require("@storybook/react-native/scripts/generate");
-
-// Storybook setup
-generate({
-  configPath: path.resolve(__dirname, "./.storybook"),
-});
+const {
+  withStorybook,
+} = require("@storybook/react-native/metro/withStorybook");
 
 // Find the project and workspace directories
 const projectRoot = __dirname;
@@ -26,7 +23,6 @@ config.resolver.nodeModulesPaths = [
   path.resolve(monorepoRoot, "node_modules"),
 ];
 
-// Storybook setup
-config.transformer.unstable_allowRequireContext = true;
-
-module.exports = config;
+module.exports = withStorybook(config, {
+  liteMode: true,
+});

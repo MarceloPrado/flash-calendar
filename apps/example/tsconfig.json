@@ -9,6 +9,6 @@
     "esModuleInterop": true
   },
 
-  "include": ["src", ".storybook"],
+  "include": ["src", ".rnstorybook"],
   "exclude": ["node_modules"]
 }

@@ -1,12 +1,12 @@
 import { StorybookConfig } from "@storybook/react-native";
-import * as path from "path";
+import { resolve } from "path";
 
-const flashCalendarStories = path.resolve(
+const flashCalendarStories = resolve(
   __dirname,
   "../../../packages/flash-calendar/src/components/**/*.stories.?(ts|tsx|js|jsx)"
 );
 
-const exampleStories = path.resolve(
+const exampleStories = resolve(
   __dirname,
   "../src/components/**/*.stories.?(ts|tsx|js|jsx)"
 );

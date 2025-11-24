@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-native";
 import { addDays, subDays } from "date-fns";
 import { format } from "date-fns/fp/format";
 import { useRef, useState } from "react";

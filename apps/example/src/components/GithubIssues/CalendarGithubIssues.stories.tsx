@@ -3,7 +3,7 @@ import {
   toDateId,
   useDateRange,
 } from "@marceloterreiro/flash-calendar";
-import type { Meta } from "@storybook/react";
+import type { Meta } from "@storybook/react-native";
 import { addDays, format } from "date-fns";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
