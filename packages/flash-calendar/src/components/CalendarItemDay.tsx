@@ -271,6 +271,7 @@ export interface CalendarItemDayContainerProps {
   daySpacing: number;
   /** The day's height */
   dayHeight: number;
+  /** The metadata for the day, extracted from the calendar's state. */
   metadata?: CalendarDayMetadata;
 }
 

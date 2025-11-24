@@ -20,6 +20,7 @@ import {
   windowsXpTokens,
 } from "./WindowsXpCalendar";
 import { LinearCalendar } from "./LinearCalendar";
+import { DynamicFillerCalendar } from "./DynamicFillerCalendar";
 
 const styles = StyleSheet.create({
   windowsXpBackground: {
@@ -37,6 +38,8 @@ const CalendarMeta: Meta<typeof Calendar> = {
 export default CalendarMeta;
 
 export const Linear = () => <LinearCalendar />;
+
+export const DynamicFiller = () => <DynamicFillerCalendar />;
 
 export const WindowsXP = () => {
   const [isPickerVisible, setIsPickerVisible] = useState(true);
