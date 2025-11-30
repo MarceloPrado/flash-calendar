@@ -1,5 +1,11 @@
 # @marceloterreiro/flash-calendar
 
+## 1.6.0
+
+### Minor Changes
+
+- 256b67d: Add callback support to `activeDayFiller` for dynamic styling based on day metadata
+
 ## 1.5.0
 
 ### Minor Changes
