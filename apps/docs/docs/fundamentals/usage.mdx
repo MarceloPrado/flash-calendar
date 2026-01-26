@@ -346,69 +346,6 @@ export const CalendarListCompact = () => {
 
 </HStack>
 
-## Bottom sheet
-
-You can replace the base `FlashList` component by passing the
-`CalendarScrollComponent` prop to `Calendar.List`. This is useful when you want
-to use Flash Calendar in an Android [bottom sheet](https://github.com/gorhom/react-native-bottom-sheet).
-
-<HStack spacing={24} alignItems="flex-start">
-
-<div>
-
-```tsx
-import BottomSheet from "@gorhom/bottom-sheet";
-import { Calendar } from "@marceloterreiro/flash-calendar";
-import { FlashList } from "@shopify/flash-list";
-import React, { useCallback, useMemo, useRef } from "react";
-import { Platform, StyleSheet, View } from "react-native";
-
-import { BottomSheetFlashList } from "./components/BottomSheetFlashList";
-
-/**
- * iOS works fine with default flash list. Is better to keep it
- * since it's more performant.
- */
-const SafeFlashList = Platform.select({
-  android: BottomSheetFlashList,
-  ios: FlashList,
-});
-
-export const BottomSheetCalendar = () => {
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ["25%", "50%"], []);
-
-  return (
-    <View style={styles.container}>
-      <BottomSheet index={1} ref={bottomSheetRef} snapPoints={snapPoints}>
-        <View style={styles.contentContainer}>
-          <Calendar.List
-            // highlight-next-line
-            CalendarScrollComponent={SafeFlashList}
-            calendarInitialMonthId="2024-02-01"
-            onCalendarDayPress={(dateId) => console.log(`Pressed ${dateId}`)}
-          />
-        </View>
-      </BottomSheet>
-    </View>
-  );
-};
-```
-
-</div>
-
-<video controls width={250}>
-  <source src={bottomSheetAndroid} type="video/mp4" />
-</video>
-
-</HStack>
-
-For a reference implementation of the `BottomSheetFlashList` component, check
-the
-[source](https://github.com/marceloprado/flash-calendar/blob/d832d72867d40c9b375c30aec9985b181c0a80f3/kitchen-sink/expo/src/components/BottomSheetFlashList/BottomSheetFlashList.tsx).
-Bear in mind this isn't a very performant implementation. Contributions
-welcomed!
-
 ## Two calendars in the same screen
 
 To render more than one calendar in the same screen, use the

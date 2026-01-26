@@ -1,8 +1,10 @@
-import type { LegendListProps, LegendListRef } from "@legendapp/list";
-import { LegendList } from "@legendapp/list";
-import type { Ref } from "react";
+import type { CalendarProps } from "@/components/Calendar";
+import { Calendar } from "@/components/Calendar";
+import { getWeekOfMonth, startOfMonth, toDateId } from "@/helpers/dates";
+import type { CalendarMonth } from "@/hooks/useCalendarList";
+import { getHeightForMonth, useCalendarList } from "@/hooks/useCalendarList";
+import { LegendList as LegendListBase, type LegendListProps, type LegendListRef } from "@legendapp/list";
 import {
-  forwardRef,
   memo,
   useCallback,
   useImperativeHandle,
@@ -11,12 +13,10 @@ import {
 } from "react";
 import { View } from "react-native";
 
-import type { CalendarProps } from "@/components/Calendar";
-import { Calendar } from "@/components/Calendar";
-import { getWeekOfMonth, startOfMonth, toDateId } from "@/helpers/dates";
-import type { CalendarMonth } from "@/hooks/useCalendarList";
-import { getHeightForMonth, useCalendarList } from "@/hooks/useCalendarList";
-
+// Type assertion to make LegendList compatible with React 19
+const LegendList = LegendListBase as <T>(
+  props: LegendListProps<T> & { ref?: React.Ref<LegendListRef> }
+) => React.ReactElement;
 /**
  * Represents each `CalendarList` item. It's enhanced with the required
  * `Calendar` props to simplify building custom `Calendar` components.
@@ -70,13 +70,6 @@ export interface CalendarListProps
   calendarInitialMonthId?: string;
 
   /**
-   * The scroll component to use. Useful if you need to replace the LegendList
-   * with an alternative (e.g. a BottomSheet LegendList).
-   * @defaultValue LegendList
-   */
-  CalendarScrollComponent?: typeof LegendList;
-
-  /**
    * Overwrites the default `Calendar` component.
    *
    * **Important**: when providing a custom implementation, make sure to
@@ -113,18 +106,16 @@ export interface CalendarListRef {
   scrollToOffset: (offset: number, animated: boolean) => void;
 }
 
-export const CalendarList = memo(
-  forwardRef(function CalendarList(
-    props: CalendarListProps,
-    ref: Ref<CalendarListRef>
-  ) {
+export const CalendarList = memo(function CalendarList({
+  ref,
+  ...props
+}: CalendarListProps & { ref?: React.Ref<CalendarListRef> }) {
     const {
       // List-related props
       calendarInitialMonthId,
       calendarPastScrollRangeInMonths = 12,
       calendarFutureScrollRangeInMonths = 12,
       calendarFirstDayOfWeek = "sunday",
-      CalendarScrollComponent = LegendList,
       calendarFormatLocale,
 
       // Spacings
@@ -346,10 +337,8 @@ export const CalendarList = memo(
       return { paddingBottom: calendarSpacing };
     }, [calendarSpacing]);
 
-    const ScrollComponent = CalendarScrollComponent as any;
-    
     return (
-      <ScrollComponent
+      <LegendList
         data={monthListWithCalendarProps}
         estimatedItemSize={273}
         getFixedItemSize={handleGetFixedItemSize}
@@ -368,5 +357,5 @@ export const CalendarList = memo(
         {...flatListProps}
       />
     );
-  })
+  }
 );
