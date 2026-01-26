@@ -17,7 +17,7 @@
     "docs": "turbo docs --filter=docs",
     "dev": "turbo dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "kitchen-sink:expo": "cd kitchen-sink/expo && bun run ios",
+    "kitchen-sink": "cd kitchen-sink/expo && bun run ios",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "publish-packages": "turbo build lint test typecheck --filter @marceloterreiro/flash-calendar && changeset version && changeset publish",
