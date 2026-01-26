@@ -2,12 +2,12 @@ import { memo, useEffect } from "react";
 import type { ColorSchemeName, PressableProps } from "react-native";
 
 import type {
-  CalendarItemDayContainerProps,
-  CalendarItemDayProps,
+    CalendarItemDayContainerProps,
+    CalendarItemDayProps,
 } from "@/components/CalendarItemDay";
 import {
-  CalendarItemDayContainer,
-  CalendarItemDayWithContainer,
+    CalendarItemDayContainer,
+    CalendarItemDayWithContainer,
 } from "@/components/CalendarItemDay";
 import type { CalendarItemEmptyProps } from "@/components/CalendarItemEmpty";
 import { CalendarItemEmpty } from "@/components/CalendarItemEmpty";
@@ -49,13 +49,13 @@ export type CalendarOnDayPress = (dateId: string) => void;
 export interface CalendarProps extends UseCalendarParams {
   /**
    * A unique identifier for this calendar instance. This is useful if you
-   * need to render more than one calendar at once. This allows Flash Calendar
+   * need to render more than one calendar at once. This allows Legend Calendar
    * to scope its state to the given instance.
    *
    * No need to get fancy with `uuid` or anything like that - a simple static
    * string is enough.
    *
-   * If not provided, Flash Calendar will use a default value which will hoist
+   * If not provided, Legend Calendar will use a default value which will hoist
    * the state in a global scope.
    */
   calendarInstanceId?: string;
@@ -86,7 +86,7 @@ export interface CalendarProps extends UseCalendarParams {
    */
   calendarMonthHeaderHeight?: number;
   /**
-   * When set, Flash Calendar will use this color scheme instead of the system's
+   * When set, Legend Calendar will use this color scheme instead of the system's
    * value (`light|dark`). This is useful if your app doesn't support dark-mode,
    * for example.
    *

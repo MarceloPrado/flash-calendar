@@ -2,9 +2,9 @@ import mitt from "mitt";
 import { useEffect, useState } from "react";
 
 import {
-  getStateFields,
-  type CalendarActiveDateRange,
-  type CalendarDayMetadata,
+    getStateFields,
+    type CalendarActiveDateRange,
+    type CalendarDayMetadata,
 } from "@/hooks/useCalendar";
 
 interface OnSetActiveDateRangesPayload {
@@ -27,7 +27,7 @@ export const activeDateRangesEmitter = mitt<{
 /**
  * The default calendar instance ID. This is used when no instance ID is provided.
  */
-const DEFAULT_CALENDAR_INSTANCE_ID = "flash-calendar-default-instance";
+const DEFAULT_CALENDAR_INSTANCE_ID = "legend-calendar-default-instance";
 
 /**
  * Returns an optimized metadata for a particular day. This hook listens to the

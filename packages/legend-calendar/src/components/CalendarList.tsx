@@ -293,7 +293,7 @@ export const CalendarList = memo(
       ]
     );
 
-    const flashListRef = useRef<LegendListRef>(null);
+    const legendListRef = useRef<LegendListRef>(null);
 
     useImperativeHandle(ref, () => ({
       scrollToMonth(
@@ -304,7 +304,7 @@ export const CalendarList = memo(
         // Wait for the next render cycle to ensure the list has been
         // updated with the new months.
         setTimeout(() => {
-          flashListRef.current?.scrollToOffset({
+          legendListRef.current?.scrollToOffset({
             offset: getScrollOffsetForMonth(date) + additionalOffset,
             animated,
           });
@@ -332,13 +332,13 @@ export const CalendarList = memo(
          */
         weekOffset = weekOffset - calendarRowVerticalSpacing;
 
-        flashListRef.current?.scrollToOffset({
+        legendListRef.current?.scrollToOffset({
           offset: currentMonthOffset + weekOffset + additionalOffset,
           animated,
         });
       },
       scrollToOffset(offset, animated) {
-        flashListRef.current?.scrollToOffset({ offset, animated });
+        legendListRef.current?.scrollToOffset({ offset, animated });
       },
     }));
 
@@ -357,7 +357,7 @@ export const CalendarList = memo(
         keyExtractor={keyExtractor}
         onEndReached={handleOnEndReached}
         recycleItems
-        ref={flashListRef}
+        ref={legendListRef}
         renderItem={({ item }: { item: CalendarMonthEnhanced }) => (
           <View style={calendarContainerStyle}>
             <Calendar calendarMonthId={item.id} {...item.calendarProps} />

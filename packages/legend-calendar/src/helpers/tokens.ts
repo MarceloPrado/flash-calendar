@@ -13,7 +13,7 @@ const baseTokens = {
 } as const;
 
 /**
- * Minimal theme for the Flash Calendar component.
+ * Minimal theme for the Legend Calendar component.
  * @internal
  */
 export const lightTheme = {
