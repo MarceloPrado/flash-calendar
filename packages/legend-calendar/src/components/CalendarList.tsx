@@ -364,6 +364,7 @@ export const CalendarList = memo(
           </View>
         )}
         showsVerticalScrollIndicator={false}
+        style={{ flex: 1 }}
         {...flatListProps}
       />
     );

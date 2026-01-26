@@ -2,7 +2,7 @@ import type { CalendarOnDayPress } from "@marceloterreiro/flash-calendar";
 import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
 import { addMonths } from "date-fns";
 import { useCallback, useState } from "react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 
 const todayId = toDateId(new Date());
 const maxDateId = toDateId(addMonths(new Date(), 12));
@@ -31,6 +31,7 @@ export const SlowExampleAddressed = () => {
 
         <Calendar.List
           calendarActiveDateRanges={dateRanges}
+          calendarColorScheme="light"
           calendarInitialMonthId={todayId}
           calendarMaxDateId={maxDateId}
           calendarMinDateId={todayId}

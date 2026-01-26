@@ -1,8 +1,8 @@
 import type { CalendarListProps } from "@marceloterreiro/flash-calendar";
 import {
-  Calendar,
-  toDateId,
-  useDateRange,
+    Calendar,
+    toDateId,
+    useDateRange,
 } from "@marceloterreiro/flash-calendar";
 import { useMemo } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
@@ -32,6 +32,7 @@ export function CalendarListDemo() {
         <Calendar.List
           {...calendarListProps}
           calendarActiveDateRanges={calendarActiveDateRanges}
+          calendarColorScheme="light"
           onCalendarDayPress={onCalendarDayPress}
         />
       </View>

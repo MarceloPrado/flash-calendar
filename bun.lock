@@ -74,6 +74,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@gorhom/bottom-sheet": "^5.2.6",
+        "@legendapp/list": "^2.0.0",
         "@marceloterreiro/flash-calendar": "*",
         "expo": "54",
         "expo-status-bar": "~3.0.9",

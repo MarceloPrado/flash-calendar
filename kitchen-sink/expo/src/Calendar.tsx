@@ -16,6 +16,7 @@ export function CalendarDemo() {
             endId: selectedDate ?? undefined,
           },
         ]}
+        calendarColorScheme="light"
         calendarMonthId={today}
         onCalendarDayPress={setSelectedDate}
       />
