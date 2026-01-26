@@ -3,8 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@marceloterreiro/flash-calendar": ["../../packages/flash-calendar/src"],
-      "@/*": ["../../packages/flash-calendar/src/*"]
+      "@marceloterreiro/flash-calendar": ["../../packages/legend-calendar/src"],
+      "@/*": ["../../packages/legend-calendar/src/*"]
     },
     "esModuleInterop": true
   },

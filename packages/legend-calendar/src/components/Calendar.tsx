@@ -17,13 +17,13 @@ import type { CalendarRowMonthProps } from "@/components/CalendarRowMonth";
 import { CalendarRowMonth } from "@/components/CalendarRowMonth";
 import type { CalendarRowWeekProps } from "@/components/CalendarRowWeek";
 import { CalendarRowWeek } from "@/components/CalendarRowWeek";
+import { CalendarThemeProvider } from "@/components/CalendarThemeProvider";
 import { VStack } from "@/components/VStack";
 import { uppercaseFirstLetter } from "@/helpers/strings";
 import type { BaseTheme } from "@/helpers/tokens";
 import type { UseCalendarParams } from "@/hooks/useCalendar";
 import { useCalendar } from "@/hooks/useCalendar";
 import { activeDateRangesEmitter } from "@/hooks/useOptimizedDayMetadata";
-import { CalendarThemeProvider } from "@/components/CalendarThemeProvider";
 
 export type PressableLike = React.ComponentType<
   Pick<PressableProps, "children" | "style" | "disabled"> & {
@@ -202,8 +202,8 @@ export const Calendar = memo(function Calendar(props: CalendarProps) {
     });
     /**
      * While `calendarMonthId` is not used by the effect, we still need it in
-     * the dependency array since [FlashList uses recycling
-     * internally](https://shopify.github.io/flash-list/docs/recycling).
+     * the dependency array since [LegendList uses recycling
+     * internally](https://legendapp.com/open-source/list/).
      *
      * This means `Calendar` can re-render with different props instead of
      * getting re-mounted. Without it, we would see staled/invalid data, as

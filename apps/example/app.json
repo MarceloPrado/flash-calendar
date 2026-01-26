@@ -3,6 +3,9 @@
     "name": "example",
     "slug": "example",
     "version": "1.0.0",
+    "experiments": {
+      "reactCompiler": true
+    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",

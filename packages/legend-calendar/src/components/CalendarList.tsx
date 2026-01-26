@@ -1,5 +1,5 @@
-import type { FlashListProps } from "@shopify/flash-list";
-import { FlashList } from "@shopify/flash-list";
+import type { LegendListProps, LegendListRef } from "@legendapp/list";
+import { LegendList } from "@legendapp/list";
 import type { Ref } from "react";
 import {
   forwardRef,
@@ -29,7 +29,10 @@ const keyExtractor = (month: CalendarMonth) => month.id;
 
 export interface CalendarListProps
   extends Omit<CalendarProps, "calendarMonthId">,
-    Omit<FlashListProps<CalendarMonthEnhanced>, "renderItem" | "data"> {
+    Omit<
+      LegendListProps<CalendarMonthEnhanced>,
+      "renderItem" | "data" | "children"
+    > {
   /**
    * How many months to show before the current month. Once the user scrolls
    * past this range and if they haven't exceeded the `calendarMinDateId`, new
@@ -67,11 +70,11 @@ export interface CalendarListProps
   calendarInitialMonthId?: string;
 
   /**
-   * The scroll component to use. Useful if you need to replace the FlashList
-   * with an alternative (e.g. a BottomSheet FlashList).
-   * @defaultValue FlashList
+   * The scroll component to use. Useful if you need to replace the LegendList
+   * with an alternative (e.g. a BottomSheet LegendList).
+   * @defaultValue LegendList
    */
-  CalendarScrollComponent?: typeof FlashList;
+  CalendarScrollComponent?: typeof LegendList;
 
   /**
    * Overwrites the default `Calendar` component.
@@ -86,7 +89,7 @@ export interface CalendarListProps
    * - calendarRowVerticalSpacing
    * - calendarSpacing
    */
-  renderItem?: FlashListProps<CalendarMonthEnhanced>["renderItem"];
+  renderItem?: LegendListProps<CalendarMonthEnhanced>["renderItem"];
 }
 
 interface ImperativeScrollParams {
@@ -121,7 +124,7 @@ export const CalendarList = memo(
       calendarPastScrollRangeInMonths = 12,
       calendarFutureScrollRangeInMonths = 12,
       calendarFirstDayOfWeek = "sunday",
-      CalendarScrollComponent = FlashList,
+      CalendarScrollComponent = LegendList,
       calendarFormatLocale,
 
       // Spacings
@@ -218,16 +221,17 @@ export const CalendarList = memo(
       }));
     }, [calendarProps, monthList]);
 
-    const handleOnEndReached = useCallback(() => {
-      appendMonths(calendarFutureScrollRangeInMonths);
-      onEndReached?.();
-    }, [appendMonths, calendarFutureScrollRangeInMonths, onEndReached]);
+    const handleOnEndReached = useCallback(
+      (info: { distanceFromEnd: number }) => {
+        appendMonths(calendarFutureScrollRangeInMonths);
+        onEndReached?.(info);
+      },
+      [appendMonths, calendarFutureScrollRangeInMonths, onEndReached]
+    );
 
-    const handleOverrideItemLayout = useCallback<
-      NonNullable<FlashListProps<CalendarMonth>["overrideItemLayout"]>
-    >(
-      (layout, item) => {
-        const monthHeight = getHeightForMonth({
+    const handleGetFixedItemSize = useCallback(
+      (_index: number, item: CalendarMonth) => {
+        return getHeightForMonth({
           calendarMonth: item,
           calendarSpacing,
           calendarDayHeight,
@@ -236,7 +240,6 @@ export const CalendarList = memo(
           calendarAdditionalHeight,
           calendarWeekHeaderHeight,
         });
-        layout.size = monthHeight;
       },
       [
         calendarAdditionalHeight,
@@ -290,7 +293,7 @@ export const CalendarList = memo(
       ]
     );
 
-    const flashListRef = useRef<FlashList<CalendarMonthEnhanced>>(null);
+    const flashListRef = useRef<LegendListRef>(null);
 
     useImperativeHandle(ref, () => ({
       scrollToMonth(
@@ -343,16 +346,19 @@ export const CalendarList = memo(
       return { paddingBottom: calendarSpacing };
     }, [calendarSpacing]);
 
+    const ScrollComponent = CalendarScrollComponent as any;
+    
     return (
-      <CalendarScrollComponent
+      <ScrollComponent
         data={monthListWithCalendarProps}
         estimatedItemSize={273}
+        getFixedItemSize={handleGetFixedItemSize}
         initialScrollIndex={initialMonthIndex}
         keyExtractor={keyExtractor}
         onEndReached={handleOnEndReached}
-        overrideItemLayout={handleOverrideItemLayout}
+        recycleItems
         ref={flashListRef}
-        renderItem={({ item }) => (
+        renderItem={({ item }: { item: CalendarMonthEnhanced }) => (
           <View style={calendarContainerStyle}>
             <Calendar calendarMonthId={item.id} {...item.calendarProps} />
           </View>

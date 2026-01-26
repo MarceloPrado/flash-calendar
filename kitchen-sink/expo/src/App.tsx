@@ -1,13 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { CalendarDemo } from "./Calendar";
-import { CalendarListDemo } from "./CalendarList";
-import { BottomSheetCalendar } from "./BottomSheetCalendar";
-import { CalendarCustomFormatting } from "./CalendarCustomFormatting";
 import { ImperativeScrolling } from "./ImperativeScroll";
 // import { SlowExampleAddressed } from "./SlowExampleAddressed";
 
