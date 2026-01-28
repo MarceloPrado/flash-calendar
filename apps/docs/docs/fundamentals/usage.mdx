@@ -33,7 +33,7 @@ Here's the minimal example to render a `Calendar` and a `Calendar.List`:
 
 <div>
 ```tsx
-import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+import { Calendar, toDateId } from "@lazerlen/flash-calendar";
 import { useState } from "react";
 import { Text, View } from "react-native";
 
@@ -69,7 +69,7 @@ export function BasicCalendar() {
 <div>
 
 ```tsx
-import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+import { Calendar, toDateId } from "@lazerlen/flash-calendar";
 import { useState } from "react";
 import { Text, View } from "react-native";
 
@@ -104,8 +104,8 @@ export function BasicCalendarList() {
 
 ## Date range picker
 
-Building a date range picker with Flash Calendar is easy thanks to the
-[`useDateRange`](https://github.com/MarceloPrado/flash-calendar/blob/cd59ccfb60ccc3eb75a8e7ec2e347c6888be7091/packages/flash-calendar/src/hooks/useDateRange.ts#L68-L92)
+Building a date range picker with Legend Calendar is easy thanks to the
+[`useDateRange`](https://github.com/LeviWilliams/legend-calendar/blob/main/packages/legend-calendar/src/hooks/useDateRange.ts)
 hook:
 
 <HStack spacing={24} alignItems="flex-start">
@@ -113,7 +113,7 @@ hook:
 <div>
 
 ```tsx
-import { Calendar, useDateRange } from "@marceloterreiro/flash-calendar";
+import { Calendar, useDateRange } from "@lazerlen/flash-calendar";
 
 export const CalendarListDateRange = () => {
   const {
@@ -154,7 +154,7 @@ If you just need a different locale, use the `calendarFormatLocale` prop:
 <div>
 
 ```tsx
-import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+import { Calendar, toDateId } from "@lazerlen/flash-calendar";
 import { useState } from "react";
 
 const today = toDateId(new Date());
@@ -189,7 +189,7 @@ export function BrazilianCalendar() {
 If you need full control over how the dates are displayed, use the
 `getCalendarDayFormat`, `getCalendarMonthFormat` and `getCalendarWeekDayFormat`
 props. They share the [same
-signature](https://github.com/MarceloPrado/flash-calendar/blob/cd59ccfb60ccc3eb75a8e7ec2e347c6888be7091/packages/flash-calendar/src/hooks/useCalendar.ts#L108-L120)
+signature](https://github.com/LeviWilliams/legend-calendar/blob/main/packages/legend-calendar/src/hooks/useCalendar.ts)
 and allow you to use your preferred date library:
 
 <HStack spacing={24} alignItems="flex-start">
@@ -197,7 +197,7 @@ and allow you to use your preferred date library:
 <div>
 
 ```tsx
-import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+import { Calendar, toDateId } from "@lazerlen/flash-calendar";
 import { subMonths } from "date-fns";
 import { format } from "date-fns/fp";
 
@@ -228,10 +228,10 @@ export const CalendarCustomFormatting = () => {
 
 #### Note on referential equality
 
-Due to Flash Calendar's architecture, it's important to make your date
+Due to Legend Calendar's architecture, it's important to make your date
 formatting functions stable. You should move them outside the component
 scope (preferred) or memoize them with `useCallback`. Refer to [Issue
-69](https://github.com/MarceloPrado/flash-calendar/issues/69) for more.
+69](https://github.com/LeviWilliams/legend-calendar/issues/69) for more.
 
 <HStack spacing={12}>
   <Admonition type="tip" title="DO">
@@ -285,7 +285,7 @@ This works for both `Calendar` and `Calendar.List`:
 <div>
 
 ```tsx
-import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+import { Calendar, toDateId } from "@lazerlen/flash-calendar";
 
 const calendarDisabledDateIds = ["2024-03-14", "2024-03-15"];
 
@@ -321,7 +321,7 @@ There are several props to tweak the spacings between the components. Check the 
 <div>
 
 ```tsx
-import { Calendar } from "@marceloterreiro/flash-calendar";
+import { Calendar } from "@lazerlen/flash-calendar";
 import { View } from "react-native";
 
 export const CalendarListCompact = () => {
@@ -356,7 +356,7 @@ To render more than one calendar in the same screen, use the
 <div>
 
 ```tsx
-import { Calendar, useDateRange } from "@marceloterreiro/flash-calendar";
+import { Calendar, useDateRange } from "@lazerlen/flash-calendar";
 
 export const TwoCalendarsMounted = () => {
   const dateRangeOne = useDateRange();

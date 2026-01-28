@@ -1,9 +1,9 @@
-import type { CalendarProps } from "@marceloterreiro/flash-calendar";
+import type { CalendarProps } from "@lazerlen/flash-calendar";
 import {
   Calendar,
   activeDateRangesEmitter,
   useCalendar,
-} from "@marceloterreiro/flash-calendar";
+} from "@lazerlen/flash-calendar";
 import { memo, useEffect } from "react";
 import { Text } from "react-native";
 import { uppercaseFirstLetter } from "@/helpers/strings";

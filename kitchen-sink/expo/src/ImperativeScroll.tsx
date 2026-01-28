@@ -1,9 +1,9 @@
-import type { CalendarListRef } from "@marceloterreiro/flash-calendar";
+import type { CalendarListRef } from "@lazerlen/flash-calendar";
 import {
     Calendar,
     fromDateId,
     toDateId,
-} from "@marceloterreiro/flash-calendar";
+} from "@lazerlen/flash-calendar";
 import { addMonths, startOfMonth, subMonths } from "date-fns";
 import { useCallback, useRef, useState } from "react";
 import { Button, Text, View } from "react-native";

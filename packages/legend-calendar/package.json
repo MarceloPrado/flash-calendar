@@ -1,6 +1,6 @@
 {
-  "name": "@marceloterreiro/flash-calendar",
-  "version": "1.6.0",
+  "name": "@lazerlen/flash-calendar",
+  "version": "0.1.0",
   "private": false,
   "description": "A better calendar for React Native.",
   "repository": {
@@ -25,9 +25,9 @@
     "mitt": "^3.0.1"
   },
   "devDependencies": {
+    "@lazerlen/eslint-config": "*",
+    "@lazerlen/tsconfig": "*",
     "@legendapp/list": "^2.0.0",
-    "@marceloterreiro/eslint-config": "*",
-    "@marceloterreiro/tsconfig": "*",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/bun": "^1.3.2",
     "@types/react": "~19.1.10",

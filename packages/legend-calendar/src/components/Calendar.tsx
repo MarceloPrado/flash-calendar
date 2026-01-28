@@ -2,12 +2,12 @@ import { memo, useEffect } from "react";
 import type { ColorSchemeName, PressableProps } from "react-native";
 
 import type {
-    CalendarItemDayContainerProps,
-    CalendarItemDayProps,
+  CalendarItemDayContainerProps,
+  CalendarItemDayProps,
 } from "@/components/CalendarItemDay";
 import {
-    CalendarItemDayContainer,
-    CalendarItemDayWithContainer,
+  CalendarItemDayContainer,
+  CalendarItemDayWithContainer,
 } from "@/components/CalendarItemDay";
 import type { CalendarItemEmptyProps } from "@/components/CalendarItemEmpty";
 import { CalendarItemEmpty } from "@/components/CalendarItemEmpty";

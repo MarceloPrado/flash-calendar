@@ -1,5 +1,5 @@
 {
-  "name": "@marceloterreiro/monorepo",
+  "name": "@lazerlen/monorepo",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -8,7 +8,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MarceloPrado/flash-calendar.git"
+    "url": "git+https://github.com/LeviWilliams/legend-calendar.git"
   },
   "scripts": {
     "analyze:bundle": "scripts/analyze-bundle.sh",
@@ -20,7 +20,7 @@
     "kitchen-sink": "cd kitchen-sink/expo && bun run ios",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
-    "publish-packages": "turbo build lint test typecheck --filter @marceloterreiro/flash-calendar && changeset version && changeset publish",
+    "publish-packages": "turbo build lint test typecheck --filter @lazerlen/flash-calendar && changeset version && changeset publish",
     "test": "turbo test",
     "postinstall": "manypkg check"
   },
@@ -36,9 +36,9 @@
   ],
   "dependencies": {
     "@changesets/cli": "^2.27.1",
+    "@lazerlen/eslint-config": "*",
+    "@lazerlen/tsconfig": "*",
     "@manypkg/cli": "^0.21.2",
-    "@marceloterreiro/eslint-config": "*",
-    "@marceloterreiro/tsconfig": "*",
     "@typescript-eslint/typescript-estree": "^6.21.0",
     "eslint-plugin-import": "^2.29.1",
     "prettier": "^2.8.8",

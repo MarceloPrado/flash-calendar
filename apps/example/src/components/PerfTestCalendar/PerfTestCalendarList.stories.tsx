@@ -2,7 +2,7 @@ import {
   Calendar,
   toDateId,
   useDateRange,
-} from "@marceloterreiro/flash-calendar";
+} from "@lazerlen/flash-calendar";
 import type { Meta } from "@storybook/react-native";
 import { addDays, startOfMonth } from "date-fns";
 import { useState } from "react";

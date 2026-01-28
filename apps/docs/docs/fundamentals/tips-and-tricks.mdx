@@ -20,7 +20,7 @@ Date and timezones are a confusing topic. This is why Flash Calendar is careful 
 Date ID is a simple `YYYY-MM-DD` representation of a given date. Flash Calendar exposes two functions to convert between Date and Date ID.
 
 ```tsx
-import { toDateId, fromDateId } from "@marceloterreiro/flash-calendar";
+import { toDateId, fromDateId } from "@lazerlen/flash-calendar";
 
 const januaryFirstAsDate = fromDateId("2024-01-01"); // Date object
 const januaryFirstAsId = toDateId(januaryFirstAsDate); // "2024-01-01"
@@ -44,7 +44,7 @@ const endOfJanuaryId = toDateId("2024-01-31");
 const endOfJanuary = fromDateId(endOfJanuaryId); // Date object
 ```
 
-These two convertions functions were [battle-tested](https://github.com/MarceloPrado/flash-calendar/blob/ee87cb1a695a42840f00f17bbaeb1a795a1e3ba0/packages/flash-calendar/src/helpers/dates.test.ts#L30-L130) to return the expected results, regardless of the timezone.
+These two convertions functions were [battle-tested](https://github.com/LeviWilliams/legend-calendar/blob/main/packages/legend-calendar/src/helpers/dates.test.ts) to return the expected results, regardless of the timezone.
 
 ## Programmatically scrolling to a date
 
@@ -58,8 +58,8 @@ date (`.scrollToDate`), a month (`.scrollToMonth`), or an offset
 
 ```tsx
 import { addMonths, subMonths, startOfMonth } from "date-fns";
-import type { CalendarListRef } from "@marceloterreiro/flash-calendar";
-import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+import type { CalendarListRef } from "@lazerlen/flash-calendar";
+import { Calendar, toDateId } from "@lazerlen/flash-calendar";
 import { useRef, useState } from "react";
 import { Button, Text, View } from "react-native";
 

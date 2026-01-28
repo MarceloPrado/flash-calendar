@@ -4,7 +4,7 @@ import { useState } from "react";
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { Calendar } from "@marceloterreiro/flash-calendar";
+import { Calendar } from "@lazerlen/flash-calendar";
 import { CalendarDemo } from "./Calendar";
 import { CalendarListDemo } from "./CalendarList";
 // import { SlowExampleAddressed } from "./SlowExampleAddressed";

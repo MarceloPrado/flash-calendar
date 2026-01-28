@@ -1,14 +1,12 @@
-# React Native Flash Calendar
+# React Native Legend Calendar
 
-[![npm](https://img.shields.io/npm/l/@marceloterreiro/flash-calendar?style=flat-square)](https://www.npmjs.com/package/@marceloterreiro/flash-calendar) [![npm](https://img.shields.io/badge/types-included-blue?style=flat-square)](https://www.npmjs.com/package/@marceloterreiro/flash-calendar) [![runs with expo](https://img.shields.io/badge/Runs%20with%20Expo-4630EB.svg?style=flat-square&logo=EXPO&labelColor=f3f3f3&logoColor=000)](https://expo.io/)
+[![npm](https://img.shields.io/npm/l/@lazerlen/flash-calendar?style=flat-square)](https://www.npmjs.com/package/@lazerlen/flash-calendar) [![npm](https://img.shields.io/badge/types-included-blue?style=flat-square)](https://www.npmjs.com/package/@lazerlen/flash-calendar) [![runs with expo](https://img.shields.io/badge/Runs%20with%20Expo-4630EB.svg?style=flat-square&logo=EXPO&labelColor=f3f3f3&logoColor=000)](https://expo.io/)
 
-This is the monorepo for Flash Calendar, an incredibly fast and flexible library to build calendars in React Native.
-
-<img src="./apps/docs/static/img/cover.png" width="800px"/>
+An opinionated fork of Marcelo Prado's [flash-calendar](https://github.com/MarceloPrado/flash-calendar) library which leverages [legend-list](https://github.com/LegendApp/legend-list) instead. **All credit to Marcelo** for his awesome work on the original library, this one is just slightly changed for my needs.
 
 ## Documentation & Examples
 
-You can find the Flash Calendar documentation [on the website](https://marceloprado.github.io/flash-calendar/).
+You can find the Legend Calendar documentation [on the website](https://leviwilliams.github.io/legend-calendar/).
 
 ## Installation
 
@@ -46,24 +44,24 @@ Ensure your changes are unit-tested. To improve DX, run the tests in watch mode 
 
 #### /apps
 
-- `/apps/example`: Storybook host for Flash Calendar, runs with the latest uncompiled code.
-- `/apps/docs`: The documentation website for Flash Calendar.
+- `/apps/example`: Storybook host for Legend Calendar, runs with the latest uncompiled code.
+- `/apps/docs`: The documentation website for Legend Calendar.
 
 #### /kitchen-sink
 
-A place to test the published Flash Calendar in a real environment.
+A place to test the published Legend Calendar in a real environment.
 
-- `/kitchen-sink/expo`: Scaffolded expo project to test the flash calendar in a real environment.
+- `/kitchen-sink/expo`: Scaffolded expo project to test the legend calendar in a real environment.
 
 #### /packages
 
-The actual src code for Flash Calendar:
+The actual src code for Legend Calendar:
 
-- `/packages/flash-calendar`: The flash calendar package itself.
+- `/packages/legend-calendar`: The legend calendar package itself.
 - `/packages/eslint-config`: Shared eslint config for the project.
 - `/packages/tsconfig`: Shared tsconfig for the project.
 
 
 ### License
 
-Flash Calendar is [MIT licensed](./LICENSE).
+Legend Calendar is [MIT licensed](./LICENSE).

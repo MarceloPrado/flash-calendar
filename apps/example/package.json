@@ -1,5 +1,5 @@
 {
-  "name": "@marceloterreiro/example",
+  "name": "@lazerlen/example",
   "version": "0.0.1",
   "private": true,
   "main": "./index.js",
@@ -15,7 +15,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@marceloterreiro/flash-calendar": "*",
+    "@lazerlen/flash-calendar": "*",
     "date-fns": "^3.3.1",
     "expo": "54",
     "expo-status-bar": "~3.0.9",
@@ -24,8 +24,8 @@
     "react-native": "0.81.5"
   },
   "devDependencies": {
-    "@marceloterreiro/eslint-config": "*",
-    "@marceloterreiro/tsconfig": "*",
+    "@lazerlen/eslint-config": "*",
+    "@lazerlen/tsconfig": "*",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-community/datetimepicker": "8.4.4",
     "@react-native-community/slider": "5.0.1",

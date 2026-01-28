@@ -1,5 +1,5 @@
 ---
-"@marceloterreiro/flash-calendar": major
+"@lazerlen/flash-calendar": major
 ---
 
 Remove CalendarScrollComponent prop from Calendar.List

@@ -1,9 +1,9 @@
-import type { CalendarListProps } from "@marceloterreiro/flash-calendar";
+import type { CalendarListProps } from "@lazerlen/flash-calendar";
 import {
     Calendar,
     toDateId,
     useDateRange,
-} from "@marceloterreiro/flash-calendar";
+} from "@lazerlen/flash-calendar";
 import { useMemo } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 
