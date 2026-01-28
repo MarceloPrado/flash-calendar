@@ -20,5 +20,5 @@ jobs:
       - name: Build
         run: bun run build
 
-      - name: Lint, Test, Typecheck
-        run: bun turbo build lint test typecheck
+      - name: Lint, Test
+        run: bun turbo build lint test

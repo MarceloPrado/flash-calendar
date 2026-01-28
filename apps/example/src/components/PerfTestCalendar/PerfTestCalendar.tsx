@@ -1,4 +1,3 @@
-import { uppercaseFirstLetter } from "@/helpers/strings";
 import type { CalendarProps } from "@lazerlen/legend-calendar";
 import {
   Calendar,
@@ -7,6 +6,7 @@ import {
 } from "@lazerlen/legend-calendar";
 import { memo, useEffect } from "react";
 import { Text } from "react-native";
+import { uppercaseFirstLetter } from "@/helpers/strings";
 
 import { PerfTestCalendarItemDayWithContainer } from "./PerfTestCalendarItemDay";
 import { useRenderCount } from "./useRenderCount";

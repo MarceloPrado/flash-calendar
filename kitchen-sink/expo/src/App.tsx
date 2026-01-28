@@ -9,8 +9,8 @@ import {
   View,
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-
 import { Calendar } from "@lazerlen/legend-calendar";
+
 import { CalendarDemo } from "./Calendar";
 import { CalendarListDemo } from "./CalendarList";
 // import { SlowExampleAddressed } from "./SlowExampleAddressed";
