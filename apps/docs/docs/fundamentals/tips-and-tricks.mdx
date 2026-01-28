@@ -9,15 +9,15 @@ import imperativeScrollVideo from "@site/static/videos/imperative-scroll.mp4";
 
 ## Exploring the libary and props
 
-All props from Flash Calendar are documented and prefixed with `calendar` to
+All props from Legend Calendar are documented and prefixed with `calendar` to
 increase IDE discoverability. After installing the package, just type `<Calendar
 calendar` and open your autocomplete to see the available options.
 
 ## Date IDs vs Dates
 
-Date and timezones are a confusing topic. This is why Flash Calendar is careful to name things consistently. All props and callbacks used by the library follows the same convention of using a date ID instead of a `Date`.
+Date and timezones are a confusing topic. This is why Legend Calendar is careful to name things consistently. All props and callbacks used by the library follows the same convention of using a date ID instead of a `Date`.
 
-Date ID is a simple `YYYY-MM-DD` representation of a given date. Flash Calendar exposes two functions to convert between Date and Date ID.
+Date ID is a simple `YYYY-MM-DD` representation of a given date. Legend Calendar exposes two functions to convert between Date and Date ID.
 
 ```tsx
 import { toDateId, fromDateId } from "@lazerlen/legend-calendar";
@@ -48,7 +48,7 @@ These two convertions functions were [battle-tested](https://github.com/LeviWill
 
 ## Programmatically scrolling to a date
 
-Flash Calendar exposes a `ref` that allows imperative scrolling to a desired
+Legend Calendar exposes a `ref` that allows imperative scrolling to a desired
 date (`.scrollToDate`), a month (`.scrollToMonth`), or an offset
 (`.scrollToOffset`).
 
@@ -139,7 +139,7 @@ itemDay: {
 
 ## Avoiding dark mode
 
-If your app doesn't support dynamic themes, you can override Flash Calendar's
+If your app doesn't support dynamic themes, you can override Legend Calendar's
 color scheme by passing a `calendarColorScheme` prop:
 
 ```tsx
@@ -160,7 +160,7 @@ export const LightModeOnly = () => {
 };
 ```
 
-When set, Flash Calendar's theming system will use this scheme instead of the
+When set, Legend Calendar's theming system will use this scheme instead of the
 user system's theme.
 
 **Note**: you should avoid using this prop. Instead, your app should
@@ -177,7 +177,7 @@ export const ListenToVisibleMonth = () => {
   const [visibleMonth, setVisibleMonth] = useState(today);
 
   const handleViewableItemsChanged = useCallback<
-    NonNullable<FlashListProps<CalendarMonth>["onViewableItemsChanged"]>
+    NonNullable<LegendListProps<CalendarMonth>["onViewableItemsChanged"]>
   >(({ viewableItems }) => {
     const firstVisibleItem = viewableItems.find((item) => item.isViewable);
 

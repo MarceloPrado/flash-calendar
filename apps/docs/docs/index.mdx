@@ -8,7 +8,8 @@ import moniVideo from "@site/static/videos/moni-demo.mp4";
 
 # Introduction
 
-**An incredibly fast and flexible way of building calendars in React Native.**
+This is a fork of Marcelo Prado's [flash-calendar](https://github.com/MarceloPrado/flash-calendar) library which leverages [legend-list](https://github.com/LegendApp/legend-list) instead. 
+If you found this, you probably want to use the original library.
 
 <Image img={require("/img/shots.png")} width={800} />
 
@@ -21,7 +22,7 @@ import moniVideo from "@site/static/videos/moni-demo.mp4";
 - Dark-mode out of the box
 - Infinite scroll
 - Date range support
-- Tiny bundle size _(18kb minified, 6kb gzip)_
+- Tiny bundle size _(~20kb minified)_
   - Just a [single](https://github.com/developit/mitt) third-party dependency _(200 bytes)_
 - [Bottom sheet](https://github.com/gorhom/react-native-bottom-sheet) compatible
 
@@ -37,11 +38,11 @@ npm add @lazerlen/legend-calendar
 
 To use this package, **you also need to install its peer dependencies**. Check out their documentation for more information:
 
-- [`@shopify/flash-list`](https://shopify.github.io/flash-list)
+- [`@legendapp/list`](https://github.com/LegendApp/legend-list)
 
 ## Getting started
 
-**To learn more about Flash Calendar, start [here](/fundamentals/principles).**
+**Start [here](/fundamentals/usage).**
 
 ## Playground & examples
 
@@ -50,29 +51,3 @@ There are a bunch of examples, including interactable stories, available in the 
 <video controls width={500}>
   <source src={playgroundVideo} type="video/mp4" />
 </video>
-
-## Who's using it?
-
-- 🇺🇸 [Brex](https://brex.com), the AI-powered spend platform ([iOS](https://apps.apple.com/us/app/brex/id1472905508), [Android](https://play.google.com/store/apps/details?id=com.brex.mobile&hl=en&pli=1))
-- 🇺🇸 [Dysperse](https://dysperse.com), an all-in-one unified productivity platform designed to enhance efficiency and streamline tasks ([Windows](https://click.dysperse.com/xP1iJKE), [Web](https://click.dysperse.com/b1PFaNM))
-
-Here's a sneak peek of what you can build with Flash Calendar (from my former
-side project):
-
-<video controls width={500}>
-  <source src={moniVideo} type="video/mp4" />
-</video>
-
-In this demo, there are several features working together:
-
-- [date range picker](/fundamentals/usage#date-range-picker)
-- [theme prop](/fundamentals/customization.mdx#theme-prop)
-- [bottom-sheet integration](/fundamentals/usage#bottom-sheet)
-- infinite scroll
-- [localization](/fundamentals/usage#localization-and-date-formatting)
-
-## Resources
-
-- [Build fast, flexible calendars with Flash
-  Calendar](https://expo.dev/blog/build-fast-flexible-calendars-in-react-native-with-flash-calendar) |
-  Expo Blog

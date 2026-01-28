@@ -1,4 +1,4 @@
-turbo build --filter flash-calendar -- --metafile
+turbo build --filter @lazerlen/legend-calendar -- --metafile
 echo "Open https://esbuild.github.io/analyze and add the metafile to analyze the library bundle"
 
 # cd kitchen-sink/expo

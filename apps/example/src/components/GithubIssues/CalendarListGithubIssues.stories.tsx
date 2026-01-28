@@ -1,14 +1,14 @@
+import { useTheme } from "@/hooks/useTheme";
 import type {
   CalendarMonth,
   CalendarOnDayPress,
   CalendarTheme,
 } from "@lazerlen/legend-calendar";
 import { Calendar, toDateId } from "@lazerlen/legend-calendar";
-import type { FlashListProps } from "@shopify/flash-list";
+import type { LegendListProps } from "@legendapp/list";
 import type { Meta } from "@storybook/react-native";
 import { useCallback, useMemo, useState } from "react";
 import { Alert, Text, View } from "react-native";
-import { useTheme } from "@/hooks/useTheme";
 
 const CalendarMeta: Meta<typeof Calendar> = {
   title: "Calendar.List/Github Issues",
@@ -133,7 +133,7 @@ export const ListenToVisibleMonth = () => {
   const [visibleMonth, setVisibleMonth] = useState(today);
 
   const handleViewableItemsChanged = useCallback<
-    NonNullable<FlashListProps<CalendarMonth>["onViewableItemsChanged"]>
+    NonNullable<LegendListProps<CalendarMonth>["onViewableItemsChanged"]>
   >(({ viewableItems }) => {
     const firstVisibleItem = viewableItems.find((item) => item.isViewable);
 
