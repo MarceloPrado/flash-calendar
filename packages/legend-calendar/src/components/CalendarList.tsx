@@ -5,11 +5,11 @@ import type { CalendarMonth } from "@/hooks/useCalendarList";
 import { getHeightForMonth, useCalendarList } from "@/hooks/useCalendarList";
 import { LegendList as LegendListBase, type LegendListProps, type LegendListRef } from "@legendapp/list";
 import {
-  memo,
-  useCallback,
-  useImperativeHandle,
-  useMemo,
-  useRef,
+    memo,
+    useCallback,
+    useImperativeHandle,
+    useMemo,
+    useRef,
 } from "react";
 import { View } from "react-native";
 
@@ -133,6 +133,7 @@ export const CalendarList = memo(function CalendarList({
       calendarColorScheme,
       theme,
       onEndReached,
+      onStartReached,
       ...otherProps
     } = props;
 
@@ -195,7 +196,7 @@ export const CalendarList = memo(function CalendarList({
       ]
     );
 
-    const { initialMonthIndex, monthList, appendMonths, addMissingMonths } =
+    const { initialMonthIndex, monthList, appendMonths, prependMonths, addMissingMonths } =
       useCalendarList({
         calendarFirstDayOfWeek,
         calendarFutureScrollRangeInMonths,
@@ -218,6 +219,14 @@ export const CalendarList = memo(function CalendarList({
         onEndReached?.(info);
       },
       [appendMonths, calendarFutureScrollRangeInMonths, onEndReached]
+    );
+
+    const handleOnStartReached = useCallback(
+      (info: { distanceFromStart: number }) => {
+        prependMonths(calendarPastScrollRangeInMonths);
+        onStartReached?.(info);
+      },
+      [prependMonths, calendarPastScrollRangeInMonths, onStartReached]
     );
 
     const handleGetFixedItemSize = useCallback(
@@ -345,6 +354,7 @@ export const CalendarList = memo(function CalendarList({
         initialScrollIndex={initialMonthIndex}
         keyExtractor={keyExtractor}
         onEndReached={handleOnEndReached}
+        onStartReached={handleOnStartReached}
         recycleItems
         ref={legendListRef}
         renderItem={({ item }: { item: CalendarMonthEnhanced }) => (
