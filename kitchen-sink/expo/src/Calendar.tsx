@@ -1,4 +1,4 @@
-import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+import { Calendar, toDateId } from "@lazerlen/legend-calendar";
 import { useState } from "react";
 import { Text } from "react-native";
 
@@ -16,6 +16,7 @@ export function CalendarDemo() {
             endId: selectedDate ?? undefined,
           },
         ]}
+        calendarColorScheme="light"
         calendarMonthId={today}
         onCalendarDayPress={setSelectedDate}
       />

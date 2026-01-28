@@ -1,14 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
+import { Calendar } from "@lazerlen/legend-calendar";
 import { CalendarDemo } from "./Calendar";
 import { CalendarListDemo } from "./CalendarList";
-import { BottomSheetCalendar } from "./BottomSheetCalendar";
-import { CalendarCustomFormatting } from "./CalendarCustomFormatting";
-import { ImperativeScrolling } from "./ImperativeScroll";
 // import { SlowExampleAddressed } from "./SlowExampleAddressed";
 
 export default function App() {
@@ -18,22 +22,23 @@ export default function App() {
     <GestureHandlerRootView style={styles.flexOne}>
       <SafeAreaView style={styles.pageContainer}>
         <StatusBar style="auto" />
-        {/* <View style={styles.paddedContainer}>
+        <View style={styles.paddedContainer}>
           <Calendar.HStack alignItems="center" justifyContent="space-between">
             <Text>
               Demo: {demo === "calendar" ? "Calendar" : "Calendar List"}
             </Text>
-            <Button
+            <TouchableOpacity
               onPress={() =>
                 setDemo(demo === "calendar" ? "calendarList" : "calendar")
               }
-              title="Toggle"
-            />
+            >
+              <Text>Toggle</Text>
+            </TouchableOpacity>
           </Calendar.HStack>
 
           {demo === "calendar" ? <CalendarDemo /> : <CalendarListDemo />}
-        </View> */}
-        <ImperativeScrolling />
+        </View>
+        {/* <ImperativeScrolling /> */}
         {/* <BottomSheetCalendar /> */}
         {/* <SlowExampleAddressed /> */}
       </SafeAreaView>

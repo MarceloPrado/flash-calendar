@@ -17,13 +17,13 @@ import type { CalendarRowMonthProps } from "@/components/CalendarRowMonth";
 import { CalendarRowMonth } from "@/components/CalendarRowMonth";
 import type { CalendarRowWeekProps } from "@/components/CalendarRowWeek";
 import { CalendarRowWeek } from "@/components/CalendarRowWeek";
+import { CalendarThemeProvider } from "@/components/CalendarThemeProvider";
 import { VStack } from "@/components/VStack";
 import { uppercaseFirstLetter } from "@/helpers/strings";
 import type { BaseTheme } from "@/helpers/tokens";
 import type { UseCalendarParams } from "@/hooks/useCalendar";
 import { useCalendar } from "@/hooks/useCalendar";
 import { activeDateRangesEmitter } from "@/hooks/useOptimizedDayMetadata";
-import { CalendarThemeProvider } from "@/components/CalendarThemeProvider";
 
 export type PressableLike = React.ComponentType<
   Pick<PressableProps, "children" | "style" | "disabled"> & {
@@ -49,13 +49,13 @@ export type CalendarOnDayPress = (dateId: string) => void;
 export interface CalendarProps extends UseCalendarParams {
   /**
    * A unique identifier for this calendar instance. This is useful if you
-   * need to render more than one calendar at once. This allows Flash Calendar
+   * need to render more than one calendar at once. This allows Legend Calendar
    * to scope its state to the given instance.
    *
    * No need to get fancy with `uuid` or anything like that - a simple static
    * string is enough.
    *
-   * If not provided, Flash Calendar will use a default value which will hoist
+   * If not provided, Legend Calendar will use a default value which will hoist
    * the state in a global scope.
    */
   calendarInstanceId?: string;
@@ -86,7 +86,7 @@ export interface CalendarProps extends UseCalendarParams {
    */
   calendarMonthHeaderHeight?: number;
   /**
-   * When set, Flash Calendar will use this color scheme instead of the system's
+   * When set, Legend Calendar will use this color scheme instead of the system's
    * value (`light|dark`). This is useful if your app doesn't support dark-mode,
    * for example.
    *
@@ -202,8 +202,8 @@ export const Calendar = memo(function Calendar(props: CalendarProps) {
     });
     /**
      * While `calendarMonthId` is not used by the effect, we still need it in
-     * the dependency array since [FlashList uses recycling
-     * internally](https://shopify.github.io/flash-list/docs/recycling).
+     * the dependency array since [LegendList uses recycling
+     * internally](https://legendapp.com/open-source/list/).
      *
      * This means `Calendar` can re-render with different props instead of
      * getting re-mounted. Without it, we would see staled/invalid data, as

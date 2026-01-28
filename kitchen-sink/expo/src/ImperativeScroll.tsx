@@ -1,10 +1,6 @@
-import { addMonths, subMonths, startOfMonth } from "date-fns";
-import type { CalendarListRef } from "@marceloterreiro/flash-calendar";
-import {
-  Calendar,
-  toDateId,
-  fromDateId,
-} from "@marceloterreiro/flash-calendar";
+import type { CalendarListRef } from "@lazerlen/legend-calendar";
+import { Calendar, fromDateId, toDateId } from "@lazerlen/legend-calendar";
+import { addMonths, startOfMonth, subMonths } from "date-fns";
 import { useCallback, useRef, useState } from "react";
 import { Button, Text, View } from "react-native";
 
@@ -39,6 +35,7 @@ export function ImperativeScrolling() {
       </View>
       <View style={{ flex: 1, width: "100%" }}>
         <Calendar.List
+          calendarColorScheme="light"
           calendarInitialMonthId={toDateId(currentMonth)}
           onCalendarDayPress={onCalendarDayPress}
           ref={ref}

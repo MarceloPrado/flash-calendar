@@ -1,8 +1,4 @@
-import {
-  Calendar,
-  toDateId,
-  useDateRange,
-} from "@marceloterreiro/flash-calendar";
+import { Calendar, toDateId, useDateRange } from "@lazerlen/legend-calendar";
 import type { Meta } from "@storybook/react-native";
 import { addDays, format } from "date-fns";
 import { useEffect, useState } from "react";

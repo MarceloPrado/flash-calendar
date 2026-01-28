@@ -1,22 +1,23 @@
-import { themes as prismThemes } from "prism-react-renderer";
-import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
+import type { Config } from "@docusaurus/types";
+import { themes as prismThemes } from "prism-react-renderer";
 
 const config: Config = {
-  title: "Flash Calendar",
-  tagline: "The fastest calendar component for React Native",
+  title: "Legend Calendar",
+  tagline:
+    "An incredibly fast and flexible calendar component for React Native",
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here
-  url: "https://marceloprado.github.io",
+  url: "https://leviwilliams.github.io",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: "/flash-calendar/",
+  baseUrl: "/legend-calendar/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "marceloprado", // Usually your GitHub org/user name.
-  projectName: "flash-calendar", // Usually your repo name.
+  organizationName: "LeviWilliams", // Usually your GitHub org/user name.
+  projectName: "legend-calendar", // Usually your repo name.
   trailingSlash: false,
 
   onBrokenLinks: "throw",
@@ -55,9 +56,9 @@ const config: Config = {
     },
     image: "img/social-card.png",
     navbar: {
-      title: "Flash Calendar",
+      title: "Legend Calendar",
       logo: {
-        alt: "Flash Calendar Logo",
+        alt: "Legend Calendar Logo",
         src: "img/logo.svg",
       },
       items: [
@@ -68,7 +69,7 @@ const config: Config = {
           label: "Docs",
         },
         {
-          href: "https://github.com/marceloprado/flash-calendar",
+          href: "https://github.com/LeviWilliams/legend-calendar",
           label: "GitHub",
           position: "right",
         },
@@ -83,16 +84,12 @@ const config: Config = {
           items: [
             {
               label: "GitHub",
-              href: "https://github.com/MarceloPrado/flash-calendar",
-            },
-            {
-              label: "Twitter",
-              href: "https://twitter.com/marceloterreiro",
+              href: "https://github.com/LeviWilliams/legend-calendar",
             },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Marcelo Prado. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Levi Williams. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,

@@ -2,8 +2,10 @@
   "expo": {
     "name": "expo-app",
     "slug": "expo-app",
-    "jsEngine": "hermes",
     "version": "1.0.0",
+    "experiments": {
+      "reactCompiler": true
+    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",

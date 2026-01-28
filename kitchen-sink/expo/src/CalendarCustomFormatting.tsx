@@ -1,4 +1,4 @@
-import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+import { Calendar, toDateId } from "@lazerlen/legend-calendar";
 import { subMonths } from "date-fns";
 import { format } from "date-fns/fp";
 

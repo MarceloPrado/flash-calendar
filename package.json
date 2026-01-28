@@ -1,5 +1,5 @@
 {
-  "name": "@marceloterreiro/monorepo",
+  "name": "@lazerlen/monorepo",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -8,7 +8,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MarceloPrado/flash-calendar.git"
+    "url": "git+https://github.com/LeviWilliams/legend-calendar.git"
   },
   "scripts": {
     "analyze:bundle": "scripts/analyze-bundle.sh",
@@ -17,15 +17,15 @@
     "docs": "turbo docs --filter=docs",
     "dev": "turbo dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "kitchen-sink:expo": "cd kitchen-sink/expo && bun run ios",
+    "kitchen-sink": "cd kitchen-sink/expo && bun run ios",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
-    "publish-packages": "turbo build lint test typecheck --filter @marceloterreiro/flash-calendar && changeset version && changeset publish",
+    "publish-packages": "turbo build lint test typecheck --filter @lazerlen/legend-calendar && changeset version && changeset publish",
     "test": "turbo test",
     "postinstall": "manypkg check"
   },
   "overrides": {
-    "react": "19.0.0",
+    "react": "19.1.0",
     "sharp": "0.34.5"
   },
   "packageManager": "bun@1.3.2",
@@ -36,14 +36,14 @@
   ],
   "dependencies": {
     "@changesets/cli": "^2.27.1",
+    "@lazerlen/eslint-config": "*",
+    "@lazerlen/tsconfig": "*",
     "@manypkg/cli": "^0.21.2",
-    "@marceloterreiro/eslint-config": "*",
-    "@marceloterreiro/tsconfig": "*",
     "@typescript-eslint/typescript-estree": "^6.21.0",
     "eslint-plugin-import": "^2.29.1",
     "prettier": "^2.8.8",
     "react-loadable": "npm:@docusaurus/react-loadable@5.5.2",
     "turbo": "^2.0.6",
-    "typescript": "~5.8.3"
+    "typescript": "~5.9.2"
   }
 }

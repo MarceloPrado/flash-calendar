@@ -16,7 +16,7 @@ export const CalendarThemeProvider = ({
 }: {
   children: ReactNode;
   /**
-   * When set, Flash Calendar will use this color scheme instead of the system's
+   * When set, Legend Calendar will use this color scheme instead of the system's
    * value (`light|dark`). This is useful if your app doesn't support dark-mode,
    * for example.
    *

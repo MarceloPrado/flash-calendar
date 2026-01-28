@@ -1,10 +1,12 @@
 {
-  "extends": "@marceloterreiro/tsconfig/base",
+  "extends": "@lazerlen/tsconfig/base",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@marceloterreiro/flash-calendar": ["../../packages/flash-calendar/src"],
-      "@/*": ["../../packages/flash-calendar/src/*"]
+      "@lazerlen/legend-calendar": ["../../packages/legend-calendar/src"],
+      "@lazerlen/legend-calendar/*": [
+        "../../packages/legend-calendar/src/*"
+      ],
     },
     "esModuleInterop": true
   },
