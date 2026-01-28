@@ -7,6 +7,7 @@
       "@lazerlen/legend-calendar/*": [
         "../../packages/legend-calendar/src/*"
       ],
+      "@/*": ["../../packages/legend-calendar/src/*"]
     },
     "esModuleInterop": true
   },

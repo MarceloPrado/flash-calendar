@@ -101,8 +101,8 @@ export const PerfTestCalendar = memo(
       });
       /**
        * While `calendarMonthId` is not used by the effect, we still need it in
-       * the dependency array since [FlashList uses recycling
-       * internally](https://shopify.github.io/flash-list/docs/recycling).
+       * the dependency array since [LegendList uses recycling
+       * internally](https://www.legendapp.com/open-source/list/v2/performance/#recycling-list-items).
        *
        * This means `Calendar` can re-render with different props instead of
        * getting re-mounted. Without it, we would see staled/invalid data, as

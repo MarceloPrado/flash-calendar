@@ -3,7 +3,7 @@ import { resolve } from "path";
 
 const flashCalendarStories = resolve(
   __dirname,
-  "../../../packages/flash-calendar/src/components/**/*.stories.?(ts|tsx|js|jsx)"
+  "../../../packages/legend-calendar/src/components/**/*.stories.?(ts|tsx|js|jsx)"
 );
 
 const exampleStories = resolve(

@@ -21,7 +21,6 @@ const config: Config = {
   trailingSlash: false,
 
   onBrokenLinks: "throw",
-  onBrokenMarkdownLinks: "warn",
 
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
@@ -47,14 +46,17 @@ const config: Config = {
   ],
 
   plugins: ["@docusaurus/plugin-ideal-image"],
-
+  markdown: {
+    hooks: {
+      onBrokenMarkdownLinks: "warn",
+    },
+  },
   themeConfig: {
     algolia: {
       appId: "XZ9MYUH844",
       apiKey: "f23abd1fe4bf9bf91c59d7ccd526269d",
       indexName: "marcelopradoio",
     },
-    image: "img/social-card.png",
     navbar: {
       title: "Legend Calendar",
       logo: {
