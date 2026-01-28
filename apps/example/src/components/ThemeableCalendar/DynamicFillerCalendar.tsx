@@ -1,9 +1,5 @@
-import type { CalendarTheme } from "@lazerlen/flash-calendar";
-import {
-  Calendar,
-  toDateId,
-  useDateRange,
-} from "@lazerlen/flash-calendar";
+import type { CalendarTheme } from "@lazerlen/legend-calendar";
+import { Calendar, toDateId, useDateRange } from "@lazerlen/legend-calendar";
 import { startOfMonth } from "date-fns";
 import { format } from "date-fns/fp";
 import { memo } from "react";

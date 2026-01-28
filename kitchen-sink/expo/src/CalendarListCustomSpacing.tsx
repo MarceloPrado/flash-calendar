@@ -1,4 +1,4 @@
-import { Calendar } from "@lazerlen/flash-calendar";
+import { Calendar } from "@lazerlen/legend-calendar";
 import { View } from "react-native";
 
 export const CalendarListCompact = () => {

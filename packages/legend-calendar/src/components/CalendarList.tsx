@@ -1,17 +1,16 @@
+import {
+  LegendList as LegendListBase,
+  type LegendListProps,
+  type LegendListRef,
+} from "@legendapp/list";
+import { memo, useCallback, useImperativeHandle, useMemo, useRef } from "react";
+import { View } from "react-native";
+
 import type { CalendarProps } from "@/components/Calendar";
 import { Calendar } from "@/components/Calendar";
 import { getWeekOfMonth, startOfMonth, toDateId } from "@/helpers/dates";
 import type { CalendarMonth } from "@/hooks/useCalendarList";
 import { getHeightForMonth, useCalendarList } from "@/hooks/useCalendarList";
-import { LegendList as LegendListBase, type LegendListProps, type LegendListRef } from "@legendapp/list";
-import {
-    memo,
-    useCallback,
-    useImperativeHandle,
-    useMemo,
-    useRef,
-} from "react";
-import { View } from "react-native";
 
 // Type assertion to make LegendList compatible with React 19
 const LegendList = LegendListBase as <T>(
@@ -110,262 +109,265 @@ export const CalendarList = memo(function CalendarList({
   ref,
   ...props
 }: CalendarListProps & { ref?: React.Ref<CalendarListRef> }) {
-    const {
-      // List-related props
-      calendarInitialMonthId,
-      calendarPastScrollRangeInMonths = 12,
-      calendarFutureScrollRangeInMonths = 12,
-      calendarFirstDayOfWeek = "sunday",
-      calendarFormatLocale,
+  const {
+    // List-related props
+    calendarInitialMonthId,
+    calendarPastScrollRangeInMonths = 12,
+    calendarFutureScrollRangeInMonths = 12,
+    calendarFirstDayOfWeek = "sunday",
+    calendarFormatLocale,
 
-      // Spacings
-      calendarSpacing = 20,
-      calendarRowHorizontalSpacing,
-      calendarRowVerticalSpacing = 8,
+    // Spacings
+    calendarSpacing = 20,
+    calendarRowHorizontalSpacing,
+    calendarRowVerticalSpacing = 8,
 
-      // Heights
-      calendarMonthHeaderHeight = 20,
-      calendarDayHeight = 32,
-      calendarWeekHeaderHeight = calendarDayHeight,
-      calendarAdditionalHeight = 0,
+    // Heights
+    calendarMonthHeaderHeight = 20,
+    calendarDayHeight = 32,
+    calendarWeekHeaderHeight = calendarDayHeight,
+    calendarAdditionalHeight = 0,
 
-      // Other props
-      calendarColorScheme,
-      theme,
-      onEndReached,
-      onStartReached,
-      ...otherProps
-    } = props;
+    // Other props
+    calendarColorScheme,
+    theme,
+    onEndReached,
+    onStartReached,
+    ...otherProps
+  } = props;
 
-    const {
+  const {
+    calendarActiveDateRanges,
+    calendarDisabledDateIds,
+    calendarInstanceId,
+    calendarMaxDateId,
+    calendarMinDateId,
+    getCalendarDayFormat,
+    getCalendarMonthFormat,
+    getCalendarWeekDayFormat,
+    onCalendarDayPress,
+    CalendarPressableComponent,
+    ...flatListProps
+  } = otherProps;
+
+  const calendarProps = useMemo(
+    (): CalendarMonthEnhanced["calendarProps"] => ({
       calendarActiveDateRanges,
+      calendarColorScheme,
+      calendarDayHeight,
       calendarDisabledDateIds,
+      calendarFirstDayOfWeek,
+      calendarFormatLocale,
       calendarInstanceId,
       calendarMaxDateId,
       calendarMinDateId,
+      calendarMonthHeaderHeight,
+      calendarRowHorizontalSpacing,
+      calendarRowVerticalSpacing,
+      calendarWeekHeaderHeight,
       getCalendarDayFormat,
       getCalendarMonthFormat,
       getCalendarWeekDayFormat,
       onCalendarDayPress,
+      theme,
       CalendarPressableComponent,
-      ...flatListProps
-    } = otherProps;
+    }),
+    [
+      calendarColorScheme,
+      calendarActiveDateRanges,
+      calendarDayHeight,
+      calendarDisabledDateIds,
+      calendarFirstDayOfWeek,
+      calendarFormatLocale,
+      calendarMaxDateId,
+      calendarMinDateId,
+      calendarMonthHeaderHeight,
+      calendarRowHorizontalSpacing,
+      calendarRowVerticalSpacing,
+      calendarWeekHeaderHeight,
+      getCalendarDayFormat,
+      getCalendarMonthFormat,
+      getCalendarWeekDayFormat,
+      calendarInstanceId,
+      onCalendarDayPress,
+      theme,
+      CalendarPressableComponent,
+    ]
+  );
 
-    const calendarProps = useMemo(
-      (): CalendarMonthEnhanced["calendarProps"] => ({
-        calendarActiveDateRanges,
-        calendarColorScheme,
-        calendarDayHeight,
-        calendarDisabledDateIds,
-        calendarFirstDayOfWeek,
-        calendarFormatLocale,
-        calendarInstanceId,
-        calendarMaxDateId,
-        calendarMinDateId,
-        calendarMonthHeaderHeight,
-        calendarRowHorizontalSpacing,
-        calendarRowVerticalSpacing,
-        calendarWeekHeaderHeight,
-        getCalendarDayFormat,
-        getCalendarMonthFormat,
-        getCalendarWeekDayFormat,
-        onCalendarDayPress,
-        theme,
-        CalendarPressableComponent,
-      }),
-      [
-        calendarColorScheme,
-        calendarActiveDateRanges,
-        calendarDayHeight,
-        calendarDisabledDateIds,
-        calendarFirstDayOfWeek,
-        calendarFormatLocale,
-        calendarMaxDateId,
-        calendarMinDateId,
-        calendarMonthHeaderHeight,
-        calendarRowHorizontalSpacing,
-        calendarRowVerticalSpacing,
-        calendarWeekHeaderHeight,
-        getCalendarDayFormat,
-        getCalendarMonthFormat,
-        getCalendarWeekDayFormat,
-        calendarInstanceId,
-        onCalendarDayPress,
-        theme,
-        CalendarPressableComponent,
-      ]
-    );
+  const {
+    initialMonthIndex,
+    monthList,
+    appendMonths,
+    prependMonths,
+    addMissingMonths,
+  } = useCalendarList({
+    calendarFirstDayOfWeek,
+    calendarFutureScrollRangeInMonths,
+    calendarPastScrollRangeInMonths,
+    calendarInitialMonthId,
+    calendarMaxDateId,
+    calendarMinDateId,
+  });
 
-    const { initialMonthIndex, monthList, appendMonths, prependMonths, addMissingMonths } =
-      useCalendarList({
-        calendarFirstDayOfWeek,
-        calendarFutureScrollRangeInMonths,
-        calendarPastScrollRangeInMonths,
-        calendarInitialMonthId,
-        calendarMaxDateId,
-        calendarMinDateId,
+  const monthListWithCalendarProps = useMemo(() => {
+    return monthList.map((month) => ({
+      ...month,
+      calendarProps,
+    }));
+  }, [calendarProps, monthList]);
+
+  const handleOnEndReached = useCallback(
+    (info: { distanceFromEnd: number }) => {
+      appendMonths(calendarFutureScrollRangeInMonths);
+      onEndReached?.(info);
+    },
+    [appendMonths, calendarFutureScrollRangeInMonths, onEndReached]
+  );
+
+  const handleOnStartReached = useCallback(
+    (info: { distanceFromStart: number }) => {
+      prependMonths(calendarPastScrollRangeInMonths);
+      onStartReached?.(info);
+    },
+    [prependMonths, calendarPastScrollRangeInMonths, onStartReached]
+  );
+
+  const handleGetFixedItemSize = useCallback(
+    (_index: number, item: CalendarMonth) => {
+      return getHeightForMonth({
+        calendarMonth: item,
+        calendarSpacing,
+        calendarDayHeight,
+        calendarMonthHeaderHeight,
+        calendarRowVerticalSpacing,
+        calendarAdditionalHeight,
+        calendarWeekHeaderHeight,
       });
+    },
+    [
+      calendarAdditionalHeight,
+      calendarDayHeight,
+      calendarMonthHeaderHeight,
+      calendarRowVerticalSpacing,
+      calendarSpacing,
+      calendarWeekHeaderHeight,
+    ]
+  );
 
-    const monthListWithCalendarProps = useMemo(() => {
-      return monthList.map((month) => ({
-        ...month,
-        calendarProps,
-      }));
-    }, [calendarProps, monthList]);
+  /**
+   * Returns the offset for the given month (how much the user needs to
+   * scroll to reach the month).
+   */
+  const getScrollOffsetForMonth = useCallback(
+    (date: Date) => {
+      const monthId = toDateId(startOfMonth(date));
 
-    const handleOnEndReached = useCallback(
-      (info: { distanceFromEnd: number }) => {
-        appendMonths(calendarFutureScrollRangeInMonths);
-        onEndReached?.(info);
-      },
-      [appendMonths, calendarFutureScrollRangeInMonths, onEndReached]
-    );
+      let baseMonthList = monthList;
+      let index = baseMonthList.findIndex((month) => month.id === monthId);
 
-    const handleOnStartReached = useCallback(
-      (info: { distanceFromStart: number }) => {
-        prependMonths(calendarPastScrollRangeInMonths);
-        onStartReached?.(info);
-      },
-      [prependMonths, calendarPastScrollRangeInMonths, onStartReached]
-    );
+      if (index === -1) {
+        baseMonthList = addMissingMonths(monthId);
+        index = baseMonthList.findIndex((month) => month.id === monthId);
+      }
 
-    const handleGetFixedItemSize = useCallback(
-      (_index: number, item: CalendarMonth) => {
-        return getHeightForMonth({
-          calendarMonth: item,
+      return baseMonthList.slice(0, index).reduce((acc, month) => {
+        const currentHeight = getHeightForMonth({
+          calendarMonth: month,
           calendarSpacing,
           calendarDayHeight,
           calendarMonthHeaderHeight,
           calendarRowVerticalSpacing,
-          calendarAdditionalHeight,
           calendarWeekHeaderHeight,
+          calendarAdditionalHeight,
         });
-      },
-      [
-        calendarAdditionalHeight,
-        calendarDayHeight,
-        calendarMonthHeaderHeight,
-        calendarRowVerticalSpacing,
-        calendarSpacing,
-        calendarWeekHeaderHeight,
-      ]
-    );
 
-    /**
-     * Returns the offset for the given month (how much the user needs to
-     * scroll to reach the month).
-     */
-    const getScrollOffsetForMonth = useCallback(
-      (date: Date) => {
-        const monthId = toDateId(startOfMonth(date));
+        return acc + currentHeight;
+      }, 0);
+    },
+    [
+      addMissingMonths,
+      calendarAdditionalHeight,
+      calendarDayHeight,
+      calendarMonthHeaderHeight,
+      calendarRowVerticalSpacing,
+      calendarSpacing,
+      calendarWeekHeaderHeight,
+      monthList,
+    ]
+  );
 
-        let baseMonthList = monthList;
-        let index = baseMonthList.findIndex((month) => month.id === monthId);
+  const legendListRef = useRef<LegendListRef>(null);
 
-        if (index === -1) {
-          baseMonthList = addMissingMonths(monthId);
-          index = baseMonthList.findIndex((month) => month.id === monthId);
-        }
-
-        return baseMonthList.slice(0, index).reduce((acc, month) => {
-          const currentHeight = getHeightForMonth({
-            calendarMonth: month,
-            calendarSpacing,
-            calendarDayHeight,
-            calendarMonthHeaderHeight,
-            calendarRowVerticalSpacing,
-            calendarWeekHeaderHeight,
-            calendarAdditionalHeight,
-          });
-
-          return acc + currentHeight;
-        }, 0);
-      },
-      [
-        addMissingMonths,
-        calendarAdditionalHeight,
-        calendarDayHeight,
-        calendarMonthHeaderHeight,
-        calendarRowVerticalSpacing,
-        calendarSpacing,
-        calendarWeekHeaderHeight,
-        monthList,
-      ]
-    );
-
-    const legendListRef = useRef<LegendListRef>(null);
-
-    useImperativeHandle(ref, () => ({
-      scrollToMonth(
-        date,
-        animated,
-        { additionalOffset = 0 } = { additionalOffset: 0 }
-      ) {
-        // Wait for the next render cycle to ensure the list has been
-        // updated with the new months.
-        setTimeout(() => {
-          legendListRef.current?.scrollToOffset({
-            offset: getScrollOffsetForMonth(date) + additionalOffset,
-            animated,
-          });
-        }, 0);
-      },
-      scrollToDate(
-        date,
-        animated,
-        { additionalOffset = 0 } = {
-          additionalOffset: 0,
-        }
-      ) {
-        const currentMonthOffset = getScrollOffsetForMonth(date);
-        const weekOfMonthIndex = getWeekOfMonth(date, calendarFirstDayOfWeek);
-        const rowHeight = calendarDayHeight + calendarRowVerticalSpacing;
-
-        let weekOffset =
-          calendarWeekHeaderHeight + rowHeight * weekOfMonthIndex;
-
-        /**
-         * We need to subtract one vertical spacing to avoid cutting off the
-         * desired date. A simple way of understanding why is imagining we
-         * want to scroll exactly to the given date, but leave a little bit of
-         * breathing room (`calendarRowVerticalSpacing`) above it.
-         */
-        weekOffset = weekOffset - calendarRowVerticalSpacing;
-
+  useImperativeHandle(ref, () => ({
+    scrollToMonth(
+      date,
+      animated,
+      { additionalOffset = 0 } = { additionalOffset: 0 }
+    ) {
+      // Wait for the next render cycle to ensure the list has been
+      // updated with the new months.
+      setTimeout(() => {
         legendListRef.current?.scrollToOffset({
-          offset: currentMonthOffset + weekOffset + additionalOffset,
+          offset: getScrollOffsetForMonth(date) + additionalOffset,
           animated,
         });
-      },
-      scrollToOffset(offset, animated) {
-        legendListRef.current?.scrollToOffset({ offset, animated });
-      },
-    }));
+      }, 0);
+    },
+    scrollToDate(
+      date,
+      animated,
+      { additionalOffset = 0 } = {
+        additionalOffset: 0,
+      }
+    ) {
+      const currentMonthOffset = getScrollOffsetForMonth(date);
+      const weekOfMonthIndex = getWeekOfMonth(date, calendarFirstDayOfWeek);
+      const rowHeight = calendarDayHeight + calendarRowVerticalSpacing;
 
-    const calendarContainerStyle = useMemo(() => {
-      return { paddingBottom: calendarSpacing };
-    }, [calendarSpacing]);
+      let weekOffset = calendarWeekHeaderHeight + rowHeight * weekOfMonthIndex;
 
-    return (
-      <LegendList
-        data={monthListWithCalendarProps}
-        estimatedItemSize={273}
-        getFixedItemSize={handleGetFixedItemSize}
-        initialScrollIndex={initialMonthIndex}
-        keyExtractor={keyExtractor}
-        onEndReached={handleOnEndReached}
-        onStartReached={handleOnStartReached}
-        recycleItems
-        ref={legendListRef}
-        renderItem={({ item }: { item: CalendarMonthEnhanced }) => (
-          <View style={calendarContainerStyle}>
-            <Calendar calendarMonthId={item.id} {...item.calendarProps} />
-          </View>
-        )}
-        showsVerticalScrollIndicator={false}
-        style={{ flex: 1 }}
-        {...flatListProps}
-      />
-    );
-  }
-);
+      /**
+       * We need to subtract one vertical spacing to avoid cutting off the
+       * desired date. A simple way of understanding why is imagining we
+       * want to scroll exactly to the given date, but leave a little bit of
+       * breathing room (`calendarRowVerticalSpacing`) above it.
+       */
+      weekOffset = weekOffset - calendarRowVerticalSpacing;
+
+      legendListRef.current?.scrollToOffset({
+        offset: currentMonthOffset + weekOffset + additionalOffset,
+        animated,
+      });
+    },
+    scrollToOffset(offset, animated) {
+      legendListRef.current?.scrollToOffset({ offset, animated });
+    },
+  }));
+
+  const calendarContainerStyle = useMemo(() => {
+    return { paddingBottom: calendarSpacing };
+  }, [calendarSpacing]);
+
+  return (
+    <LegendList
+      data={monthListWithCalendarProps}
+      estimatedItemSize={273}
+      getFixedItemSize={handleGetFixedItemSize}
+      initialScrollIndex={initialMonthIndex}
+      keyExtractor={keyExtractor}
+      onEndReached={handleOnEndReached}
+      onStartReached={handleOnStartReached}
+      recycleItems
+      ref={legendListRef}
+      renderItem={({ item }: { item: CalendarMonthEnhanced }) => (
+        <View style={calendarContainerStyle}>
+          <Calendar calendarMonthId={item.id} {...item.calendarProps} />
+        </View>
+      )}
+      showsVerticalScrollIndicator={false}
+      style={{ flex: 1 }}
+      {...flatListProps}
+    />
+  );
+});

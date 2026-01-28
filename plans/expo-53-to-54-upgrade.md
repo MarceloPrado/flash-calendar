@@ -2,10 +2,10 @@
 
 ## Apps to Upgrade
 
-| App | Location | Current SDK |
-|-----|----------|-------------|
-| **example** | `apps/example` | ^53 |
-| **kitchen-sink-expo** | `kitchen-sink/expo` | ^53 |
+| App                   | Location            | Current SDK |
+| --------------------- | ------------------- | ----------- |
+| **example**           | `apps/example`      | ^53         |
+| **kitchen-sink-expo** | `kitchen-sink/expo` | ^53         |
 
 ---
 
@@ -106,10 +106,10 @@ bun install
 
 SDK 54 includes React 19. While existing code will continue to work, consider these optional modernizations:
 
-| Before (React 18) | After (React 19) |
-|-------------------|------------------|
-| `useContext(MyContext)` | `use(MyContext)` |
-| `<Context.Provider value={...}>` | `<Context value={...}>` |
+| Before (React 18)                 | After (React 19)                        |
+| --------------------------------- | --------------------------------------- |
+| `useContext(MyContext)`           | `use(MyContext)`                        |
+| `<Context.Provider value={...}>`  | `<Context value={...}>`                 |
 | `forwardRef((props, ref) => ...)` | `function Component({ ref, ...props })` |
 
 ### Metro Changes

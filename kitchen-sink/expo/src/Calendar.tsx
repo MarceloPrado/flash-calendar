@@ -1,4 +1,4 @@
-import { Calendar, toDateId } from "@lazerlen/flash-calendar";
+import { Calendar, toDateId } from "@lazerlen/legend-calendar";
 import { useState } from "react";
 import { Text } from "react-native";
 

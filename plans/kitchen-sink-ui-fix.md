@@ -8,7 +8,7 @@ After migrating from FlashList to LegendList and upgrading to Expo 54, the kitch
 
 ### Issue 1: Missing `@legendapp/list` dependency in kitchen-sink/expo ✅ FIXED
 
-The `@legendapp/list` package is a **peer dependency** of `@marceloterreiro/flash-calendar` but was **not declared** in `kitchen-sink/expo/package.json`. 
+The `@legendapp/list` package is a **peer dependency** of `@marceloterreiro/flash-calendar` but was **not declared** in `kitchen-sink/expo/package.json`.
 
 **Fix Applied:** Added `"@legendapp/list": "^2.0.0"` to dependencies.
 
@@ -38,6 +38,7 @@ npx expo install @legendapp/list
 ```
 
 Or manually add to `package.json`:
+
 ```json
 "dependencies": {
   "@legendapp/list": "^2.0.0",
@@ -52,6 +53,7 @@ Added `style={{ flex: 1 }}` to the `ScrollComponent` in `CalendarList.tsx`.
 ### Step 3: Add `calendarColorScheme="light"` to examples ✅ DONE
 
 Fixed in:
+
 - `src/ImperativeScroll.tsx`
 - `src/CalendarList.tsx`
 - `src/Calendar.tsx`
@@ -95,6 +97,7 @@ bun run ios
 ## Rollback
 
 If issues persist, temporarily revert to FlashList:
+
 1. Revert `CalendarList.tsx` changes
 2. Add `@shopify/flash-list` back to dependencies
 3. Remove `@legendapp/list` from dependencies

@@ -33,7 +33,7 @@ Here's the minimal example to render a `Calendar` and a `Calendar.List`:
 
 <div>
 ```tsx
-import { Calendar, toDateId } from "@lazerlen/flash-calendar";
+import { Calendar, toDateId } from "@lazerlen/legend-calendar";
 import { useState } from "react";
 import { Text, View } from "react-native";
 
@@ -69,7 +69,7 @@ export function BasicCalendar() {
 <div>
 
 ```tsx
-import { Calendar, toDateId } from "@lazerlen/flash-calendar";
+import { Calendar, toDateId } from "@lazerlen/legend-calendar";
 import { useState } from "react";
 import { Text, View } from "react-native";
 
@@ -113,7 +113,7 @@ hook:
 <div>
 
 ```tsx
-import { Calendar, useDateRange } from "@lazerlen/flash-calendar";
+import { Calendar, useDateRange } from "@lazerlen/legend-calendar";
 
 export const CalendarListDateRange = () => {
   const {
@@ -154,7 +154,7 @@ If you just need a different locale, use the `calendarFormatLocale` prop:
 <div>
 
 ```tsx
-import { Calendar, toDateId } from "@lazerlen/flash-calendar";
+import { Calendar, toDateId } from "@lazerlen/legend-calendar";
 import { useState } from "react";
 
 const today = toDateId(new Date());
@@ -197,7 +197,7 @@ and allow you to use your preferred date library:
 <div>
 
 ```tsx
-import { Calendar, toDateId } from "@lazerlen/flash-calendar";
+import { Calendar, toDateId } from "@lazerlen/legend-calendar";
 import { subMonths } from "date-fns";
 import { format } from "date-fns/fp";
 
@@ -285,7 +285,7 @@ This works for both `Calendar` and `Calendar.List`:
 <div>
 
 ```tsx
-import { Calendar, toDateId } from "@lazerlen/flash-calendar";
+import { Calendar, toDateId } from "@lazerlen/legend-calendar";
 
 const calendarDisabledDateIds = ["2024-03-14", "2024-03-15"];
 
@@ -321,7 +321,7 @@ There are several props to tweak the spacings between the components. Check the 
 <div>
 
 ```tsx
-import { Calendar } from "@lazerlen/flash-calendar";
+import { Calendar } from "@lazerlen/legend-calendar";
 import { View } from "react-native";
 
 export const CalendarListCompact = () => {
@@ -356,7 +356,7 @@ To render more than one calendar in the same screen, use the
 <div>
 
 ```tsx
-import { Calendar, useDateRange } from "@lazerlen/flash-calendar";
+import { Calendar, useDateRange } from "@lazerlen/legend-calendar";
 
 export const TwoCalendarsMounted = () => {
   const dateRangeOne = useDateRange();

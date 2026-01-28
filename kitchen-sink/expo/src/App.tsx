@@ -1,10 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { Calendar } from "@lazerlen/flash-calendar";
+import { Calendar } from "@lazerlen/legend-calendar";
 import { CalendarDemo } from "./Calendar";
 import { CalendarListDemo } from "./CalendarList";
 // import { SlowExampleAddressed } from "./SlowExampleAddressed";

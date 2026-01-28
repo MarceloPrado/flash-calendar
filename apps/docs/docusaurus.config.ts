@@ -4,7 +4,8 @@ import { themes as prismThemes } from "prism-react-renderer";
 
 const config: Config = {
   title: "Legend Calendar",
-  tagline: "An incredibly fast and flexible calendar component for React Native",
+  tagline:
+    "An incredibly fast and flexible calendar component for React Native",
   favicon: "img/favicon.ico",
 
   // Set the production url of your site here

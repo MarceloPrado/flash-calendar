@@ -2,8 +2,8 @@ import type {
   CalendarMonth,
   CalendarOnDayPress,
   CalendarTheme,
-} from "@lazerlen/flash-calendar";
-import { Calendar, toDateId } from "@lazerlen/flash-calendar";
+} from "@lazerlen/legend-calendar";
+import { Calendar, toDateId } from "@lazerlen/legend-calendar";
 import type { FlashListProps } from "@shopify/flash-list";
 import type { Meta } from "@storybook/react-native";
 import { useCallback, useMemo, useState } from "react";

@@ -1,6 +1,6 @@
 # React Native Legend Calendar
 
-[![npm](https://img.shields.io/npm/l/@lazerlen/flash-calendar?style=flat-square)](https://www.npmjs.com/package/@lazerlen/flash-calendar) [![npm](https://img.shields.io/badge/types-included-blue?style=flat-square)](https://www.npmjs.com/package/@lazerlen/flash-calendar) [![runs with expo](https://img.shields.io/badge/Runs%20with%20Expo-4630EB.svg?style=flat-square&logo=EXPO&labelColor=f3f3f3&logoColor=000)](https://expo.io/)
+[![npm](https://img.shields.io/npm/l/@lazerlen/legend-calendar?style=flat-square)](https://www.npmjs.com/package/@lazerlen/legend-calendar) [![npm](https://img.shields.io/badge/types-included-blue?style=flat-square)](https://www.npmjs.com/package/@lazerlen/legend-calendar) [![runs with expo](https://img.shields.io/badge/Runs%20with%20Expo-4630EB.svg?style=flat-square&logo=EXPO&labelColor=f3f3f3&logoColor=000)](https://expo.io/)
 
 An opinionated fork of Marcelo Prado's [flash-calendar](https://github.com/MarceloPrado/flash-calendar) library which leverages [legend-list](https://github.com/LegendApp/legend-list) instead. **All credit to Marcelo** for his awesome work on the original library, this one is just slightly changed for my needs.
 
@@ -60,7 +60,6 @@ The actual src code for Legend Calendar:
 - `/packages/legend-calendar`: The legend calendar package itself.
 - `/packages/eslint-config`: Shared eslint config for the project.
 - `/packages/tsconfig`: Shared tsconfig for the project.
-
 
 ### License
 

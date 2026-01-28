@@ -1,9 +1,9 @@
 import type {
   CalendarActiveDateRange,
   CalendarTheme,
-} from "@lazerlen/flash-calendar";
-import { Calendar, toDateId } from "@lazerlen/flash-calendar";
-import { loggingHandler } from "@lazerlen/flash-calendar/src/developer/loggginHandler";
+} from "@lazerlen/legend-calendar";
+import { Calendar, toDateId } from "@lazerlen/legend-calendar";
+import { loggingHandler } from "@lazerlen/legend-calendar/src/developer/loggginHandler";
 import { add, startOfMonth } from "date-fns";
 import { format } from "date-fns/fp";
 import { memo } from "react";

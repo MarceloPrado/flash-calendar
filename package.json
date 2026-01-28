@@ -20,7 +20,7 @@
     "kitchen-sink": "cd kitchen-sink/expo && bun run ios",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
-    "publish-packages": "turbo build lint test typecheck --filter @lazerlen/flash-calendar && changeset version && changeset publish",
+    "publish-packages": "turbo build lint test typecheck --filter @lazerlen/legend-calendar && changeset version && changeset publish",
     "test": "turbo test",
     "postinstall": "manypkg check"
   },

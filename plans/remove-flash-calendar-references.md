@@ -11,6 +11,7 @@ After migrating from FlashList to LegendList, there are still various "Flash Cal
 ### 1. `packages/legend-calendar/package.json` (Line 2)
 
 **Current:**
+
 ```json
 "name": "@marceloterreiro/flash-calendar",
 ```
@@ -22,11 +23,13 @@ After migrating from FlashList to LegendList, there are still various "Flash Cal
 ### 2. `packages/legend-calendar/src/components/CalendarList.tsx`
 
 **Variable naming (Line 296):**
+
 ```typescript
 const flashListRef = useRef<LegendListRef>(null);
 ```
 
 **Action:** Rename to `legendListRef` and update all usages:
+
 - Line 307: `flashListRef.current?.scrollToOffset`
 - Line 335: `flashListRef.current?.scrollToOffset`
 - Line 341: `flashListRef.current?.scrollToOffset`
@@ -39,6 +42,7 @@ const flashListRef = useRef<LegendListRef>(null);
 **Documentation comments referencing "Flash Calendar":**
 
 - **Lines 52-58:** JSDoc comment mentions "Flash Calendar" twice
+
   ```typescript
   * A unique identifier for this calendar instance. This is useful if you
   * need to render more than one calendar at once. This allows Flash Calendar
@@ -59,6 +63,7 @@ const flashListRef = useRef<LegendListRef>(null);
 ### 4. `packages/legend-calendar/src/components/CalendarItemDay.tsx`
 
 **Documentation comments (Lines 336-343):**
+
 ```typescript
 * A unique identifier for this calendar instance. This is useful if you
 * need to render more than one calendar at once. This allows Flash Calendar
@@ -74,6 +79,7 @@ const flashListRef = useRef<LegendListRef>(null);
 ### 5. `packages/legend-calendar/src/components/CalendarThemeProvider.tsx`
 
 **Documentation comment (Line 19):**
+
 ```typescript
 * When set, Flash Calendar will use this color scheme instead of the system's
 ```
@@ -85,6 +91,7 @@ const flashListRef = useRef<LegendListRef>(null);
 ### 6. `packages/legend-calendar/src/helpers/tokens.ts`
 
 **Comment (Line 16):**
+
 ```typescript
 * Minimal theme for the Flash Calendar component.
 ```
@@ -96,6 +103,7 @@ const flashListRef = useRef<LegendListRef>(null);
 ### 7. `packages/legend-calendar/src/hooks/useOptimizedDayMetadata.ts`
 
 **Constant (Line 30):**
+
 ```typescript
 const DEFAULT_CALENDAR_INSTANCE_ID = "flash-calendar-default-instance";
 ```

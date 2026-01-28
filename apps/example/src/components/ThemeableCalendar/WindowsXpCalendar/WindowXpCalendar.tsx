@@ -1,8 +1,5 @@
-import type {
-  CalendarProps,
-  CalendarTheme,
-} from "@lazerlen/flash-calendar";
-import { Calendar, useCalendar } from "@lazerlen/flash-calendar";
+import type { CalendarProps, CalendarTheme } from "@lazerlen/legend-calendar";
+import { Calendar, useCalendar } from "@lazerlen/legend-calendar";
 import { format } from "date-fns";
 import { memo, useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";

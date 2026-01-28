@@ -1,5 +1,5 @@
-import type { CalendarOnDayPress } from "@lazerlen/flash-calendar";
-import { Calendar, toDateId } from "@lazerlen/flash-calendar";
+import type { CalendarOnDayPress } from "@lazerlen/legend-calendar";
+import { Calendar, toDateId } from "@lazerlen/legend-calendar";
 import { addMonths } from "date-fns";
 import { useCallback, useState } from "react";
 import { Text, View } from "react-native";

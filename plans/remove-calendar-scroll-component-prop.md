@@ -19,6 +19,7 @@ Remove the `CalendarScrollComponent` prop from `CalendarList` since we will only
 ### 1. `packages/legend-calendar/src/components/CalendarList.tsx`
 
 **Remove prop definition (lines 72-78):**
+
 ```diff
 - /**
 -  * The scroll component to use. Useful if you need to replace the LegendList
@@ -29,6 +30,7 @@ Remove the `CalendarScrollComponent` prop from `CalendarList` since we will only
 ```
 
 **Remove from destructuring (line 127):**
+
 ```diff
   const {
     // List-related props
@@ -42,9 +44,10 @@ Remove the `CalendarScrollComponent` prop from `CalendarList` since we will only
 ```
 
 **Remove ScrollComponent alias and use LegendList directly (lines 349-369):**
+
 ```diff
 - const ScrollComponent = CalendarScrollComponent as any;
-- 
+-
   return (
 -   <ScrollComponent
 +   <LegendList
@@ -78,11 +81,12 @@ Remove the `CalendarScrollComponent` prop from `CalendarList` since we will only
 
 ## Breaking Change
 
-This is a **breaking change** for users who were passing a custom `CalendarScrollComponent`. 
+This is a **breaking change** for users who were passing a custom `CalendarScrollComponent`.
 
 ### Migration Guide
 
 Users who need BottomSheet integration should:
+
 1. Wrap `Calendar.List` in a BottomSheet-compatible scroll container
 2. Or use the standalone `Calendar` component with their own list implementation
 

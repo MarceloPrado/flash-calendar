@@ -3,8 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@lazerlen/flash-calendar": ["../../packages/legend-calendar/src"],
-      "@lazerlen/flash-calendar/*": [
+      "@lazerlen/legend-calendar": ["../../packages/legend-calendar/src"],
+      "@lazerlen/legend-calendar/*": [
         "../../packages/legend-calendar/src/*"
       ],
     },

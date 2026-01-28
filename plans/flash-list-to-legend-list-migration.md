@@ -43,18 +43,21 @@ The migration is straightforward since **LegendList maintains API compatibility 
 ## Step 3: Update Type References
 
 **Line 32** – Update the `CalendarListProps` interface:
+
 ```diff
 - Omit<FlashListProps<CalendarMonthEnhanced>, "renderItem" | "data"> {
 + Omit<LegendListProps<CalendarMonthEnhanced>, "renderItem" | "data"> {
 ```
 
 **Line 74** – Update `CalendarScrollComponent` prop type:
+
 ```diff
 - CalendarScrollComponent?: typeof FlashList;
 + CalendarScrollComponent?: typeof LegendList;
 ```
 
 **Line 89** – Update `renderItem` prop type:
+
 ```diff
 - renderItem?: FlashListProps<CalendarMonthEnhanced>["renderItem"];
 + renderItem?: LegendListProps<CalendarMonthEnhanced>["renderItem"];
@@ -65,12 +68,14 @@ The migration is straightforward since **LegendList maintains API compatibility 
 ## Step 4: Update Default Value and Ref
 
 **Line 124** – Update default component:
+
 ```diff
 - CalendarScrollComponent = FlashList,
 + CalendarScrollComponent = LegendList,
 ```
 
 **Line 226-228** – Update `overrideItemLayout` callback to `getFixedItemSize`:
+
 ```diff
 - const handleOverrideItemLayout = useCallback<
 -   NonNullable<FlashListProps<CalendarMonth>["overrideItemLayout"]>
@@ -104,6 +109,7 @@ The migration is straightforward since **LegendList maintains API compatibility 
 > **Note:** LegendList uses `getFixedItemSize` instead of `overrideItemLayout`. The function signature is `(index, item, type?) => number | undefined`.
 
 **Line 293** – Update ref type:
+
 ```diff
 - const flashListRef = useRef<FlashList<CalendarMonthEnhanced>>(null);
 + const flashListRef = useRef<LegendListRef>(null);
@@ -166,13 +172,13 @@ The migration is straightforward since **LegendList maintains API compatibility 
 
 ## Key API Differences
 
-| FlashList | LegendList | Notes |
-|-----------|------------|-------|
-| `overrideItemLayout` | `getFixedItemSize` | Returns size directly instead of mutating layout object |
-| `FlashListProps` | `LegendListProps` | Type import |
-| `FlashList` | `LegendList` | Component import |
-| N/A | `recycleItems` | Enable recycling (recommended for performance) |
-| N/A | `maintainVisibleContentPosition` | Useful for bidirectional scrolling |
+| FlashList            | LegendList                       | Notes                                                   |
+| -------------------- | -------------------------------- | ------------------------------------------------------- |
+| `overrideItemLayout` | `getFixedItemSize`               | Returns size directly instead of mutating layout object |
+| `FlashListProps`     | `LegendListProps`                | Type import                                             |
+| `FlashList`          | `LegendList`                     | Component import                                        |
+| N/A                  | `recycleItems`                   | Enable recycling (recommended for performance)          |
+| N/A                  | `maintainVisibleContentPosition` | Useful for bidirectional scrolling                      |
 
 ---
 

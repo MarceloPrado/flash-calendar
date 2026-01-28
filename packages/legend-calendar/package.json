@@ -1,6 +1,6 @@
 {
-  "name": "@lazerlen/flash-calendar",
-  "version": "0.1.0",
+  "name": "@lazerlen/legend-calendar",
+  "version": "1.0.0",
   "private": false,
   "description": "A better calendar for React Native.",
   "repository": {

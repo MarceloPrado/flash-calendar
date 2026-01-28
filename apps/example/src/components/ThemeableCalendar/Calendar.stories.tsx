@@ -1,12 +1,8 @@
 import type {
   CalendarActiveDateRange,
   CalendarOnDayPress,
-} from "@lazerlen/flash-calendar";
-import {
-  Calendar,
-  fromDateId,
-  toDateId,
-} from "@lazerlen/flash-calendar";
+} from "@lazerlen/legend-calendar";
+import { Calendar, fromDateId, toDateId } from "@lazerlen/legend-calendar";
 import type { Meta } from "@storybook/react-native";
 import { add, sub } from "date-fns";
 import { format } from "date-fns/fp";
@@ -79,7 +75,7 @@ export const WindowsXP = () => {
 
   return (
     <View style={styles.windowsXpBackground}>
-      <WindowsXpWindow title="@lazerlen/flash-calendar">
+      <WindowsXpWindow title="@lazerlen/legend-calendar">
         <Calendar.VStack justifyContent="flex-start" spacing={12}>
           <Text>
             This is a Windows's XP themed calendar, using the composable API
