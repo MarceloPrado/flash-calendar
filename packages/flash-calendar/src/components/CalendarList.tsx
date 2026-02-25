@@ -6,6 +6,7 @@ import {
   memo,
   useCallback,
   useImperativeHandle,
+  useLayoutEffect,
   useMemo,
   useRef,
 } from "react";
@@ -266,6 +267,17 @@ export const CalendarList = memo(
     );
 
     const flashListRef = useRef<FlashListRef<CalendarMonthEnhanced>>(null);
+
+    // fix for this issue: https://github.com/Shopify/flash-list/issues/1797
+    useLayoutEffect(() => {
+      if (initialMonthIndex <= 0) return;
+      flashListRef.current?.scrollToIndex({
+        index: initialMonthIndex,
+        animated: false,
+      });
+      // Only run on mount
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useImperativeHandle(ref, () => ({
       scrollToMonth(
