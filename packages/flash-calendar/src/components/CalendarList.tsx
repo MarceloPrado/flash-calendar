@@ -1,4 +1,4 @@
-import type { FlashListProps } from "@shopify/flash-list";
+import type { FlashListProps, FlashListRef } from "@shopify/flash-list";
 import { FlashList } from "@shopify/flash-list";
 import type { Ref } from "react";
 import {
@@ -6,6 +6,7 @@ import {
   memo,
   useCallback,
   useImperativeHandle,
+  useLayoutEffect,
   useMemo,
   useRef,
 } from "react";
@@ -223,31 +224,6 @@ export const CalendarList = memo(
       onEndReached?.();
     }, [appendMonths, calendarFutureScrollRangeInMonths, onEndReached]);
 
-    const handleOverrideItemLayout = useCallback<
-      NonNullable<FlashListProps<CalendarMonth>["overrideItemLayout"]>
-    >(
-      (layout, item) => {
-        const monthHeight = getHeightForMonth({
-          calendarMonth: item,
-          calendarSpacing,
-          calendarDayHeight,
-          calendarMonthHeaderHeight,
-          calendarRowVerticalSpacing,
-          calendarAdditionalHeight,
-          calendarWeekHeaderHeight,
-        });
-        layout.size = monthHeight;
-      },
-      [
-        calendarAdditionalHeight,
-        calendarDayHeight,
-        calendarMonthHeaderHeight,
-        calendarRowVerticalSpacing,
-        calendarSpacing,
-        calendarWeekHeaderHeight,
-      ]
-    );
-
     /**
      * Returns the offset for the given month (how much the user needs to
      * scroll to reach the month).
@@ -290,7 +266,18 @@ export const CalendarList = memo(
       ]
     );
 
-    const flashListRef = useRef<FlashList<CalendarMonthEnhanced>>(null);
+    const flashListRef = useRef<FlashListRef<CalendarMonthEnhanced>>(null);
+
+    // fix for this issue: https://github.com/Shopify/flash-list/issues/1797
+    useLayoutEffect(() => {
+      if (initialMonthIndex <= 0) return;
+      flashListRef.current?.scrollToIndex({
+        index: initialMonthIndex,
+        animated: false,
+      });
+      // Only run on mount
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useImperativeHandle(ref, () => ({
       scrollToMonth(
@@ -346,11 +333,9 @@ export const CalendarList = memo(
     return (
       <CalendarScrollComponent
         data={monthListWithCalendarProps}
-        estimatedItemSize={273}
         initialScrollIndex={initialMonthIndex}
         keyExtractor={keyExtractor}
         onEndReached={handleOnEndReached}
-        overrideItemLayout={handleOverrideItemLayout}
         ref={flashListRef}
         renderItem={({ item }) => (
           <View style={calendarContainerStyle}>

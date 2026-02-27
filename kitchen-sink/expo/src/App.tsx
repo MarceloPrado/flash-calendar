@@ -2,7 +2,8 @@
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 import { CalendarDemo } from "./Calendar";
 import { CalendarListDemo } from "./CalendarList";
@@ -15,10 +16,11 @@ export default function App() {
   const [demo, setDemo] = useState<"calendar" | "calendarList">("calendar");
 
   return (
-    <GestureHandlerRootView style={styles.flexOne}>
-      <SafeAreaView style={styles.pageContainer}>
-        <StatusBar style="auto" />
-        {/* <View style={styles.paddedContainer}>
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={styles.flexOne}>
+        <SafeAreaView style={styles.pageContainer}>
+          <StatusBar style="auto" />
+          {/* <View style={styles.paddedContainer}>
           <Calendar.HStack alignItems="center" justifyContent="space-between">
             <Text>
               Demo: {demo === "calendar" ? "Calendar" : "Calendar List"}
@@ -33,11 +35,12 @@ export default function App() {
 
           {demo === "calendar" ? <CalendarDemo /> : <CalendarListDemo />}
         </View> */}
-        <ImperativeScrolling />
-        {/* <BottomSheetCalendar /> */}
-        {/* <SlowExampleAddressed /> */}
-      </SafeAreaView>
-    </GestureHandlerRootView>
+          <ImperativeScrolling />
+          {/* <BottomSheetCalendar /> */}
+          {/* <SlowExampleAddressed /> */}
+        </SafeAreaView>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 }
 
