@@ -1,5 +1,11 @@
 # @marceloterreiro/flash-calendar
 
+## 2.0.0
+
+### Major Changes
+
+- 28bd9e8: Update to flashlist v2
+
 ## 1.6.0
 
 ### Minor Changes
