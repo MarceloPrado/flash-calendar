@@ -330,9 +330,9 @@ export const CalendarList = memo(function CalendarList({
     <LegendList
       data={monthListWithCalendarProps}
       estimatedItemSize={273}
-      maintainVisibleContentPosition
       initialScrollIndex={initialMonthIndex}
       keyExtractor={keyExtractor}
+      maintainVisibleContentPosition
       onEndReached={handleOnEndReached}
       onStartReached={handleOnStartReached}
       recycleItems
