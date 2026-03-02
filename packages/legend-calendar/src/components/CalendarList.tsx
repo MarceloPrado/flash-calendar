@@ -2,7 +2,7 @@ import {
   LegendList as LegendListBase,
   type LegendListProps,
   type LegendListRef,
-} from "@legendapp/list";
+} from "@legendapp/list/react-native";
 import { memo, useCallback, useImperativeHandle, useMemo, useRef } from "react";
 import { View } from "react-native";
 
@@ -232,29 +232,6 @@ export const CalendarList = memo(function CalendarList({
     },
     [prependMonths, calendarPastScrollRangeInMonths, onStartReached]
   );
-
-  const handleGetFixedItemSize = useCallback(
-    (_index: number, item: CalendarMonth) => {
-      return getHeightForMonth({
-        calendarMonth: item,
-        calendarSpacing,
-        calendarDayHeight,
-        calendarMonthHeaderHeight,
-        calendarRowVerticalSpacing,
-        calendarAdditionalHeight,
-        calendarWeekHeaderHeight,
-      });
-    },
-    [
-      calendarAdditionalHeight,
-      calendarDayHeight,
-      calendarMonthHeaderHeight,
-      calendarRowVerticalSpacing,
-      calendarSpacing,
-      calendarWeekHeaderHeight,
-    ]
-  );
-
   /**
    * Returns the offset for the given month (how much the user needs to
    * scroll to reach the month).
@@ -353,9 +330,9 @@ export const CalendarList = memo(function CalendarList({
     <LegendList
       data={monthListWithCalendarProps}
       estimatedItemSize={273}
-      getFixedItemSize={handleGetFixedItemSize}
       initialScrollIndex={initialMonthIndex}
       keyExtractor={keyExtractor}
+      maintainVisibleContentPosition
       onEndReached={handleOnEndReached}
       onStartReached={handleOnStartReached}
       recycleItems

@@ -74,7 +74,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@lazerlen/legend-calendar": "*",
-        "@legendapp/list": "^2.0.0",
+        "@legendapp/list": "^3.0.0-beta.39",
         "expo": "54",
         "expo-status-bar": "~3.0.9",
         "react": "19.1.0",
@@ -110,7 +110,7 @@
       "devDependencies": {
         "@lazerlen/eslint-config": "*",
         "@lazerlen/tsconfig": "*",
-        "@legendapp/list": "^2.0.0",
+        "@legendapp/list": "^3.0.0-beta.39",
         "@testing-library/react-hooks": "^8.0.1",
         "@types/bun": "^1.3.2",
         "@types/react": "~19.1.10",
@@ -123,7 +123,7 @@
         "typescript": "~5.9.2",
       },
       "peerDependencies": {
-        "@legendapp/list": "*",
+        "@legendapp/list": ">=3.0.0-beta.39",
         "react": "*",
         "react-native": "*",
       },
@@ -892,7 +892,7 @@
 
     "@lazerlen/tsconfig": ["@lazerlen/tsconfig@workspace:packages/tsconfig"],
 
-    "@legendapp/list": ["@legendapp/list@2.0.19", "", { "dependencies": { "use-sync-external-store": "^1.5.0" }, "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-zDWg8yg0smKxxk+M7gwAbZAnf5uczohPA+IjqLSkImz7+e9ytxeT0Mq35RBO9RTKODOXfV/aIgm1uqUHLBEdmg=="],
+    "@legendapp/list": ["@legendapp/list@3.0.0-beta.39", "", { "dependencies": { "use-sync-external-store": "^1.5.0" }, "peerDependencies": { "react": "*" } }, "sha512-Tt9wDY5pDhiSFrvPJIUJvEQ8ZC1Ec67gL77GXtt1rCABrvlA9lp7g7npQae0utPzcnDc8wyDSlOmgQwwYyKreg=="],
 
     "@leichtgewicht/ip-codec": ["@leichtgewicht/ip-codec@2.0.5", "", {}, "sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw=="],
 
