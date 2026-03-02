@@ -1,14 +1,14 @@
+import { useTheme } from "@/hooks/useTheme";
 import type {
   CalendarMonth,
   CalendarOnDayPress,
   CalendarTheme,
 } from "@lazerlen/legend-calendar";
 import { Calendar, toDateId } from "@lazerlen/legend-calendar";
-import type { LegendListProps } from "@legendapp/list";
+import type { LegendListProps } from "@legendapp/list/react-native";
 import type { Meta } from "@storybook/react-native";
 import { useCallback, useMemo, useState } from "react";
 import { Alert, Text, View } from "react-native";
-import { useTheme } from "@/hooks/useTheme";
 
 const CalendarMeta: Meta<typeof Calendar> = {
   title: "Calendar.List/Github Issues",

@@ -2,7 +2,7 @@ import {
   LegendList as LegendListBase,
   type LegendListProps,
   type LegendListRef,
-} from "@legendapp/list";
+} from "@legendapp/list/react-native";
 import { memo, useCallback, useImperativeHandle, useMemo, useRef } from "react";
 import { View } from "react-native";
 
@@ -234,7 +234,7 @@ export const CalendarList = memo(function CalendarList({
   );
 
   const handleGetFixedItemSize = useCallback(
-    (_index: number, item: CalendarMonth) => {
+    (item: CalendarMonth, _index: number) => {
       return getHeightForMonth({
         calendarMonth: item,
         calendarSpacing,
