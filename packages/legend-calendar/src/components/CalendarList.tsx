@@ -232,29 +232,6 @@ export const CalendarList = memo(function CalendarList({
     },
     [prependMonths, calendarPastScrollRangeInMonths, onStartReached]
   );
-
-  const handleGetFixedItemSize = useCallback(
-    (item: CalendarMonth, _index: number) => {
-      return getHeightForMonth({
-        calendarMonth: item,
-        calendarSpacing,
-        calendarDayHeight,
-        calendarMonthHeaderHeight,
-        calendarRowVerticalSpacing,
-        calendarAdditionalHeight,
-        calendarWeekHeaderHeight,
-      });
-    },
-    [
-      calendarAdditionalHeight,
-      calendarDayHeight,
-      calendarMonthHeaderHeight,
-      calendarRowVerticalSpacing,
-      calendarSpacing,
-      calendarWeekHeaderHeight,
-    ]
-  );
-
   /**
    * Returns the offset for the given month (how much the user needs to
    * scroll to reach the month).
@@ -353,7 +330,7 @@ export const CalendarList = memo(function CalendarList({
     <LegendList
       data={monthListWithCalendarProps}
       estimatedItemSize={273}
-      getFixedItemSize={handleGetFixedItemSize}
+      maintainVisibleContentPosition
       initialScrollIndex={initialMonthIndex}
       keyExtractor={keyExtractor}
       onEndReached={handleOnEndReached}
