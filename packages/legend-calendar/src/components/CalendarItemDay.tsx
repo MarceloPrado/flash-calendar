@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import type { TextProps, TextStyle, ViewStyle } from "react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -171,7 +171,7 @@ export interface CalendarItemDayProps {
  * `CalendarItemDayWithContainer`, since it also includes the spacing between
  * each day.
  */
-export const CalendarItemDay = ({
+export const CalendarItemDay = memo(function CalendarItemDay({
   onPress,
   children,
   theme,
@@ -179,7 +179,7 @@ export const CalendarItemDay = ({
   metadata,
   textProps,
   CalendarPressableComponent = Pressable as PressableLike,
-}: CalendarItemDayProps) => {
+}: CalendarItemDayProps) {
   const baseTheme = useTheme();
   const baseStyles = useMemo(() => {
     return buildBaseStyles(baseTheme);
@@ -245,7 +245,7 @@ export const CalendarItemDay = ({
       }}
     </CalendarPressableComponent>
   );
-};
+});
 
 interface CalendarItemDayContainerTheme {
   /** An empty view that acts as a spacer between each day. The spacing is
@@ -275,7 +275,7 @@ export interface CalendarItemDayContainerProps {
   metadata?: CalendarDayMetadata;
 }
 
-export const CalendarItemDayContainer = ({
+export const CalendarItemDayContainer = memo(function CalendarItemDayContainer({
   children,
   isStartOfWeek,
   shouldShowActiveDayFiller,
@@ -283,7 +283,7 @@ export const CalendarItemDayContainer = ({
   daySpacing,
   dayHeight,
   metadata,
-}: CalendarItemDayContainerProps) => {
+}: CalendarItemDayContainerProps) {
   const baseTheme = useTheme();
   const spacerStyles = useMemo<ViewStyle>(() => {
     return {
@@ -325,7 +325,7 @@ export const CalendarItemDayContainer = ({
       {activeDayFiller ? <View style={activeDayFiller} /> : null}
     </View>
   );
-};
+});
 
 export interface CalendarItemDayWithContainerProps
   extends Omit<CalendarItemDayProps, "height">,
@@ -345,7 +345,7 @@ export interface CalendarItemDayWithContainerProps
   calendarInstanceId?: string;
 }
 
-export const CalendarItemDayWithContainer = ({
+export const CalendarItemDayWithContainer = memo(function CalendarItemDayWithContainer({
   children,
   metadata: baseMetadata,
   onPress,
@@ -355,7 +355,7 @@ export const CalendarItemDayWithContainer = ({
   containerTheme,
   calendarInstanceId,
   CalendarPressableComponent,
-}: CalendarItemDayWithContainerProps) => {
+}: CalendarItemDayWithContainerProps) {
   const metadata = useOptimizedDayMetadata(baseMetadata, calendarInstanceId);
 
   return (
@@ -382,4 +382,4 @@ export const CalendarItemDayWithContainer = ({
       </CalendarItemDay>
     </CalendarItemDayContainer>
   );
-};
+});

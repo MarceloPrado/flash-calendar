@@ -4,7 +4,7 @@ import {
   type LegendListRef,
 } from "@legendapp/list/react-native";
 import { memo, useCallback, useImperativeHandle, useMemo, useRef } from "react";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import type { CalendarProps } from "@/components/Calendar";
 import { Calendar } from "@/components/Calendar";
@@ -326,10 +326,19 @@ export const CalendarList = memo(function CalendarList({
     return { paddingBottom: calendarSpacing };
   }, [calendarSpacing]);
 
+  const handleRenderItem = useCallback(
+    ({ item }: { item: CalendarMonthEnhanced }) => (
+      <View style={calendarContainerStyle}>
+        <Calendar calendarMonthId={item.id} {...item.calendarProps} />
+      </View>
+    ),
+    [calendarContainerStyle]
+  );
+
   return (
     <LegendList
-      data={monthListWithCalendarProps}
       estimatedItemSize={273}
+      data={monthListWithCalendarProps}
       initialScrollIndex={initialMonthIndex}
       keyExtractor={keyExtractor}
       maintainVisibleContentPosition
@@ -337,14 +346,16 @@ export const CalendarList = memo(function CalendarList({
       onStartReached={handleOnStartReached}
       recycleItems
       ref={legendListRef}
-      renderItem={({ item }: { item: CalendarMonthEnhanced }) => (
-        <View style={calendarContainerStyle}>
-          <Calendar calendarMonthId={item.id} {...item.calendarProps} />
-        </View>
-      )}
+      renderItem={handleRenderItem}
       showsVerticalScrollIndicator={false}
-      style={{ flex: 1 }}
+      style={styles.container}
       {...flatListProps}
     />
   );
+});
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
 });

@@ -1,10 +1,9 @@
 import {
-  Children,
   Fragment,
   isValidElement,
   useMemo,
   type ReactElement,
-  type ReactNode,
+  type ReactNode
 } from "react";
 import { StyleSheet, View, type ViewStyle } from "react-native";
 
@@ -53,15 +52,5 @@ export function VStack({
     [alignItems, grow, justifyContent, spacing]
   );
 
-  return (
-    <View style={containerStyles}>
-      {Children.toArray(children)
-        .map((c) => (isFragment(c) ? c.props.children : c))
-        .flat()
-        .filter((c) => c !== null && typeof c !== "undefined")
-        .map((child, i) => (
-          <Fragment key={i}>{child}</Fragment>
-        ))}
-    </View>
-  );
+  return <View style={containerStyles}>{children}</View>;
 }
