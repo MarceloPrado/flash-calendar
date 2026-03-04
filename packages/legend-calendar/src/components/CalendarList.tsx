@@ -3,7 +3,14 @@ import {
   type LegendListProps,
   type LegendListRef,
 } from "@legendapp/list/react-native";
-import { memo, useCallback, useImperativeHandle, useMemo, useRef } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from "react";
 import { StyleSheet, View } from "react-native";
 
 import type { CalendarProps } from "@/components/Calendar";
@@ -11,6 +18,7 @@ import { Calendar } from "@/components/Calendar";
 import { getWeekOfMonth, startOfMonth, toDateId } from "@/helpers/dates";
 import type { CalendarMonth } from "@/hooks/useCalendarList";
 import { getHeightForMonth, useCalendarList } from "@/hooks/useCalendarList";
+import { activeDateRangesStore } from "@/hooks/useOptimizedDayMetadata";
 
 // Type assertion to make LegendList compatible with React 19
 const LegendList = LegendListBase as <T>(
@@ -150,9 +158,19 @@ export const CalendarList = memo(function CalendarList({
     ...flatListProps
   } = otherProps;
 
+  // Write directly to store to bypass the entire render cascade.
+  // This means calendarProps stays stable and monthListWithCalendarProps
+  // doesn't recompute on every date tap.
+  useEffect(() => {
+    activeDateRangesStore.setRanges(
+      calendarInstanceId ?? "legend-calendar-default-instance",
+      calendarActiveDateRanges ?? []
+    );
+  }, [calendarActiveDateRanges, calendarInstanceId]);
+
   const calendarProps = useMemo(
     (): CalendarMonthEnhanced["calendarProps"] => ({
-      calendarActiveDateRanges,
+      // calendarActiveDateRanges intentionally omitted - written to store above
       calendarColorScheme,
       calendarDayHeight,
       calendarDisabledDateIds,
@@ -174,7 +192,6 @@ export const CalendarList = memo(function CalendarList({
     }),
     [
       calendarColorScheme,
-      calendarActiveDateRanges,
       calendarDayHeight,
       calendarDisabledDateIds,
       calendarFirstDayOfWeek,
