@@ -21,9 +21,7 @@
     "lint": "eslint src",
     "test": "bun test"
   },
-  "dependencies": {
-    "mitt": "^3.0.1"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@lazerlen/eslint-config": "*",
     "@lazerlen/tsconfig": "*",
