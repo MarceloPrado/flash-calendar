@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import { memo, useMemo } from "react";
 import type { TextStyle, ViewStyle } from "react-native";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
+import { Text } from "@/components/Text";
 import { useTheme } from "@/hooks/useTheme";
 
 const styles = StyleSheet.create({

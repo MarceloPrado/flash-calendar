@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
 import { memo, useCallback, useMemo } from "react";
-import type { TextProps, TextStyle, ViewStyle } from "react-native";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import type { TextStyle, ViewStyle } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 
+import type { CalendarTextProps } from "@/components/Text";
+import { Text } from "@/components/Text";
 import type { BaseTheme } from "@/helpers/tokens";
 import type { CalendarDayMetadata } from "@/hooks/useCalendar";
 import { useOptimizedDayMetadata } from "@/hooks/useOptimizedDayMetadata";
@@ -158,7 +160,7 @@ export interface CalendarItemDayProps {
   /** The cell's height */
   height: number;
   /** Optional TextProps to spread to the <Text> component. */
-  textProps?: Omit<TextProps, "children" | "onPress">;
+  textProps?: Omit<CalendarTextProps, "children">;
   /** Optional component to replace the default <Pressable> component. */
   CalendarPressableComponent?: PressableLike;
 }

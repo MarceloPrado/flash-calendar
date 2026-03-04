@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
 import { memo, useMemo } from "react";
-import type { TextProps, TextStyle, ViewStyle } from "react-native";
-import { StyleSheet, Text, View } from "react-native";
+import type { TextStyle, ViewStyle } from "react-native";
+import { StyleSheet, View } from "react-native";
 
+import type { CalendarTextProps } from "@/components/Text";
+import { Text } from "@/components/Text";
 import { lightTheme } from "@/helpers/tokens";
 import { useTheme } from "@/hooks/useTheme";
 
@@ -30,7 +32,7 @@ export interface CalendarItemWeekNameProps {
   /** The theme of the week name, useful for customizing the component. */
   theme?: CalendarItemWeekNameTheme;
   /** Optional TextProps to spread to the <Text> component. */
-  textProps?: Omit<TextProps, "children">;
+  textProps?: Omit<CalendarTextProps, "children">;
 }
 
 export const CalendarItemWeekName = memo(function CalendarItemWeekName({

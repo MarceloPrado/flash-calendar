@@ -46,6 +46,7 @@ export type {
 export type { CalendarRowMonthProps } from "@/components/CalendarRowMonth";
 export type { CalendarRowWeekProps } from "@/components/CalendarRowWeek";
 export type { HStackProps } from "@/components/HStack";
+export type { CalendarTextProps } from "@/components/Text";
 export type { VStackProps } from "@/components/VStack";
 
 interface CalendarItemNamespace {
