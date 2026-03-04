@@ -35,8 +35,27 @@ class DateRangeStore {
 
   setRanges(instanceId: string, ranges: CalendarActiveDateRange[]): void {
     const store = this.getOrCreateStore(instanceId);
+
+    // Bail out if the ranges haven't changed to avoid notifying all subscribers
+    if (this.rangesEqual(store.ranges, ranges)) {
+      return;
+    }
+
     store.ranges = ranges;
     store.subscribers.forEach((callback) => callback());
+  }
+
+  private rangesEqual(
+    a: CalendarActiveDateRange[],
+    b: CalendarActiveDateRange[]
+  ): boolean {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (a[i].startId !== b[i].startId || a[i].endId !== b[i].endId) {
+        return false;
+      }
+    }
+    return true;
   }
 
   getSnapshot(instanceId: string): CalendarActiveDateRange[] {
