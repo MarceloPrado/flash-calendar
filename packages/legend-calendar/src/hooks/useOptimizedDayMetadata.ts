@@ -50,6 +50,13 @@ class DateRangeStore {
       store.subscribers.delete(callback);
     };
   }
+
+  /**
+   * Clears all stores. Useful for testing.
+   */
+  clear(): void {
+    this.stores.clear();
+  }
 }
 
 /**
