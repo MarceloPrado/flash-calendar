@@ -1,4 +1,4 @@
-import { useMemo, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
 
 import {
   getStateFields,
@@ -14,6 +14,14 @@ const DEFAULT_CALENDAR_INSTANCE_ID = "legend-calendar-default-instance";
 interface DateRangeStoreState {
   ranges: CalendarActiveDateRange[];
   subscribers: Set<() => void>;
+  cachedActiveByDayId: Map<
+    string,
+    {
+      baseMetadata: CalendarDayMetadata;
+      key: string;
+      metadata: CalendarDayMetadata;
+    }
+  >;
 }
 
 /**
@@ -28,6 +36,7 @@ class DateRangeStore {
       this.stores.set(instanceId, {
         ranges: [],
         subscribers: new Set(),
+        cachedActiveByDayId: new Map(),
       });
     }
     return this.stores.get(instanceId)!;
@@ -42,6 +51,7 @@ class DateRangeStore {
     }
 
     store.ranges = ranges;
+    store.cachedActiveByDayId.clear();
     store.subscribers.forEach((callback) => callback());
   }
 
@@ -60,6 +70,48 @@ class DateRangeStore {
 
   getSnapshot(instanceId: string): CalendarActiveDateRange[] {
     return this.getOrCreateStore(instanceId).ranges;
+  }
+
+  getDaySnapshot(
+    instanceId: string,
+    baseMetadata: CalendarDayMetadata
+  ): CalendarDayMetadata {
+    const store = this.getOrCreateStore(instanceId);
+
+    const { isStartOfRange, isEndOfRange, isRangeValid, state } =
+      getStateFields({
+        id: baseMetadata.id,
+        calendarActiveDateRanges: store.ranges,
+      });
+
+    if (state !== "active") {
+      return baseMetadata;
+    }
+
+    const key = `${isStartOfRange ? 1 : 0}${isEndOfRange ? 1 : 0}${
+      isRangeValid ? 1 : 0
+    }`;
+
+    const cached = store.cachedActiveByDayId.get(baseMetadata.id);
+    if (cached && cached.baseMetadata === baseMetadata && cached.key === key) {
+      return cached.metadata;
+    }
+
+    const metadata: CalendarDayMetadata = {
+      ...baseMetadata,
+      isStartOfRange,
+      isEndOfRange,
+      isRangeValid,
+      state,
+    };
+
+    store.cachedActiveByDayId.set(baseMetadata.id, {
+      baseMetadata,
+      key,
+      metadata,
+    });
+
+    return metadata;
   }
 
   subscribe(instanceId: string, callback: () => void): () => void {
@@ -103,32 +155,10 @@ export const useOptimizedDayMetadata = (
   const safeCalendarInstanceId =
     calendarInstanceId ?? DEFAULT_CALENDAR_INSTANCE_ID;
 
-  const ranges = useSyncExternalStore(
+  return useSyncExternalStore(
     (callback) =>
       activeDateRangesStore.subscribe(safeCalendarInstanceId, callback),
-    () => activeDateRangesStore.getSnapshot(safeCalendarInstanceId)
+    () =>
+      activeDateRangesStore.getDaySnapshot(safeCalendarInstanceId, baseMetadata)
   );
-
-  return useMemo(() => {
-    // We're only interested in the active date ranges, no need to worry about
-    // disabled states. These are already covered by the base metadata.
-    const { isStartOfRange, isEndOfRange, isRangeValid, state } =
-      getStateFields({
-        id: baseMetadata.id,
-        calendarActiveDateRanges: ranges,
-      });
-
-    if (state === "active") {
-      return {
-        ...baseMetadata,
-        isStartOfRange,
-        isEndOfRange,
-        isRangeValid,
-        state,
-      };
-    }
-
-    // Return the base metadata directly when idle - same ref means memo() bails out
-    return baseMetadata;
-  }, [baseMetadata, ranges]);
 };

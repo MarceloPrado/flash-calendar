@@ -260,10 +260,9 @@ describe("useOptimizedDayMetadata", () => {
     });
 
     expect(result.current).toEqual(baseMetadata);
-    // useSyncExternalStore triggers a re-render when the snapshot changes,
-    // but useMemo returns the same baseMetadata ref, so the component using
-    // this hook (with memo()) won't re-render. This is still more efficient.
-    expect(result.all).toHaveLength(2);
+    // With per-day snapshots, the hook does not re-render when this day is
+    // unaffected by range changes.
+    expect(result.all).toHaveLength(1);
 
     // Emit another event
     act(() => {
@@ -276,7 +275,7 @@ describe("useOptimizedDayMetadata", () => {
     });
 
     expect(result.current).toEqual(baseMetadata);
-    expect(result.all).toHaveLength(3);
+    expect(result.all).toHaveLength(1);
 
     // Emit an incomplete range
     act(() => {
@@ -289,7 +288,7 @@ describe("useOptimizedDayMetadata", () => {
     });
 
     expect(result.current).toEqual(baseMetadata);
-    expect(result.all).toHaveLength(4);
+    expect(result.all).toHaveLength(1);
 
     // Check if the metadata is updated when the range is complete
     act(() => {
@@ -305,7 +304,7 @@ describe("useOptimizedDayMetadata", () => {
       state: "active",
       isRangeValid: true,
     });
-    expect(result.all).toHaveLength(5);
+    expect(result.all).toHaveLength(2);
   });
 
   it("resets the state once a new range is selected", () => {
