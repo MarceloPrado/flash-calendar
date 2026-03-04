@@ -23,7 +23,6 @@ import { uppercaseFirstLetter } from "@/helpers/strings";
 import type { BaseTheme } from "@/helpers/tokens";
 import type { UseCalendarParams } from "@/hooks/useCalendar";
 import { useCalendar } from "@/hooks/useCalendar";
-import { activeDateRangesEmitter } from "@/hooks/useOptimizedDayMetadata";
 
 export type PressableLike = React.ComponentType<
   Pick<PressableProps, "children" | "style" | "disabled"> & {
@@ -196,10 +195,10 @@ export const Calendar = memo(function Calendar(props: CalendarProps) {
     ...otherProps
   } = props;
   useEffect(() => {
-    activeDateRangesEmitter.emit("onSetActiveDateRanges", {
-      instanceId: calendarInstanceId,
-      ranges: calendarActiveDateRanges ?? [],
-    });
+    activeDateRangesStore.setRanges(
+      calendarInstanceId ?? "legend-calendar-default-instance",
+      calendarActiveDateRanges ?? []
+    );
     /**
      * While `calendarMonthId` is not used by the effect, we still need it in
      * the dependency array since [LegendList uses recycling
