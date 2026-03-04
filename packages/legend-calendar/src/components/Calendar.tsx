@@ -196,9 +196,13 @@ export const Calendar = memo(function Calendar(props: CalendarProps) {
     ...otherProps
   } = props;
   useEffect(() => {
+    // When used inside CalendarList, calendarActiveDateRanges is undefined
+    // because CalendarList writes directly to the store. Skip to avoid
+    // overwriting the store with empty ranges on recycle/scroll.
+    if (calendarActiveDateRanges === undefined) return;
     activeDateRangesStore.setRanges(
       calendarInstanceId ?? "legend-calendar-default-instance",
-      calendarActiveDateRanges ?? []
+      calendarActiveDateRanges
     );
     /**
      * While `calendarMonthId` is not used by the effect, we still need it in
