@@ -1,5 +1,4 @@
-import mitt from "mitt";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 import {
   getStateFields,
@@ -7,32 +6,143 @@ import {
   type CalendarDayMetadata,
 } from "@/hooks/useCalendar";
 
-interface OnSetActiveDateRangesPayload {
-  instanceId?: string;
-  ranges: CalendarActiveDateRange[];
-}
-
-/**
- * An event emitter for the active date ranges. This notifies the calendar items
- * when their state changes, allowing just the affected items to re-render.
- *
- * While this is an implementation detail focused on improving performance, it's
- * exported in case you need to build your own calendar. Check the source code
- * for a reference implementation.
- */
-export const activeDateRangesEmitter = mitt<{
-  onSetActiveDateRanges: OnSetActiveDateRangesPayload;
-}>();
-
 /**
  * The default calendar instance ID. This is used when no instance ID is provided.
  */
 const DEFAULT_CALENDAR_INSTANCE_ID = "legend-calendar-default-instance";
 
+interface DateRangeStoreState {
+  ranges: CalendarActiveDateRange[];
+  subscribers: Set<() => void>;
+  cachedActiveByDayId: Map<
+    string,
+    {
+      baseMetadata: CalendarDayMetadata;
+      key: string;
+      metadata: CalendarDayMetadata;
+    }
+  >;
+}
+
+/**
+ * A lightweight store for active date ranges. This replaces the mitt emitter
+ * with a more efficient useSyncExternalStore-compatible pattern.
+ */
+class DateRangeStore {
+  private stores = new Map<string, DateRangeStoreState>();
+
+  private getOrCreateStore(instanceId: string): DateRangeStoreState {
+    if (!this.stores.has(instanceId)) {
+      this.stores.set(instanceId, {
+        ranges: [],
+        subscribers: new Set(),
+        cachedActiveByDayId: new Map(),
+      });
+    }
+    return this.stores.get(instanceId)!;
+  }
+
+  setRanges(instanceId: string, ranges: CalendarActiveDateRange[]): void {
+    const store = this.getOrCreateStore(instanceId);
+
+    // Bail out if the ranges haven't changed to avoid notifying all subscribers
+    if (this.rangesEqual(store.ranges, ranges)) {
+      return;
+    }
+
+    store.ranges = ranges;
+    store.cachedActiveByDayId.clear();
+    store.subscribers.forEach((callback) => callback());
+  }
+
+  private rangesEqual(
+    a: CalendarActiveDateRange[],
+    b: CalendarActiveDateRange[]
+  ): boolean {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (a[i].startId !== b[i].startId || a[i].endId !== b[i].endId) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  getSnapshot(instanceId: string): CalendarActiveDateRange[] {
+    return this.getOrCreateStore(instanceId).ranges;
+  }
+
+  getDaySnapshot(
+    instanceId: string,
+    baseMetadata: CalendarDayMetadata
+  ): CalendarDayMetadata {
+    const store = this.getOrCreateStore(instanceId);
+
+    const { isStartOfRange, isEndOfRange, isRangeValid, state } =
+      getStateFields({
+        id: baseMetadata.id,
+        calendarActiveDateRanges: store.ranges,
+      });
+
+    if (state !== "active") {
+      return baseMetadata;
+    }
+
+    const key = `${isStartOfRange ? 1 : 0}${isEndOfRange ? 1 : 0}${
+      isRangeValid ? 1 : 0
+    }`;
+
+    const cached = store.cachedActiveByDayId.get(baseMetadata.id);
+    if (cached && cached.baseMetadata === baseMetadata && cached.key === key) {
+      return cached.metadata;
+    }
+
+    const metadata: CalendarDayMetadata = {
+      ...baseMetadata,
+      isStartOfRange,
+      isEndOfRange,
+      isRangeValid,
+      state,
+    };
+
+    store.cachedActiveByDayId.set(baseMetadata.id, {
+      baseMetadata,
+      key,
+      metadata,
+    });
+
+    return metadata;
+  }
+
+  subscribe(instanceId: string, callback: () => void): () => void {
+    const store = this.getOrCreateStore(instanceId);
+    store.subscribers.add(callback);
+    return () => {
+      store.subscribers.delete(callback);
+    };
+  }
+
+  /**
+   * Clears all stores. Useful for testing.
+   */
+  clear(): void {
+    this.stores.clear();
+  }
+}
+
+/**
+ * A store for active date ranges. This notifies calendar items when their state
+ * changes, allowing just the affected items to re-render.
+ *
+ * While this is an implementation detail focused on improving performance, it's
+ * exported in case you need to build your own calendar. Check the source code
+ * for a reference implementation.
+ */
+export const activeDateRangesStore = new DateRangeStore();
+
 /**
  * Returns an optimized metadata for a particular day. This hook listens to the
- * `activeDateRanges` emitter, enabling only the affected calendar items to
- * re-render.
+ * date range store, enabling only the affected calendar items to re-render.
  *
  * While this is an implementation detail focused on improving performance, it's
  * exported in case you need to build your own calendar. Check the source code
@@ -42,52 +152,13 @@ export const useOptimizedDayMetadata = (
   baseMetadata: CalendarDayMetadata,
   calendarInstanceId?: string
 ) => {
-  const [metadata, setMetadata] = useState(baseMetadata);
-
   const safeCalendarInstanceId =
     calendarInstanceId ?? DEFAULT_CALENDAR_INSTANCE_ID;
 
-  // Ensure the metadata is updated when the base changes.
-  useEffect(() => {
-    setMetadata(baseMetadata);
-  }, [baseMetadata]);
-
-  useEffect(() => {
-    const handler = (payload: OnSetActiveDateRangesPayload) => {
-      const { ranges, instanceId = DEFAULT_CALENDAR_INSTANCE_ID } = payload;
-      if (instanceId !== safeCalendarInstanceId) {
-        // This event is not for this instance, ignore it.
-        return;
-      }
-
-      // We're only interested in the active date ranges, no need to worry about
-      // disabled states. These are already covered by the base metadata.
-      const { isStartOfRange, isEndOfRange, isRangeValid, state } =
-        getStateFields({
-          id: metadata.id,
-          calendarActiveDateRanges: ranges,
-        });
-
-      if (state === "active") {
-        setMetadata((prev) => ({
-          ...prev,
-          isStartOfRange,
-          isEndOfRange,
-          isRangeValid,
-          state,
-        }));
-      } else {
-        // Resets the state when it's no longer active.
-        setMetadata(baseMetadata);
-      }
-    };
-
-    activeDateRangesEmitter.on("onSetActiveDateRanges", handler);
-
-    return () => {
-      activeDateRangesEmitter.off("onSetActiveDateRanges", handler);
-    };
-  }, [baseMetadata, safeCalendarInstanceId, metadata]);
-
-  return metadata;
+  return useSyncExternalStore(
+    (callback) =>
+      activeDateRangesStore.subscribe(safeCalendarInstanceId, callback),
+    () =>
+      activeDateRangesStore.getDaySnapshot(safeCalendarInstanceId, baseMetadata)
+  );
 };

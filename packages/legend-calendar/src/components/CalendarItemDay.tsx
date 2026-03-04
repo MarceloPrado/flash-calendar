@@ -348,41 +348,43 @@ export interface CalendarItemDayWithContainerProps
   calendarInstanceId?: string;
 }
 
-export const CalendarItemDayWithContainer = memo(function CalendarItemDayWithContainer({
-  children,
-  metadata: baseMetadata,
-  onPress,
-  theme,
-  dayHeight,
-  daySpacing,
-  containerTheme,
-  calendarInstanceId,
-  CalendarPressableComponent,
-}: CalendarItemDayWithContainerProps) {
-  const metadata = useOptimizedDayMetadata(baseMetadata, calendarInstanceId);
+export const CalendarItemDayWithContainer = memo(
+  function CalendarItemDayWithContainer({
+    children,
+    metadata: baseMetadata,
+    onPress,
+    theme,
+    dayHeight,
+    daySpacing,
+    containerTheme,
+    calendarInstanceId,
+    CalendarPressableComponent,
+  }: CalendarItemDayWithContainerProps) {
+    const metadata = useOptimizedDayMetadata(baseMetadata, calendarInstanceId);
 
-  return (
-    <CalendarItemDayContainer
-      dayHeight={dayHeight}
-      daySpacing={daySpacing}
-      isStartOfWeek={metadata.isStartOfWeek}
-      metadata={metadata}
-      shouldShowActiveDayFiller={
-        metadata.isRangeValid && !metadata.isEndOfWeek
-          ? !metadata.isEndOfRange
-          : false
-      }
-      theme={containerTheme}
-    >
-      <CalendarItemDay
-        CalendarPressableComponent={CalendarPressableComponent}
-        height={dayHeight}
+    return (
+      <CalendarItemDayContainer
+        dayHeight={dayHeight}
+        daySpacing={daySpacing}
+        isStartOfWeek={metadata.isStartOfWeek}
         metadata={metadata}
-        onPress={onPress}
-        theme={theme}
+        shouldShowActiveDayFiller={
+          metadata.isRangeValid && !metadata.isEndOfWeek
+            ? !metadata.isEndOfRange
+            : false
+        }
+        theme={containerTheme}
       >
-        {children}
-      </CalendarItemDay>
-    </CalendarItemDayContainer>
-  );
-});
+        <CalendarItemDay
+          CalendarPressableComponent={CalendarPressableComponent}
+          height={dayHeight}
+          metadata={metadata}
+          onPress={onPress}
+          theme={theme}
+        >
+          {children}
+        </CalendarItemDay>
+      </CalendarItemDayContainer>
+    );
+  }
+);

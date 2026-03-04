@@ -1,10 +1,4 @@
-import {
-  Fragment,
-  isValidElement,
-  useMemo,
-  type ReactElement,
-  type ReactNode
-} from "react";
+import { useMemo, type ReactNode } from "react";
 import { StyleSheet, View, type ViewStyle } from "react-native";
 
 const styles = StyleSheet.create({
@@ -26,12 +20,6 @@ export interface VStackProps {
 
   /** If the VStack should `flex: 1` to fill the parent's height */
   grow?: boolean;
-}
-
-function isFragment(
-  child: ReactNode
-): child is ReactElement<{ children?: ReactNode }> {
-  return isValidElement(child) && child.type === Fragment;
 }
 
 export function VStack({

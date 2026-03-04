@@ -1,14 +1,18 @@
-import { renderHook, act } from "@testing-library/react-hooks";
-import { describe, it, expect } from "bun:test";
+import { act, renderHook } from "@testing-library/react-hooks";
+import { beforeEach, describe, expect, it } from "bun:test";
 
-import type { CalendarDayMetadata } from "@/hooks/useCalendar";
 import { fromDateId } from "@/helpers/dates";
+import type { CalendarDayMetadata } from "@/hooks/useCalendar";
 import {
-  activeDateRangesEmitter,
+  activeDateRangesStore,
   useOptimizedDayMetadata,
 } from "@/hooks/useOptimizedDayMetadata";
 
 describe("useOptimizedDayMetadata", () => {
+  beforeEach(() => {
+    activeDateRangesStore.clear();
+  });
+
   it("return the base metadata as the initial value", () => {
     const baseMetadata: CalendarDayMetadata = {
       date: fromDateId("2024-02-16"),
@@ -70,9 +74,9 @@ describe("useOptimizedDayMetadata", () => {
       ...baseMetadata,
       isDisabled: true,
     });
-    // `useEffect` is called after the hook renders with the new baseMetadata.
-    // Hence, the length of the `result.all` array is 3.
-    expect(result.all).toHaveLength(3);
+    // With useSyncExternalStore + useMemo, we get fewer renders than the old
+    // useEffect + useState implementation (2 instead of 3), which is more efficient.
+    expect(result.all).toHaveLength(2);
   });
 
   it("endOfRange: returns the updated metadata once an event is emitted", () => {
@@ -105,14 +109,12 @@ describe("useOptimizedDayMetadata", () => {
 
     // Emit event
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
-        ranges: [
-          {
-            startId: "2024-02-01",
-            endId: "2024-02-16",
-          },
-        ],
-      });
+      activeDateRangesStore.setRanges("legend-calendar-default-instance", [
+        {
+          startId: "2024-02-01",
+          endId: "2024-02-16",
+        },
+      ]);
     });
 
     expect(result.current).toEqual({
@@ -154,14 +156,12 @@ describe("useOptimizedDayMetadata", () => {
 
     // Emit event
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
-        ranges: [
-          {
-            startId: "2024-02-01",
-            endId: "2024-02-16",
-          },
-        ],
-      });
+      activeDateRangesStore.setRanges("legend-calendar-default-instance", [
+        {
+          startId: "2024-02-01",
+          endId: "2024-02-16",
+        },
+      ]);
     });
 
     expect(result.current).toEqual({
@@ -203,14 +203,12 @@ describe("useOptimizedDayMetadata", () => {
 
     // Emit event
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
-        ranges: [
-          {
-            startId: "2024-02-01",
-            endId: "2024-02-01",
-          },
-        ],
-      });
+      activeDateRangesStore.setRanges("legend-calendar-default-instance", [
+        {
+          startId: "2024-02-01",
+          endId: "2024-02-01",
+        },
+      ]);
     });
 
     expect(result.current).toEqual({
@@ -253,29 +251,27 @@ describe("useOptimizedDayMetadata", () => {
 
     // Emit event
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
-        ranges: [
-          {
-            startId: "2024-02-01",
-            endId: "2024-02-17",
-          },
-        ],
-      });
+      activeDateRangesStore.setRanges("legend-calendar-default-instance", [
+        {
+          startId: "2024-02-01",
+          endId: "2024-02-17",
+        },
+      ]);
     });
 
     expect(result.current).toEqual(baseMetadata);
+    // With per-day snapshots, the hook does not re-render when this day is
+    // unaffected by range changes.
     expect(result.all).toHaveLength(1);
 
     // Emit another event
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
-        ranges: [
-          {
-            startId: "2024-02-19",
-            endId: "2024-02-23",
-          },
-        ],
-      });
+      activeDateRangesStore.setRanges("legend-calendar-default-instance", [
+        {
+          startId: "2024-02-19",
+          endId: "2024-02-23",
+        },
+      ]);
     });
 
     expect(result.current).toEqual(baseMetadata);
@@ -283,14 +279,12 @@ describe("useOptimizedDayMetadata", () => {
 
     // Emit an incomplete range
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
-        ranges: [
-          {
-            startId: "2024-02-01",
-            endId: undefined,
-          },
-        ],
-      });
+      activeDateRangesStore.setRanges("legend-calendar-default-instance", [
+        {
+          startId: "2024-02-01",
+          endId: undefined,
+        },
+      ]);
     });
 
     expect(result.current).toEqual(baseMetadata);
@@ -298,14 +292,12 @@ describe("useOptimizedDayMetadata", () => {
 
     // Check if the metadata is updated when the range is complete
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
-        ranges: [
-          {
-            startId: "2024-02-01",
-            endId: "2024-02-20",
-          },
-        ],
-      });
+      activeDateRangesStore.setRanges("legend-calendar-default-instance", [
+        {
+          startId: "2024-02-01",
+          endId: "2024-02-20",
+        },
+      ]);
     });
     expect(result.current).toEqual({
       ...baseMetadata,
@@ -345,14 +337,12 @@ describe("useOptimizedDayMetadata", () => {
 
     // Emit event
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
-        ranges: [
-          {
-            startId: "2024-02-01",
-            endId: "2024-02-01",
-          },
-        ],
-      });
+      activeDateRangesStore.setRanges("legend-calendar-default-instance", [
+        {
+          startId: "2024-02-01",
+          endId: "2024-02-01",
+        },
+      ]);
     });
 
     expect(result.current).toEqual({
@@ -366,14 +356,12 @@ describe("useOptimizedDayMetadata", () => {
 
     // Emit another range
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
-        ranges: [
-          {
-            startId: "2024-02-03",
-            endId: "2024-02-03",
-          },
-        ],
-      });
+      activeDateRangesStore.setRanges("legend-calendar-default-instance", [
+        {
+          startId: "2024-02-03",
+          endId: "2024-02-03",
+        },
+      ]);
     });
 
     // Back to the initial state
@@ -406,14 +394,12 @@ describe("useOptimizedDayMetadata with calendarInstanceId", () => {
     const { result } = renderHook(() => useOptimizedDayMetadata(baseMetadata));
 
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
-        ranges: [
-          {
-            startId: "2024-02-16",
-            endId: "2024-02-16",
-          },
-        ],
-      });
+      activeDateRangesStore.setRanges("legend-calendar-default-instance", [
+        {
+          startId: "2024-02-16",
+          endId: "2024-02-16",
+        },
+      ]);
     });
 
     expect(result.current).toEqual({
@@ -433,15 +419,12 @@ describe("useOptimizedDayMetadata with calendarInstanceId", () => {
     );
 
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
-        instanceId,
-        ranges: [
-          {
-            startId: "2024-02-16",
-            endId: "2024-02-16",
-          },
-        ],
-      });
+      activeDateRangesStore.setRanges(instanceId, [
+        {
+          startId: "2024-02-16",
+          endId: "2024-02-16",
+        },
+      ]);
     });
 
     expect(result.current).toEqual({
@@ -461,15 +444,12 @@ describe("useOptimizedDayMetadata with calendarInstanceId", () => {
     );
 
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
-        instanceId: "different-calendar",
-        ranges: [
-          {
-            startId: "2024-02-16",
-            endId: "2024-02-16",
-          },
-        ],
-      });
+      activeDateRangesStore.setRanges("different-calendar", [
+        {
+          startId: "2024-02-16",
+          endId: "2024-02-16",
+        },
+      ]);
     });
 
     // The metadata should not change
@@ -491,15 +471,12 @@ describe("useOptimizedDayMetadata with calendarInstanceId", () => {
     );
 
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
-        instanceId: instanceId1,
-        ranges: [
-          {
-            startId: "2024-02-16",
-            endId: "2024-02-16",
-          },
-        ],
-      });
+      activeDateRangesStore.setRanges(instanceId1, [
+        {
+          startId: "2024-02-16",
+          endId: "2024-02-16",
+        },
+      ]);
     });
 
     expect(result1.current).toEqual({
@@ -512,15 +489,12 @@ describe("useOptimizedDayMetadata with calendarInstanceId", () => {
     expect(result2.current).toEqual(baseMetadata2);
 
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
-        instanceId: instanceId2,
-        ranges: [
-          {
-            startId: "2024-02-15",
-            endId: "2024-02-17",
-          },
-        ],
-      });
+      activeDateRangesStore.setRanges(instanceId2, [
+        {
+          startId: "2024-02-15",
+          endId: "2024-02-17",
+        },
+      ]);
     });
 
     expect(result1.current).toEqual({
@@ -545,15 +519,12 @@ describe("useOptimizedDayMetadata with calendarInstanceId", () => {
     );
 
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
-        instanceId,
-        ranges: [
-          {
-            startId: "2024-02-16",
-            endId: "2024-02-16",
-          },
-        ],
-      });
+      activeDateRangesStore.setRanges(instanceId, [
+        {
+          startId: "2024-02-16",
+          endId: "2024-02-16",
+        },
+      ]);
     });
 
     expect(result.current).toEqual({
@@ -565,15 +536,12 @@ describe("useOptimizedDayMetadata with calendarInstanceId", () => {
     });
 
     act(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
-        instanceId,
-        ranges: [
-          {
-            startId: "2024-02-18",
-            endId: "2024-02-20",
-          },
-        ],
-      });
+      activeDateRangesStore.setRanges(instanceId, [
+        {
+          startId: "2024-02-18",
+          endId: "2024-02-20",
+        },
+      ]);
     });
 
     // Should reset to base state
