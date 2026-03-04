@@ -23,6 +23,7 @@ import { uppercaseFirstLetter } from "@/helpers/strings";
 import type { BaseTheme } from "@/helpers/tokens";
 import type { UseCalendarParams } from "@/hooks/useCalendar";
 import { useCalendar } from "@/hooks/useCalendar";
+import { activeDateRangesStore } from "@/hooks/useOptimizedDayMetadata";
 
 export type PressableLike = React.ComponentType<
   Pick<PressableProps, "children" | "style" | "disabled"> & {
