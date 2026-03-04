@@ -44,6 +44,7 @@
     "eslint-plugin-import": "^2.29.1",
     "prettier": "^2.8.8",
     "react-loadable": "npm:@docusaurus/react-loadable@5.5.2",
+    "sherif": "^1.10.0",
     "turbo": "^2.0.6",
     "typescript": "~5.9.2"
   }
