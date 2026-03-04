@@ -288,8 +288,11 @@ export const CalendarList = memo(
         // Wait for the next render cycle to ensure the list has been
         // updated with the new months.
         setTimeout(() => {
-          flashListRef.current?.scrollToOffset({
-            offset: getScrollOffsetForMonth(date) + additionalOffset,
+          const monthId = toDateId(startOfMonth(date));
+          const index = monthList.findIndex((month) => month.id === monthId);
+
+          flashListRef.current?.scrollToIndex({
+            index,
             animated,
           });
         }, 0);
