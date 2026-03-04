@@ -16,6 +16,8 @@ jobs:
 
       - name: Install Dependencies
         run: bun install
+      - name: check repo
+        run: bun repo:lint
 
       - name: Build
         run: bun run build
