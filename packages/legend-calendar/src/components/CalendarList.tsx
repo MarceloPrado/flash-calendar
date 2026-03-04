@@ -337,8 +337,8 @@ export const CalendarList = memo(function CalendarList({
 
   return (
     <LegendList
-      estimatedItemSize={273}
       data={monthListWithCalendarProps}
+      estimatedItemSize={273}
       initialScrollIndex={initialMonthIndex}
       keyExtractor={keyExtractor}
       maintainVisibleContentPosition

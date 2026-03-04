@@ -85,7 +85,8 @@ export const useOptimizedDayMetadata = (
     calendarInstanceId ?? DEFAULT_CALENDAR_INSTANCE_ID;
 
   const ranges = useSyncExternalStore(
-    (callback) => activeDateRangesStore.subscribe(safeCalendarInstanceId, callback),
+    (callback) =>
+      activeDateRangesStore.subscribe(safeCalendarInstanceId, callback),
     () => activeDateRangesStore.getSnapshot(safeCalendarInstanceId)
   );
 
