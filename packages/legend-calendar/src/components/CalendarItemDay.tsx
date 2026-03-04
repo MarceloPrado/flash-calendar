@@ -5,7 +5,6 @@ import { Pressable, StyleSheet, View } from "react-native";
 
 import type { CalendarTextProps } from "@/components/Text";
 import { Text } from "@/components/Text";
-
 import type { BaseTheme } from "@/helpers/tokens";
 import type { CalendarDayMetadata } from "@/hooks/useCalendar";
 import { useOptimizedDayMetadata } from "@/hooks/useOptimizedDayMetadata";
