@@ -22,11 +22,12 @@
     "typecheck": "turbo typecheck",
     "publish-packages": "turbo build lint test typecheck --filter @marceloterreiro/flash-calendar && changeset version && changeset publish",
     "test": "turbo test",
-    "postinstall": "manypkg check"
+    "repo:lint": "sherif ",
+    "repo:fix": "sherif --fix "
   },
   "overrides": {
-    "react": "19.1.0",
-    "sharp": "0.34.5"
+    "sharp": "0.34.5",
+    "react-dom": "19.2.0"
   },
   "packageManager": "bun@1.3.2",
   "version": "",
@@ -34,7 +35,7 @@
     "@swc/core",
     "sharp"
   ],
-  "dependencies": {
+  "devDependencies": {
     "@changesets/cli": "^2.27.1",
     "@manypkg/cli": "^0.21.2",
     "@marceloterreiro/eslint-config": "*",
