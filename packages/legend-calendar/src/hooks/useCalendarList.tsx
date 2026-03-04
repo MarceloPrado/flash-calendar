@@ -2,16 +2,16 @@ import { useCallback, useMemo, useState } from "react";
 
 import type { CalendarProps } from "@/components/Calendar";
 import {
-  fromDateId,
-  toDateId,
-  startOfMonth,
   addMonths,
-  subMonths,
   differenceInMonths,
+  fromDateId,
   getWeeksInMonth,
+  startOfMonth,
+  subMonths,
+  toDateId,
 } from "@/helpers/dates";
-import type { UseCalendarParams } from "@/hooks/useCalendar";
 import { pipe } from "@/helpers/functions";
+import type { UseCalendarParams } from "@/hooks/useCalendar";
 
 export interface CalendarMonth {
   id: string;
@@ -183,6 +183,10 @@ export const useCalendarList = ({
         calendarFirstDayOfWeek
       );
 
+      if (newMonths.length === 0) {
+        return monthList;
+      }
+
       const newMonthList = [...monthList, ...newMonths];
       setMonthList(newMonthList);
       return newMonthList;
@@ -200,11 +204,22 @@ export const useCalendarList = ({
         endingMonth
       );
 
+      const hasReachedStartingMonth = monthList.find(
+        (m) => m.id === toDateId(startingMonth)
+      );
+      if (hasReachedStartingMonth) {
+        return monthList;
+      }
+
       const newMonths = buildMonthList(
         startingMonth,
         endingMonth,
         calendarFirstDayOfWeek
       );
+
+      if (newMonths.length === 0) {
+        return monthList;
+      }
 
       const newMonthList = [...newMonths, ...monthList];
       setMonthList(newMonthList);

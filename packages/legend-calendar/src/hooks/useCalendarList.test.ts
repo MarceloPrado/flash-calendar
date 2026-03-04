@@ -1,5 +1,5 @@
 import { act, renderHook } from "@testing-library/react-hooks";
-import { describe, it, expect } from "bun:test";
+import { describe, expect, it } from "bun:test";
 
 import { fromDateId } from "@/helpers/dates";
 import { getHeightForMonth, useCalendarList } from "@/hooks/useCalendarList";
@@ -344,6 +344,36 @@ describe("useCalendarList", () => {
         result.current.prependMonths(12);
       });
       expect(result.current.monthList).toEqual(currentMonthList);
+    });
+
+    it("Prepend does not trigger a state update when starting month is already present", () => {
+      const { result } = renderHook(() =>
+        useCalendarList({
+          calendarFirstDayOfWeek: "sunday",
+          calendarFutureScrollRangeInMonths: 2,
+          calendarPastScrollRangeInMonths: 2,
+          calendarInitialMonthId: "2024-07-01",
+          calendarMinDateId: "2024-01-01",
+          calendarMaxDateId: "2024-12-31",
+        })
+      );
+
+      // Prepend until we reach the min date
+      act(() => {
+        result.current.prependMonths(2);
+      });
+      act(() => {
+        result.current.prependMonths(2);
+      });
+
+      // Now min is reached — capture reference
+      const listAfterReachingMin = result.current.monthList;
+
+      // Another prepend should be a true no-op (same reference)
+      act(() => {
+        result.current.prependMonths(2);
+      });
+      expect(result.current.monthList).toBe(listAfterReachingMin);
     });
   });
 
