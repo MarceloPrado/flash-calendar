@@ -1,8 +1,8 @@
 import { Calendar as CalendarDefault } from "@/components/Calendar";
 import {
-  CalendarItemDay,
-  CalendarItemDayContainer,
-  CalendarItemDayWithContainer,
+    CalendarItemDay,
+    CalendarItemDayContainer,
+    CalendarItemDayWithContainer,
 } from "@/components/CalendarItemDay";
 import { CalendarItemEmpty } from "@/components/CalendarItemEmpty";
 import { CalendarItemWeekName } from "@/components/CalendarItemWeekName";
@@ -27,25 +27,26 @@ const CalendarItemDayWithNamespace =
 CalendarItemDayWithNamespace.Container = CalendarItemDayContainer;
 CalendarItemDayWithNamespace.WithContainer = CalendarItemDayWithContainer;
 export type {
-  CalendarOnDayPress,
-  CalendarProps,
-  CalendarTheme,
+    CalendarOnDayPress,
+    CalendarProps,
+    CalendarTheme
 } from "@/components/Calendar";
 export type {
-  CalendarItemDayContainerProps,
-  CalendarItemDayProps,
-  CalendarItemDayWithContainerProps,
+    CalendarItemDayContainerProps,
+    CalendarItemDayProps,
+    CalendarItemDayWithContainerProps
 } from "@/components/CalendarItemDay";
 export type { CalendarItemEmptyProps } from "@/components/CalendarItemEmpty";
 export type { CalendarItemWeekNameProps } from "@/components/CalendarItemWeekName";
 export type {
-  CalendarListProps,
-  CalendarListRef,
-  CalendarMonthEnhanced,
+    CalendarListProps,
+    CalendarListRef,
+    CalendarMonthEnhanced
 } from "@/components/CalendarList";
 export type { CalendarRowMonthProps } from "@/components/CalendarRowMonth";
 export type { CalendarRowWeekProps } from "@/components/CalendarRowWeek";
 export type { HStackProps } from "@/components/HStack";
+export type { CalendarTextProps } from "@/components/Text";
 export type { VStackProps } from "@/components/VStack";
 
 interface CalendarItemNamespace {
