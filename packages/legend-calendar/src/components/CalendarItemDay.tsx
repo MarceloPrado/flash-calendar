@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { memo, useCallback, useMemo } from "react";
+import { memo } from "react";
 import type { TextStyle, ViewStyle } from "react-native";
 import { Pressable, StyleSheet, View } from "react-native";
 
@@ -183,13 +183,11 @@ export const CalendarItemDay = memo(function CalendarItemDay({
   CalendarPressableComponent = Pressable as PressableLike,
 }: CalendarItemDayProps) {
   const baseTheme = useTheme();
-  const baseStyles = useMemo(() => {
-    return buildBaseStyles(baseTheme);
-  }, [baseTheme]);
+  const baseStyles = buildBaseStyles(baseTheme);
 
-  const handlePress = useCallback(() => {
+  const handlePress = () => {
     onPress(metadata.id);
-  }, [metadata.id, onPress]);
+  };
 
   return (
     <CalendarPressableComponent
@@ -287,39 +285,27 @@ export const CalendarItemDayContainer = memo(function CalendarItemDayContainer({
   metadata,
 }: CalendarItemDayContainerProps) {
   const baseTheme = useTheme();
-  const spacerStyles = useMemo<ViewStyle>(() => {
-    return {
-      position: "relative",
-      marginLeft: isStartOfWeek ? 0 : daySpacing,
-      flex: 1,
-      height: dayHeight,
-      ...theme?.spacer,
-    };
-  }, [dayHeight, daySpacing, isStartOfWeek, theme?.spacer]);
+  const spacerStyles: ViewStyle = {
+    position: "relative",
+    marginLeft: isStartOfWeek ? 0 : daySpacing,
+    flex: 1,
+    height: dayHeight,
+    ...theme?.spacer,
+  };
 
-  const activeDayFiller = useMemo<ViewStyle | null>(() => {
-    if (!shouldShowActiveDayFiller) {
-      return null;
-    }
-
-    return {
-      position: "absolute",
-      top: 0,
-      bottom: 0,
-      right: -(daySpacing + 1), // +1 to cover the 1px gap
-      width: daySpacing + 2, // +2 to cover the 1px gap (distributes evenly on both sides)
-      backgroundColor: baseTheme.colors.background.inverse.primary,
-      ...(typeof theme?.activeDayFiller === "function" && !!metadata
-        ? theme.activeDayFiller(metadata)
-        : theme?.activeDayFiller),
-    };
-  }, [
-    baseTheme.colors.background.inverse.primary,
-    daySpacing,
-    metadata,
-    shouldShowActiveDayFiller,
-    theme,
-  ]);
+  const activeDayFiller: ViewStyle | null = !shouldShowActiveDayFiller
+    ? null
+    : {
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        right: -(daySpacing + 1), // +1 to cover the 1px gap
+        width: daySpacing + 2, // +2 to cover the 1px gap (distributes evenly on both sides)
+        backgroundColor: baseTheme.colors.background.inverse.primary,
+        ...(typeof theme?.activeDayFiller === "function" && !!metadata
+          ? theme.activeDayFiller(metadata)
+          : theme?.activeDayFiller),
+      };
 
   return (
     <View style={spacerStyles}>

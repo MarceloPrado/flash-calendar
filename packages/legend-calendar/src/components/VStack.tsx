@@ -1,4 +1,4 @@
-import { useMemo, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { StyleSheet, View, type ViewStyle } from "react-native";
 
 const styles = StyleSheet.create({
@@ -29,16 +29,13 @@ export function VStack({
   justifyContent,
   grow,
 }: VStackProps) {
-  const containerStyles = useMemo<ViewStyle>(
-    () => ({
-      ...styles.container,
-      gap: spacing,
-      alignItems,
-      justifyContent,
-      flex: grow ? 1 : undefined,
-    }),
-    [alignItems, grow, justifyContent, spacing]
-  );
+  const containerStyles: ViewStyle = {
+    ...styles.container,
+    gap: spacing,
+    alignItems,
+    justifyContent,
+    flex: grow ? 1 : undefined,
+  };
 
   return <View style={containerStyles}>{children}</View>;
 }

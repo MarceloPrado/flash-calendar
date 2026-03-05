@@ -1,5 +1,7 @@
 import { defineConfig } from "tsup";
 
+import { reactCompilerEsbuildPlugin } from "./src/build/reactCompilerPlugin";
+
 const outDir = "dist";
 
 export default defineConfig({
@@ -11,5 +13,5 @@ export default defineConfig({
   format: ["cjs", "esm"],
   external: ["react", "react-native", "react-native-web"],
   minify: true,
-  noExternal: ["mitt"],
+  esbuildPlugins: [reactCompilerEsbuildPlugin({ filter: /\.[jt]sx?$/ })],
 });

@@ -1,5 +1,3 @@
-import { useMemo } from "react";
-
 import type { DayState } from "@/components/CalendarItemDay";
 import {
   addDays,
@@ -347,5 +345,4 @@ export const buildCalendar = (params: UseCalendarParams) => {
 /**
  * Returns a memoized calendar based on the given parameters.
  */
-export const useCalendar = (params: UseCalendarParams) =>
-  useMemo(() => buildCalendar(params), [params]);
+export const useCalendar = (params: UseCalendarParams) => buildCalendar(params);

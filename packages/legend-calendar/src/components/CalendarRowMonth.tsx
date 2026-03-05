@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { memo, useMemo } from "react";
+import { memo } from "react";
 import type { TextStyle, ViewStyle } from "react-native";
 import { StyleSheet, View } from "react-native";
 
@@ -40,20 +40,12 @@ export const CalendarRowMonth = memo(function CalendarRowMonth({
   theme,
 }: CalendarRowMonthProps) {
   const baseTheme = useTheme();
-  const { containerStyles, contentStyles } = useMemo(() => {
-    const containerStyles = [styles.container, { height }, theme?.container];
-    const contentStyles = [
-      styles.content,
-      { color: baseTheme.colors.content.primary },
-      theme?.content,
-    ];
-    return { containerStyles, contentStyles };
-  }, [
-    baseTheme.colors.content.primary,
-    height,
-    theme?.container,
+  const containerStyles = [styles.container, { height }, theme?.container];
+  const contentStyles = [
+    styles.content,
+    { color: baseTheme.colors.content.primary },
     theme?.content,
-  ]);
+  ];
 
   return (
     <View style={containerStyles}>

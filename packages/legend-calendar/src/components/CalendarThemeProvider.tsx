@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { createContext, useContext, useMemo } from "react";
+import { createContext, useContext } from "react";
 import type { ColorSchemeName } from "react-native";
 
 export interface CalendarThemeContextType {
@@ -25,10 +25,7 @@ export const CalendarThemeProvider = ({
    */
   colorScheme?: ColorSchemeName;
 }) => {
-  const calendarThemeContextValue = useMemo<CalendarThemeContextType>(
-    () => ({ colorScheme }),
-    [colorScheme]
-  );
+  const calendarThemeContextValue: CalendarThemeContextType = { colorScheme };
 
   return (
     <CalendarThemeContext.Provider value={calendarThemeContextValue}>
