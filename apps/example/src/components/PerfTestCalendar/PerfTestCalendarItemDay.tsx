@@ -1,6 +1,6 @@
+import type { CalendarItemDayWithContainerProps } from "@/components/CalendarItemDay";
 import { Calendar, useOptimizedDayMetadata } from "@lazerlen/legend-calendar";
 import { Text } from "react-native";
-import type { CalendarItemDayWithContainerProps } from "@/components/CalendarItemDay";
 
 import { useRenderCount } from "./useRenderCount";
 
@@ -37,13 +37,14 @@ export const PerfTestCalendarItemDayWithContainer = ({
         {children}
         <Text
           style={{
-            fontSize: 8,
+            fontSize: 7,
             fontStyle: "italic",
             textAlign: "center",
-            color: metadata.state === "active" ? "white" : "black",
+            color: metadata.state === "active" ? "white" : "gray",
+            marginTop: -2,
           }}
         >
-          {"\n"}render: {renderCounter}x
+          {renderCounter}x
         </Text>
       </Calendar.Item.Day>
     </Calendar.Item.Day.Container>

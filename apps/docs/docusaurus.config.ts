@@ -61,7 +61,7 @@ const config: Config = {
       title: "Legend Calendar",
       logo: {
         alt: "Legend Calendar Logo",
-        src: "img/logo.svg",
+        src: "img/legend-calendar.png",
       },
       items: [
         {

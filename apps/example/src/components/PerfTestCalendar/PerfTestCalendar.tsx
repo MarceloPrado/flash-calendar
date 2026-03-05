@@ -1,12 +1,12 @@
+import { uppercaseFirstLetter } from "@/helpers/strings";
 import type { CalendarProps } from "@lazerlen/legend-calendar";
 import {
   Calendar,
-  activeDateRangesEmitter,
+  activeDateRangesStore,
   useCalendar,
 } from "@lazerlen/legend-calendar";
 import { memo, useEffect } from "react";
 import { Text } from "react-native";
-import { uppercaseFirstLetter } from "@/helpers/strings";
 
 import { PerfTestCalendarItemDayWithContainer } from "./PerfTestCalendarItemDay";
 import { useRenderCount } from "./useRenderCount";
@@ -52,7 +52,10 @@ const BasePerfTestCalendar = memo(
           ))}
         </Calendar.Row.Week>
         {weeksList.map((week, index) => (
-          <Calendar.Row.Week key={index}>
+          <Calendar.Row.Week
+            key={index}
+            spacing={calendarRowHorizontalSpacing as 0 | 2 | 4 | 6 | 8 | 12 | 16 | 20 | 24}
+          >
             {week.map((dayProps) => {
               if (dayProps.isDifferentMonth) {
                 return (
@@ -96,9 +99,10 @@ BasePerfTestCalendar.displayName = "BasePerfTestCalendar";
 export const PerfTestCalendar = memo(
   ({ calendarActiveDateRanges, calendarMonthId, ...props }: CalendarProps) => {
     useEffect(() => {
-      activeDateRangesEmitter.emit("onSetActiveDateRanges", {
-        ranges: calendarActiveDateRanges ?? [],
-      });
+      activeDateRangesStore.setRanges(
+        calendarMonthId,
+        calendarActiveDateRanges ?? []
+      );
       /**
        * While `calendarMonthId` is not used by the effect, we still need it in
        * the dependency array since [LegendList uses recycling
