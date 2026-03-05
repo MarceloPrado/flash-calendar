@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useState } from "react";
 
 import type { CalendarProps } from "@/components/Calendar";
 import {
@@ -124,19 +124,15 @@ export const useCalendarList = ({
   calendarMinDateId,
 }: UseCalendarListParams) => {
   // Initialize key values
-  const { initialMonth, initialMonthId } = useMemo(() => {
-    const baseDate = calendarInitialMonthId
-      ? fromDateId(calendarInitialMonthId)
-      : fromDateId(toDateId(new Date()));
+  const baseDate = calendarInitialMonthId
+    ? fromDateId(calendarInitialMonthId)
+    : fromDateId(toDateId(new Date()));
 
-    // Normalize to start of month since each month ID is represented by the first day of month
-    const baseStartOfMonth = startOfMonth(baseDate);
+  // Normalize to start of month since each month ID is represented by the first day of month
+  const baseStartOfMonth = startOfMonth(baseDate);
 
-    return {
-      initialMonth: baseStartOfMonth,
-      initialMonthId: toDateId(baseStartOfMonth),
-    };
-  }, [calendarInitialMonthId]);
+  const initialMonth = baseStartOfMonth;
+  const initialMonthId = toDateId(baseStartOfMonth);
 
   const [monthList, setMonthList] = useState<CalendarMonth[]>(() => {
     const currentMonth = startOfMonth(initialMonth);
@@ -159,97 +155,85 @@ export const useCalendarList = ({
   /**
    * Append new months to the list.
    */
-  const appendMonths = useCallback(
-    (numberOfMonths: number) => {
-      // Last month + 1
-      const startingMonth = addMonths(monthList[monthList.length - 1].date, 1);
+  const appendMonths = (numberOfMonths: number) => {
+    // Last month + 1
+    const startingMonth = addMonths(monthList[monthList.length - 1].date, 1);
 
-      const endingMonth = getEndingMonth(
-        Math.max(numberOfMonths - 1, 0),
-        calendarMaxDateId,
-        startingMonth
+    const endingMonth = getEndingMonth(
+      Math.max(numberOfMonths - 1, 0),
+      calendarMaxDateId,
+      startingMonth
+    );
+
+    const hasReachedEndingMonth = monthList.find(
+      (m) => m.id === toDateId(endingMonth)
+    );
+    if (hasReachedEndingMonth) {
+      return monthList;
+    }
+
+    const newMonths = buildMonthList(
+      startingMonth,
+      endingMonth,
+      calendarFirstDayOfWeek
+    );
+
+    if (newMonths.length === 0) {
+      return monthList;
+    }
+
+    const newMonthList = [...monthList, ...newMonths];
+    setMonthList(newMonthList);
+    return newMonthList;
+  };
+
+  const prependMonths = (numberOfMonths: number) => {
+    const endingMonth = subMonths(monthList[0].date, 1);
+
+    const startingMonth = getStartingMonth(
+      Math.max(numberOfMonths - 1, 0),
+      calendarMinDateId,
+      endingMonth
+    );
+
+    const hasReachedStartingMonth = monthList.find(
+      (m) => m.id === toDateId(startingMonth)
+    );
+    if (hasReachedStartingMonth) {
+      return monthList;
+    }
+
+    const newMonths = buildMonthList(
+      startingMonth,
+      endingMonth,
+      calendarFirstDayOfWeek
+    );
+
+    if (newMonths.length === 0) {
+      return monthList;
+    }
+
+    const newMonthList = [...newMonths, ...monthList];
+    setMonthList(newMonthList);
+    return newMonthList;
+  };
+
+  const addMissingMonths = (targetMonthId: string) => {
+    const firstMonth = monthList[0];
+    const lastMonth = monthList[monthList.length - 1];
+
+    if (targetMonthId > lastMonth.id) {
+      return appendMonths(
+        differenceInMonths(fromDateId(targetMonthId), lastMonth.date)
       );
-
-      const hasReachedEndingMonth = monthList.find(
-        (m) => m.id === toDateId(endingMonth)
+    } else {
+      return prependMonths(
+        differenceInMonths(firstMonth.date, fromDateId(targetMonthId))
       );
-      if (hasReachedEndingMonth) {
-        return monthList;
-      }
+    }
+  };
 
-      const newMonths = buildMonthList(
-        startingMonth,
-        endingMonth,
-        calendarFirstDayOfWeek
-      );
-
-      if (newMonths.length === 0) {
-        return monthList;
-      }
-
-      const newMonthList = [...monthList, ...newMonths];
-      setMonthList(newMonthList);
-      return newMonthList;
-    },
-    [calendarFirstDayOfWeek, calendarMaxDateId, monthList]
-  );
-
-  const prependMonths = useCallback(
-    (numberOfMonths: number) => {
-      const endingMonth = subMonths(monthList[0].date, 1);
-
-      const startingMonth = getStartingMonth(
-        Math.max(numberOfMonths - 1, 0),
-        calendarMinDateId,
-        endingMonth
-      );
-
-      const hasReachedStartingMonth = monthList.find(
-        (m) => m.id === toDateId(startingMonth)
-      );
-      if (hasReachedStartingMonth) {
-        return monthList;
-      }
-
-      const newMonths = buildMonthList(
-        startingMonth,
-        endingMonth,
-        calendarFirstDayOfWeek
-      );
-
-      if (newMonths.length === 0) {
-        return monthList;
-      }
-
-      const newMonthList = [...newMonths, ...monthList];
-      setMonthList(newMonthList);
-      return newMonthList;
-    },
-    [calendarFirstDayOfWeek, calendarMinDateId, monthList]
-  );
-
-  const addMissingMonths = useCallback(
-    (targetMonthId: string) => {
-      const firstMonth = monthList[0];
-      const lastMonth = monthList[monthList.length - 1];
-
-      if (targetMonthId > lastMonth.id) {
-        return appendMonths(
-          differenceInMonths(fromDateId(targetMonthId), lastMonth.date)
-        );
-      } else {
-        return prependMonths(
-          differenceInMonths(firstMonth.date, fromDateId(targetMonthId))
-        );
-      }
-    },
-    [appendMonths, monthList, prependMonths]
-  );
-
-  const initialMonthIndex = useMemo(() => {
-    const index = monthList.findIndex((i) => i.id === initialMonthId);
-    return index;
-  }, [initialMonthId, monthList]);
+  const initialMonthIndex = monthList.findIndex((i) => i.id === initialMonthId);
 
   return {
     /**

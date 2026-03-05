@@ -1,6 +1,6 @@
-import { memo, useMemo } from "react";
+import { memo } from "react";
 import type { ViewStyle } from "react-native";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
@@ -22,9 +22,7 @@ export const CalendarItemEmpty = memo(function CalendarItemEmpty(
   props: CalendarItemEmptyProps
 ) {
   const { height, theme } = props;
-  const containerStyles = useMemo(() => {
-    return [{ ...styles.container, height }, theme?.container];
-  }, [height, theme?.container]);
+  const containerStyles = [{ ...styles.container, height }, theme?.container];
 
   return <View style={containerStyles} />;
 });

@@ -3,14 +3,7 @@ import {
   type LegendListProps,
   type LegendListRef,
 } from "@legendapp/list/react-native";
-import {
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-} from "react";
+import { memo, useEffect, useImperativeHandle, useRef } from "react";
 import { StyleSheet, View } from "react-native";
 
 import type { CalendarProps } from "@/components/Calendar";
@@ -168,49 +161,27 @@ export const CalendarList = memo(function CalendarList({
     );
   }, [calendarActiveDateRanges, calendarInstanceId]);
 
-  const calendarProps = useMemo(
-    (): CalendarMonthEnhanced["calendarProps"] => ({
-      // calendarActiveDateRanges intentionally omitted - written to store above
-      calendarColorScheme,
-      calendarDayHeight,
-      calendarDisabledDateIds,
-      calendarFirstDayOfWeek,
-      calendarFormatLocale,
-      calendarInstanceId,
-      calendarMaxDateId,
-      calendarMinDateId,
-      calendarMonthHeaderHeight,
-      calendarRowHorizontalSpacing,
-      calendarRowVerticalSpacing,
-      calendarWeekHeaderHeight,
-      getCalendarDayFormat,
-      getCalendarMonthFormat,
-      getCalendarWeekDayFormat,
-      onCalendarDayPress,
-      theme,
-      CalendarPressableComponent,
-    }),
-    [
-      calendarColorScheme,
-      calendarDayHeight,
-      calendarDisabledDateIds,
-      calendarFirstDayOfWeek,
-      calendarFormatLocale,
-      calendarMaxDateId,
-      calendarMinDateId,
-      calendarMonthHeaderHeight,
-      calendarRowHorizontalSpacing,
-      calendarRowVerticalSpacing,
-      calendarWeekHeaderHeight,
-      getCalendarDayFormat,
-      getCalendarMonthFormat,
-      getCalendarWeekDayFormat,
-      calendarInstanceId,
-      onCalendarDayPress,
-      theme,
-      CalendarPressableComponent,
-    ]
-  );
+  const calendarProps: CalendarMonthEnhanced["calendarProps"] = {
+    // calendarActiveDateRanges intentionally omitted - written to store above
+    calendarColorScheme,
+    calendarDayHeight,
+    calendarDisabledDateIds,
+    calendarFirstDayOfWeek,
+    calendarFormatLocale,
+    calendarInstanceId,
+    calendarMaxDateId,
+    calendarMinDateId,
+    calendarMonthHeaderHeight,
+    calendarRowHorizontalSpacing,
+    calendarRowVerticalSpacing,
+    calendarWeekHeaderHeight,
+    getCalendarDayFormat,
+    getCalendarMonthFormat,
+    getCalendarWeekDayFormat,
+    onCalendarDayPress,
+    theme,
+    CalendarPressableComponent,
+  };
 
   const {
     initialMonthIndex,
@@ -227,69 +198,49 @@ export const CalendarList = memo(function CalendarList({
     calendarMinDateId,
   });
 
-  const monthListWithCalendarProps = useMemo(() => {
-    return monthList.map((month) => ({
-      ...month,
-      calendarProps,
-    }));
-  }, [calendarProps, monthList]);
+  const monthListWithCalendarProps = monthList.map((month) => ({
+    ...month,
+    calendarProps,
+  }));
 
-  const handleOnEndReached = useCallback(
-    (info: { distanceFromEnd: number }) => {
-      appendMonths(calendarFutureScrollRangeInMonths);
-      onEndReached?.(info);
-    },
-    [appendMonths, calendarFutureScrollRangeInMonths, onEndReached]
-  );
+  const handleOnEndReached = (info: { distanceFromEnd: number }) => {
+    appendMonths(calendarFutureScrollRangeInMonths);
+    onEndReached?.(info);
+  };
 
-  const handleOnStartReached = useCallback(
-    (info: { distanceFromStart: number }) => {
-      prependMonths(calendarPastScrollRangeInMonths);
-      onStartReached?.(info);
-    },
-    [prependMonths, calendarPastScrollRangeInMonths, onStartReached]
-  );
+  const handleOnStartReached = (info: { distanceFromStart: number }) => {
+    prependMonths(calendarPastScrollRangeInMonths);
+    onStartReached?.(info);
+  };
   /**
    * Returns the offset for the given month (how much the user needs to
    * scroll to reach the month).
    */
-  const getScrollOffsetForMonth = useCallback(
-    (date: Date) => {
-      const monthId = toDateId(startOfMonth(date));
+  const getScrollOffsetForMonth = (date: Date) => {
+    const monthId = toDateId(startOfMonth(date));
 
-      let baseMonthList = monthList;
-      let index = baseMonthList.findIndex((month) => month.id === monthId);
+    let baseMonthList = monthList;
+    let index = baseMonthList.findIndex((month) => month.id === monthId);
 
-      if (index === -1) {
-        baseMonthList = addMissingMonths(monthId);
-        index = baseMonthList.findIndex((month) => month.id === monthId);
-      }
+    if (index === -1) {
+      baseMonthList = addMissingMonths(monthId);
+      index = baseMonthList.findIndex((month) => month.id === monthId);
+    }
 
-      return baseMonthList.slice(0, index).reduce((acc, month) => {
-        const currentHeight = getHeightForMonth({
-          calendarMonth: month,
-          calendarSpacing,
-          calendarDayHeight,
-          calendarMonthHeaderHeight,
-          calendarRowVerticalSpacing,
-          calendarWeekHeaderHeight,
-          calendarAdditionalHeight,
-        });
+    return baseMonthList.slice(0, index).reduce((acc, month) => {
+      const currentHeight = getHeightForMonth({
+        calendarMonth: month,
+        calendarSpacing,
+        calendarDayHeight,
+        calendarMonthHeaderHeight,
+        calendarRowVerticalSpacing,
+        calendarWeekHeaderHeight,
+        calendarAdditionalHeight,
+      });
 
-        return acc + currentHeight;
-      }, 0);
-    },
-    [
-      addMissingMonths,
-      calendarAdditionalHeight,
-      calendarDayHeight,
-      calendarMonthHeaderHeight,
-      calendarRowVerticalSpacing,
-      calendarSpacing,
-      calendarWeekHeaderHeight,
-      monthList,
-    ]
-  );
+      return acc + currentHeight;
+    }, 0);
+  };
 
   const legendListRef = useRef<LegendListRef>(null);
 
@@ -339,17 +290,12 @@ export const CalendarList = memo(function CalendarList({
     },
   }));
 
-  const calendarContainerStyle = useMemo(() => {
-    return { paddingBottom: calendarSpacing };
-  }, [calendarSpacing]);
+  const calendarContainerStyle = { paddingBottom: calendarSpacing };
 
-  const handleRenderItem = useCallback(
-    ({ item }: { item: CalendarMonthEnhanced }) => (
-      <View style={calendarContainerStyle}>
-        <Calendar calendarMonthId={item.id} {...item.calendarProps} />
-      </View>
-    ),
-    [calendarContainerStyle]
+  const handleRenderItem = ({ item }: { item: CalendarMonthEnhanced }) => (
+    <View style={calendarContainerStyle}>
+      <Calendar calendarMonthId={item.id} {...item.calendarProps} />
+    </View>
   );
 
   return (
