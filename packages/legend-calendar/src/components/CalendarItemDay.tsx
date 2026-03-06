@@ -309,8 +309,8 @@ export const CalendarItemDayContainer = memo(function CalendarItemDayContainer({
 
   return (
     <View style={spacerStyles}>
-      {children}
       {activeDayFiller ? <View style={activeDayFiller} /> : null}
+      {children}
     </View>
   );
 });
