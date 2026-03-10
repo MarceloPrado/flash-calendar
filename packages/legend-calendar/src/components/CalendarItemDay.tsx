@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
 export type DayState = "idle" | "active" | "today" | "disabled";
 
 interface DayTheme {
-  container: Omit<ViewStyle, "borderRadius">;
+  container: ViewStyle;
   content: TextStyle;
 }
 type CalendarItemDayTheme = Record<
@@ -57,7 +57,7 @@ const buildBaseStyles = (theme: BaseTheme): CalendarItemDayTheme => {
   };
 
   return {
-    active: ({ isPressed, isHovered, isStartOfRange, isEndOfRange }) => {
+    active: ({ isPressed, isHovered }) => {
       const baseStyles: DayTheme & { container: ViewStyle } =
         isPressed || isHovered
           ? {
@@ -81,18 +81,6 @@ const buildBaseStyles = (theme: BaseTheme): CalendarItemDayTheme => {
               },
             };
 
-      baseStyles.container.borderRadius = 0;
-      if (isStartOfRange) {
-        baseStyles.container.borderTopLeftRadius = 16;
-        baseStyles.container.borderBottomLeftRadius = 16;
-      }
-      if (isEndOfRange) {
-        baseStyles.container.borderTopRightRadius = 16;
-        baseStyles.container.borderBottomRightRadius = 16;
-      }
-      if (!isStartOfRange && !isEndOfRange) {
-        baseStyles.container.borderRadius = 0;
-      }
       return baseStyles;
     },
     disabled: () => ({
@@ -206,12 +194,74 @@ export const CalendarItemDay = memo(function CalendarItemDay({
           isStartOfRange: metadata.isStartOfRange ?? false,
         };
         const { container } = baseStyles[metadata.state](params);
-        return {
+        const baseThemeContainer = theme?.base?.({ ...metadata, isPressed })
+          .container as ViewStyle | undefined;
+        const stateThemeContainer = theme?.[metadata.state]?.({
+          ...metadata,
+          isPressed,
+        }).container as ViewStyle | undefined;
+        const mergedContainer: ViewStyle = {
           ...container,
           height,
-          ...theme?.base?.({ ...metadata, isPressed }).container,
-          ...theme?.[metadata.state]?.({ ...metadata, isPressed }).container,
+          ...baseThemeContainer,
+          ...stateThemeContainer,
         };
+        if (metadata.state === "active") {
+          const hasCustomRadius =
+            baseThemeContainer?.borderRadius !== undefined ||
+            baseThemeContainer?.borderTopLeftRadius !== undefined ||
+            baseThemeContainer?.borderBottomLeftRadius !== undefined ||
+            baseThemeContainer?.borderTopRightRadius !== undefined ||
+            baseThemeContainer?.borderBottomRightRadius !== undefined ||
+            stateThemeContainer?.borderRadius !== undefined ||
+            stateThemeContainer?.borderTopLeftRadius !== undefined ||
+            stateThemeContainer?.borderBottomLeftRadius !== undefined ||
+            stateThemeContainer?.borderTopRightRadius !== undefined ||
+            stateThemeContainer?.borderBottomRightRadius !== undefined;
+
+          if (!hasCustomRadius) {
+            const defaultRadius = styles.baseContainer.borderRadius ?? 0;
+            mergedContainer.borderRadius = 0;
+            if (metadata.isStartOfRange) {
+              mergedContainer.borderTopLeftRadius = defaultRadius;
+              mergedContainer.borderBottomLeftRadius = defaultRadius;
+            }
+            if (metadata.isEndOfRange) {
+              mergedContainer.borderTopRightRadius = defaultRadius;
+              mergedContainer.borderBottomRightRadius = defaultRadius;
+            }
+            if (!metadata.isStartOfRange && !metadata.isEndOfRange) {
+              mergedContainer.borderRadius = 0;
+            }
+          } else if (mergedContainer.borderRadius !== undefined) {
+            const radius = mergedContainer.borderRadius;
+            if (
+              metadata.isStartOfRange &&
+              mergedContainer.borderTopLeftRadius === undefined
+            ) {
+              mergedContainer.borderTopLeftRadius = radius;
+            }
+            if (
+              metadata.isStartOfRange &&
+              mergedContainer.borderBottomLeftRadius === undefined
+            ) {
+              mergedContainer.borderBottomLeftRadius = radius;
+            }
+            if (
+              metadata.isEndOfRange &&
+              mergedContainer.borderTopRightRadius === undefined
+            ) {
+              mergedContainer.borderTopRightRadius = radius;
+            }
+            if (
+              metadata.isEndOfRange &&
+              mergedContainer.borderBottomRightRadius === undefined
+            ) {
+              mergedContainer.borderBottomRightRadius = radius;
+            }
+          }
+        }
+        return mergedContainer;
       }}
     >
       {({ pressed: isPressed, hovered: isHovered, focused: isFocused }) => {
@@ -250,7 +300,7 @@ export const CalendarItemDay = memo(function CalendarItemDay({
 interface CalendarItemDayContainerTheme {
   /** An empty view that acts as a spacer between each day. The spacing is
    * controlled by the `daySpacing` prop. */
-  spacer?: ViewStyle;
+  spacer?: ViewStyle | ((params: CalendarDayMetadata) => ViewStyle);
   /** An absolute positioned filler to join the active days together in a single
    * complete range. */
   activeDayFiller?: ViewStyle | ((params: CalendarDayMetadata) => ViewStyle);
@@ -285,12 +335,16 @@ export const CalendarItemDayContainer = memo(function CalendarItemDayContainer({
   metadata,
 }: CalendarItemDayContainerProps) {
   const baseTheme = useTheme();
+  const spacerTheme =
+    typeof theme?.spacer === "function" && metadata
+      ? theme.spacer(metadata)
+      : theme?.spacer;
   const spacerStyles: ViewStyle = {
     position: "relative",
     marginLeft: isStartOfWeek ? 0 : daySpacing,
     flex: 1,
     height: dayHeight,
-    ...theme?.spacer,
+    ...(spacerTheme ?? {}),
   };
 
   const activeDayFiller: ViewStyle | null = !shouldShowActiveDayFiller
