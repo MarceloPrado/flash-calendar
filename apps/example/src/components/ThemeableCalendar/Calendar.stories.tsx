@@ -67,12 +67,12 @@ export const Circular = () => {
       <View style={styles.circularContainer}>
         <Calendar
           calendarActiveDateRanges={selectedRange}
+          calendarDayHeight={36}
           calendarMonthId={toDateId(circularMonth)}
+          calendarRowHorizontalSpacing={6}
+          calendarRowVerticalSpacing={12}
           getCalendarWeekDayFormat={format("EEEEE")}
           onCalendarDayPress={() => undefined}
-          calendarDayHeight={36}
-          calendarRowVerticalSpacing={12}
-          calendarRowHorizontalSpacing={6}
           theme={{
             rowMonth: {
               content: {

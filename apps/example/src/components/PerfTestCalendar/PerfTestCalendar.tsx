@@ -54,7 +54,18 @@ const BasePerfTestCalendar = memo(
         {weeksList.map((week, index) => (
           <Calendar.Row.Week
             key={index}
-            spacing={calendarRowHorizontalSpacing as 0 | 2 | 4 | 6 | 8 | 12 | 16 | 20 | 24}
+            spacing={
+              calendarRowHorizontalSpacing as
+                | 0
+                | 2
+                | 4
+                | 6
+                | 8
+                | 12
+                | 16
+                | 20
+                | 24
+            }
           >
             {week.map((dayProps) => {
               if (dayProps.isDifferentMonth) {
