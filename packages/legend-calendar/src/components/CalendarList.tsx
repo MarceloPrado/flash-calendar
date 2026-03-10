@@ -3,7 +3,7 @@ import {
   type LegendListProps,
   type LegendListRef,
 } from "@legendapp/list/react-native";
-import { memo, useEffect, useImperativeHandle, useRef } from "react";
+import { useEffect, useImperativeHandle, useRef } from "react";
 import { StyleSheet, View } from "react-native";
 
 import type { CalendarProps } from "@/components/Calendar";
@@ -106,7 +106,7 @@ export interface CalendarListRef {
   scrollToOffset: (offset: number, animated: boolean) => void;
 }
 
-export const CalendarList = memo(function CalendarList({
+export function CalendarList({
   ref,
   ...props
 }: CalendarListProps & { ref?: React.Ref<CalendarListRef> }) {
@@ -292,21 +292,40 @@ export const CalendarList = memo(function CalendarList({
 
   const calendarContainerStyle = { paddingBottom: calendarSpacing };
 
+  const getFixedItemSize = (item: CalendarMonthEnhanced) => {
+    return getHeightForMonth({
+      calendarMonth: item,
+      calendarSpacing,
+      calendarDayHeight,
+      calendarMonthHeaderHeight,
+      calendarRowVerticalSpacing,
+      calendarWeekHeaderHeight,
+      calendarAdditionalHeight,
+    });
+  };
+
   const handleRenderItem = ({ item }: { item: CalendarMonthEnhanced }) => (
     <View style={calendarContainerStyle}>
       <Calendar calendarMonthId={item.id} {...item.calendarProps} />
     </View>
   );
 
+  // Uncertain why but passing this as a no op resolved blanking issues after adding
+  // getFixedItemSize + recycleItems
+  const handleViewableItemsChanged = () => {};
+
   return (
     <LegendList
       data={monthListWithCalendarProps}
+      drawDistance={560}
       estimatedItemSize={273}
+      getFixedItemSize={getFixedItemSize}
       initialScrollIndex={initialMonthIndex}
       keyExtractor={keyExtractor}
       maintainVisibleContentPosition
       onEndReached={handleOnEndReached}
       onStartReached={handleOnStartReached}
+      onViewableItemsChanged={handleViewableItemsChanged}
       recycleItems
       ref={legendListRef}
       renderItem={handleRenderItem}
@@ -315,7 +334,7 @@ export const CalendarList = memo(function CalendarList({
       {...flatListProps}
     />
   );
-});
+}
 
 const styles = StyleSheet.create({
   container: {
