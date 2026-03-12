@@ -304,6 +304,12 @@ interface CalendarItemDayContainerTheme {
   /** An absolute positioned filler to join the active days together in a single
    * complete range. */
   activeDayFiller?: ViewStyle | ((params: CalendarDayMetadata) => ViewStyle);
+  /** An absolutely-positioned background view rendered inside the spacer,
+   * behind the day button. Useful for rendering a range band that doesn't
+   * extend behind the circular edge days. */
+  activeDayRangeBackground?:
+    | ViewStyle
+    | ((params: CalendarDayMetadata) => ViewStyle | undefined);
 }
 
 export interface CalendarItemDayContainerProps {
@@ -361,8 +367,24 @@ export const CalendarItemDayContainer = memo(function CalendarItemDayContainer({
           : theme?.activeDayFiller),
       };
 
+  const rangeBackgroundTheme =
+    typeof theme?.activeDayRangeBackground === "function" && metadata
+      ? theme.activeDayRangeBackground(metadata)
+      : theme?.activeDayRangeBackground;
+  const rangeBackground: ViewStyle | null = rangeBackgroundTheme
+    ? {
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        ...rangeBackgroundTheme,
+      }
+    : null;
+
   return (
     <View style={spacerStyles}>
+      {rangeBackground ? <View style={rangeBackground} /> : null}
       {activeDayFiller ? <View style={activeDayFiller} /> : null}
       {children}
     </View>

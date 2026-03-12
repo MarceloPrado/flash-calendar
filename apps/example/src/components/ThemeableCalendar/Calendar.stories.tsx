@@ -2,7 +2,7 @@ import type {
   CalendarActiveDateRange,
   CalendarOnDayPress,
 } from "@lazerlen/legend-calendar";
-import { Calendar, fromDateId, toDateId } from "@lazerlen/legend-calendar";
+import { Calendar, fromDateId, toDateId, useDateRange } from "@lazerlen/legend-calendar";
 import type { Meta } from "@storybook/react-native";
 import { add, sub } from "date-fns";
 import { format } from "date-fns/fp";
@@ -55,24 +55,22 @@ export const DynamicFiller = () => <DynamicFillerCalendar />;
 
 export const Circular = () => {
   const circularMonth = new Date(2026, 2, 1);
-  const [selectedRange] = useState<CalendarActiveDateRange[]>([
-    {
-      startId: "2026-03-10",
-      endId: "2026-03-18",
-    },
-  ]);
+  const { calendarActiveDateRanges, onCalendarDayPress } = useDateRange({
+    startId: "2026-03-10",
+    endId: "2026-03-18",
+  });
 
   return (
     <View style={styles.circularBackground}>
       <View style={styles.circularContainer}>
         <Calendar
-          calendarActiveDateRanges={selectedRange}
+          calendarActiveDateRanges={calendarActiveDateRanges}
           calendarDayHeight={36}
           calendarMonthId={toDateId(circularMonth)}
           calendarRowHorizontalSpacing={6}
           calendarRowVerticalSpacing={12}
           getCalendarWeekDayFormat={format("EEEEE")}
-          onCalendarDayPress={() => undefined}
+          onCalendarDayPress={onCalendarDayPress}
           theme={{
             rowMonth: {
               content: {
@@ -95,31 +93,25 @@ export const Circular = () => {
               },
             },
             itemDayContainer: {
-              spacer: (metadata) => ({
-                borderTopLeftRadius:
-                  metadata.state === "active" && metadata.isStartOfRange
-                    ? 18
-                    : 0,
-                borderBottomLeftRadius:
-                  metadata.state === "active" && metadata.isStartOfRange
-                    ? 18
-                    : 0,
-                borderTopRightRadius:
-                  metadata.state === "active" && metadata.isEndOfRange ? 18 : 0,
-                borderBottomRightRadius:
-                  metadata.state === "active" && metadata.isEndOfRange ? 18 : 0,
-                alignItems:
-                  metadata.state === "active" && metadata.isStartOfRange
-                    ? "flex-start"
-                    : metadata.state === "active" && metadata.isEndOfRange
-                    ? "flex-end"
-                    : "center",
+              spacer: () => ({
+                alignItems: "center",
                 justifyContent: "center",
-                backgroundColor:
-                  metadata.state === "active" ? "#eef2fd" : "transparent",
               }),
               activeDayFiller: {
                 backgroundColor: "#eef2fd",
+              },
+              activeDayRangeBackground: (metadata) => {
+                const isSingleDay =
+                  metadata.isStartOfRange && metadata.isEndOfRange;
+                if (metadata.state !== "active" || isSingleDay) {
+                  return undefined;
+                }
+
+                return {
+                  backgroundColor: "#eef2fd",
+                  left: metadata.isStartOfRange ? "50%" : 0,
+                  right: metadata.isEndOfRange ? "50%" : 0,
+                };
               },
             },
             itemDay: {
@@ -147,17 +139,18 @@ export const Circular = () => {
               }),
               active: ({ isStartOfRange, isEndOfRange }) => {
                 const isEdge = isStartOfRange || isEndOfRange;
+                
                 return {
                   container: {
-                    backgroundColor: isEdge ? "#2a74fd" : "#eef2fd",
+                    backgroundColor: isEdge ? "#2a74fd" : "transparent",
                     borderRadius: isEdge ? 999 : 0,
-                    width: isEdge ? 36 : "100%",
+                    width: 36,
                     height: 36,
-                    flex: isEdge ? 0 : 1,
+                    flex: 0,
                   },
                   content: {
                     color: isEdge ? "#ffffff" : "#2a74fd",
-                    fontWeight: isEdge ? "700" : "500",
+                    fontWeight: isEdge ? "700" : undefined,
                   },
                 };
               },
